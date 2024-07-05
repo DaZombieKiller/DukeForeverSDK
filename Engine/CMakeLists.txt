@@ -1,0 +1,7 @@
+set(TARGET_NAME Engine)
+add_library(${TARGET_NAME} INTERFACE)
+file(GLOB SOURCE_FILES CONFIGURE_DEPENDS ../Core/Inc/*.h ../Core/Src/*.h Inc/*.h Src/*.h)
+file(GLOB LINKER_FILES CONFIGURE_DEPENDS Lib/*.lib)
+target_sources(${TARGET_NAME} INTERFACE ${SOURCE_FILES})
+target_include_directories(${TARGET_NAME} INTERFACE ../Core/Inc ../Core/Src Inc Src)
+target_link_libraries(${TARGET_NAME} INTERFACE ${LINKER_FILES})

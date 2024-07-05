@@ -1,0 +1,7 @@
+set(TARGET_NAME dnGame)
+add_library(${TARGET_NAME} INTERFACE)
+file(GLOB SOURCE_FILES CONFIGURE_DEPENDS Inc/*.h Src/*.h)
+file(GLOB LINKER_FILES CONFIGURE_DEPENDS Lib/*.lib)
+target_sources(${TARGET_NAME} INTERFACE ${SOURCE_FILES})
+target_include_directories(${TARGET_NAME} INTERFACE Inc Src)
+target_link_libraries(${TARGET_NAME} INTERFACE ${LINKER_FILES})
