@@ -335,10 +335,10 @@ class CORE_API UStruct : public UField
 				return 1;
 		return 0;
 	}
-	virtual TCHAR* GetNameCPP()
 #if DNF
-		;
+	virtual dnString GetNameCPP();
 #else
+	virtual TCHAR* GetNameCPP()
 	{
 		TCHAR* Result = appStaticString1024();
 		appSprintf( Result, TEXT("F%s"), GetName() );
@@ -600,10 +600,10 @@ class CORE_API UClass : public UState
 	// UStruct interface.
 	UBOOL MergeBools() {return 1;}
 	UStruct* GetInheritanceSuper() {return GetSuperClass();}
-	TCHAR* GetNameCPP()
 #if DNF
-		;
+	dnString GetNameCPP();
 #else
+	TCHAR* GetNameCPP()
 	{
 		TCHAR* Result = appStaticString1024();
 		UClass* C;
