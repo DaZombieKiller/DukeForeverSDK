@@ -11,6 +11,7 @@ Revision history:
 #include <malloc.h>
 #include <stdio.h>
 #include "Core.h"
+#include "EditorPrivate.h"
 
 /*-----------------------------------------------------------------------------
 	Global variables.
@@ -76,6 +77,46 @@ void ShowBanner( FOutputDevice& Warn )
 	Warn.Logf( TEXT("=======================================") );
 	Warn.Logf( TEXT("") );
 }
+void MakeHeader( const TCHAR* Parms )
+{
+	FString Pkg, Path;
+	UBOOL Force = ParseParam( Parms, TEXT("FORCEEXPORT") );
+
+	if( !ParseToken(Parms, Pkg, 0) )
+		appErrorf(TEXT("Package file not specified"));
+
+	if( !ParseToken(Parms, Path, 0) )
+		appErrorf(TEXT("Header path not specified"));
+
+	INT Len = Path.InStr(TEXT("\\"), 1);
+
+	if( Len > 0 && !GFileManager->MakeDirectory( *Path.Left(Len), 1) )
+		appErrorf(TEXT("Failed to make directory %s"), *Path);
+
+	UObject* Package = UObject::LoadPackage( NULL, *Pkg, LOAD_NoFail );
+
+	for( TObjectIterator<UClass> It; It; ++It )
+	{
+		if( *It == UObject::StaticClass() || !It->IsIn( Package ) )
+			continue;
+
+		if( !(It->GetFlags() & RF_Native) )
+			continue;
+
+		if( Force )
+			It->ClassFlags &= ~CLASS_NoExport;
+		else if( It->ClassFlags & CLASS_NoExport )
+			continue;
+
+		It->SetFlags(RF_TagExp);
+	}
+
+	FStringOutputDevice Buffer;
+	UClassExporterH* Exporter = ConstructObject<UClassExporterH>( UClassExporterH::StaticClass() );
+	Exporter->ExportText( UObject::StaticClass(), TEXT("h"), Buffer, &Warn );
+	appSaveStringToFile( Buffer, *Path );
+	GIsRequestingExit = 1;
+}
 int _tmain( int argc, TCHAR* argv[] )
 {
 #if 1 // use windowed exception handler
@@ -124,6 +165,10 @@ int _tmain( int argc, TCHAR* argv[] )
 			ShowBanner( Warn );
 			Warn.Logf( TEXT("Use \"ucc help\" for help") );
 		}
+		else if ( Token==TEXT("MAKEHEADER") )
+		{
+			MakeHeader( appCmdLine() );
+		}
 		else if( Token==TEXT("HELP") )
 		{
 			ShowBanner( Warn );
@@ -152,6 +197,7 @@ int _tmain( int argc, TCHAR* argv[] )
 							new(Items)FString( FString(TEXT("   ucc ")) + RightPad(Default->HelpCmd,21) + TEXT(" ") + Default->HelpOneLiner );
 					}
 				}
+				new(Items)FString( TEXT("   ucc makeheader            Generate package headers") );
 				new(Items)FString( TEXT("   ucc help <command>        Get help on a command") );
 				Sort( &Items(0), Items.Num() );
 				for( i=0; i<Items.Num(); i++ )
