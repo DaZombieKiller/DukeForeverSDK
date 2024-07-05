@@ -508,6 +508,13 @@ class CORE_API UState : public UStruct
 	UEnum.
 -----------------------------------------------------------------------------*/
 
+#if DNF
+enum EEnumFlags
+{
+	ENUM_Native 		= 0x00000001,	// enum is a native export
+};
+#endif
+
 //
 // An enumeration, a list of names usable by UnrealScript.
 //
@@ -520,7 +527,7 @@ class CORE_API UEnum : public UField
 	// Variables.
 	TArray<FName> Names;
 #if DNF
-	BYTE Unknown;
+	BYTE EnumFlags;
 #endif
 
 	// Constructors.
@@ -654,6 +661,13 @@ private:
 	UConst.
 -----------------------------------------------------------------------------*/
 
+#if DNF
+enum EConstFlags
+{
+	CONST_Native 		= 0x00000001,	// const is a native export
+};
+#endif
+
 //
 // An UnrealScript constant.
 //
@@ -666,7 +680,7 @@ class CORE_API UConst : public UField
 	// Variables.
 	FString Value;
 #if DNF
-	BYTE Unknown;
+	BYTE ConstFlags;
 #endif
 
 	// Constructors.

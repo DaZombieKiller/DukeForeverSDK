@@ -81,6 +81,7 @@ void MakeHeader( const TCHAR* Parms )
 {
 	FString Pkg, Path;
 	UBOOL Force = ParseParam( Parms, TEXT("FORCEEXPORT") );
+	UBOOL AllClasses = ParseParam( Parms, TEXT("ALLCLASSES") );
 
 	if( !ParseToken(Parms, Pkg, 0) )
 		appErrorf(TEXT("Package file not specified"));
@@ -96,8 +97,11 @@ void MakeHeader( const TCHAR* Parms )
 
 	for( TObjectIterator<UClass> It; It; ++It )
 	{
-		if( *It == UObject::StaticClass() || !It->IsIn( Package ) )
+		if( !It->IsIn( Package ) )
 			continue;
+
+		if( AllClasses )
+			It->SetFlags( RF_Native );
 
 		if( !(It->GetFlags() & RF_Native) )
 			continue;
@@ -107,7 +111,27 @@ void MakeHeader( const TCHAR* Parms )
 		else if( It->ClassFlags & CLASS_NoExport )
 			continue;
 
-		It->SetFlags(RF_TagExp);
+		for( TFieldIterator<UConst> FIt(*It); FIt; ++FIt )
+			FIt->ConstFlags |= CONST_Native;
+
+		for( TFieldIterator<UEnum> FIt(*It); FIt; ++FIt )
+			FIt->EnumFlags |= ENUM_Native;
+
+		for( TFieldIterator<UStruct> FIt(*It); FIt; ++FIt )
+		{
+			if( FIt->IsA(UFunction::StaticClass()) || FIt->IsA(UState::StaticClass()) )
+				continue;
+
+			if( FIt->GetOuter() != *It )
+				continue;
+
+			FIt->StructFlags |= STRUCT_Native;
+		}
+
+		if ( *It == UObject::StaticClass() )
+			continue;
+
+		It->SetFlags( RF_TagExp );
 	}
 
 	FStringOutputDevice Buffer;
