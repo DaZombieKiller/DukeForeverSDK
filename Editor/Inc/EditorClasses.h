@@ -881,10 +881,17 @@ public:
 */
 //***************************************************************************//
 
+enum EStaticMeshSmoothType
+{
+    ST_UnSmooth             =0,
+    ST_SmoothAll            =1,
+    ST_SmoothAngle          =2,
+    ST_MAX                  =3,
+};
 class EDITOR_API UOptionsStaticMeshSmooth : public UOptionsProxy
 {
 public:
-    BYTE SmoothType;
+    /* EStaticMeshSmoothType */ BYTE SmoothType;
     FLOAT SmoothAngle;
     DECLARE_CLASS(UOptionsStaticMeshSmooth,UOptionsProxy,0,Editor)
     NO_DEFAULT_CONSTRUCTOR(UOptionsStaticMeshSmooth)
@@ -898,6 +905,22 @@ public:
 */
 //***************************************************************************//
 
+enum ESuperSample
+{
+    SS_None                 =0,
+    SS_2X                   =1,
+    SS_4X                   =2,
+    SS_8X                   =3,
+    SS_MAX                  =4,
+};
+enum ESampleMode
+{
+    SAMPLE_CLOSEST          =0,
+    SAMPLE_FARTHEST         =1,
+    SAMPLE_FIRST_HIT        =2,
+    SAMPLE_BEST_NORMAL      =3,
+    SAMPLE_MAX              =4,
+};
 class EDITOR_API UOptionsStaticMeshNormalMap : public UOptionsProxy
 {
 public:
@@ -916,8 +939,8 @@ public:
     INT NumSamples GCC_PACK(4);
     FLOAT SampleScale;
     FLOAT SampleDist;
-    BYTE SampleMode;
-    BYTE SuperSample;
+    /* ESampleMode */ BYTE SampleMode;
+    /* ESuperSample */ BYTE SuperSample;
     FLOAT BumpScale;
     DECLARE_CLASS(UOptionsStaticMeshNormalMap,UOptionsProxy,0,Editor)
     NO_DEFAULT_CONSTRUCTOR(UOptionsStaticMeshNormalMap)
@@ -985,10 +1008,17 @@ public:
 */
 //***************************************************************************//
 
+enum EAxis
+{
+    AXIS_X                  =0,
+    AXIS_Y                  =1,
+    AXIS_Z                  =2,
+    AXIS_MAX                =3,
+};
 class EDITOR_API UOptions2DShaper : public UOptionsProxy
 {
 public:
-    BYTE Axis;
+    /* EAxis */ BYTE Axis;
     DECLARE_CLASS(UOptions2DShaper,UOptionsProxy,0,Editor)
     NO_DEFAULT_CONSTRUCTOR(UOptions2DShaper)
 };
@@ -1082,10 +1112,19 @@ public:
 */
 //***************************************************************************//
 
+enum ETAxis
+{
+    TAXIS_X                 =0,
+    TAXIS_Y                 =1,
+    TAXIS_Z                 =2,
+    TAXIS_AUTO              =3,
+    TAXIS_WALLS             =4,
+    TAXIS_MAX               =5,
+};
 class EDITOR_API UOptionsTexAlign : public UOptionsProxy
 {
 public:
-    BYTE TAxis;
+    /* ETAxis */ BYTE TAxis;
     DECLARE_CLASS(UOptionsTexAlign,UOptionsProxy,0,Editor)
     NO_DEFAULT_CONSTRUCTOR(UOptionsTexAlign)
 };
@@ -1419,6 +1458,17 @@ public:
 /*	\class UBrushBuilder
 */
 //***************************************************************************//
+
+struct EDITOR_API FBuilderPoly
+{
+    dnArray<INT> VertexIndices;
+    INT Direction;
+    FName Item;
+    INT PolyFlags;
+
+    FBuilderPoly() { }
+    FBuilderPoly(ENoInit) : VertexIndices(E_NoInit) { }
+};
 
 
 struct UBrushBuilder_eventBuild_Parms

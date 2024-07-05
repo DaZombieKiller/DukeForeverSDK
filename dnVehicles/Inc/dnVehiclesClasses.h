@@ -78,7 +78,7 @@ public:
     FLOAT AverageSteerAngle;
     FLOAT SteerAlpha;
     class UClass* WheelMaterialType;
-    BYTE WheelMassType;
+    /* EPhysicsMassType */ BYTE WheelMassType;
     FLOAT WheelSkidMinTime;
     INT WheelSkidDBIndex;
     FSPhysicsSoundOverride* WheelSkidOverrideEntry;
@@ -117,6 +117,12 @@ public:
 */
 //***************************************************************************//
 
+enum EWheelSide
+{
+    WHEELSIDE_Left          =0,
+    WHEELSIDE_Right         =1,
+    WHEELSIDE_MAX           =2,
+};
 class DNVEHICLES_API AVehicle_MeqonWheeled_CarLike : public AVehicle_MeqonWheeled
 {
 public:
@@ -134,12 +140,18 @@ public:
 */
 //***************************************************************************//
 
+enum ECarAxleType
+{
+    CARAXLE_Front           =0,
+    CARAXLE_Rear            =1,
+    CARAXLE_MAX             =2,
+};
 
 struct AVeh_CarTemplate_eventPlayEngineSound_Parms
 {
     FName EngineSoundName;
     BITFIELD bStopLast;
-    BYTE StopSoundRule;
+    /* EStopSoundRule */ BYTE StopSoundRule;
     FLOAT FadeOutTime;
 };
 class DNVEHICLES_API AVeh_CarTemplate : public AVehicle_MeqonWheeled_CarLike
@@ -183,7 +195,7 @@ public:
     class UVMotor* motor;
     class UVGearbox* Gearbox;
     INT LastGearIndex;
-    BYTE LastEngineSlot;
+    /* ESoundSlot */ BYTE LastEngineSlot;
     BITFIELD bWasAccel:1 GCC_PACK(4);
     FLOAT EngineSoundStartTime GCC_PACK(4);
     FVector InAirVelocity;
@@ -206,7 +218,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNVEHICLES_DoLandingEffects), NULL);
     }
-    inline void __fastcall eventPlayEngineSound(FName EngineSoundName, BITFIELD bStopLast, BYTE StopSoundRule, FLOAT FadeOutTime)
+    inline void __fastcall eventPlayEngineSound(FName EngineSoundName, BITFIELD bStopLast, /* EStopSoundRule */ BYTE StopSoundRule, FLOAT FadeOutTime)
     {
         AVeh_CarTemplate_eventPlayEngineSound_Parms Parms;
         Parms.EngineSoundName=EngineSoundName;
@@ -430,6 +442,8 @@ public:
 */
 //***************************************************************************//
 
+#define UCONST_kGearbox_GearForward 1
+#define UCONST_kGearbox_GearBackwards 0
 class DNVEHICLES_API UVGearbox : public UVehicleComponent
 {
 public:
@@ -586,6 +600,16 @@ public:
 */
 //***************************************************************************//
 
+enum EMotorConstant
+{
+    MOTORC_Drive0           =0,
+    MOTORC_Drive1           =1,
+    MOTORC_Drive2           =2,
+    MOTORC_Brake0           =3,
+    MOTORC_Brake1           =4,
+    MOTORC_Brake2           =5,
+    MOTORC_MAX              =6,
+};
 class DNVEHICLES_API UVMotor : public UVAxle
 {
 public:

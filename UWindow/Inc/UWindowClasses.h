@@ -62,7 +62,7 @@ public:
     FStringNoInit OldLevel GCC_PACK(4);
     BYTE ConsoleKey;
     BYTE InGameWindowKey;
-    BYTE UWindowKey;
+    /* EInputKey */ BYTE UWindowKey;
     class UUWindowFramedWindow* ConsoleWindow;
     dnArray<FSMenuUnlock> KeyArray;
     BITFIELD bDisableLJoyInput:1 GCC_PACK(4);
@@ -85,6 +85,100 @@ public:
 */
 //***************************************************************************//
 
+enum PropertyCondition
+{
+    PC_None                 =0,
+    PC_LessThan             =1,
+    PC_Equal                =2,
+    PC_GreaterThan          =3,
+    PC_NotEqual             =4,
+    PC_Contains             =5,
+    PC_NotContains          =6,
+    PC_MAX                  =7,
+};
+enum MessageBoxResult
+{
+    MBR_None                =0,
+    MBR_Yes                 =1,
+    MBR_No                  =2,
+    MBR_OK                  =3,
+    MBR_Cancel              =4,
+    MBR_MAX                 =5,
+};
+enum MessageBoxButtons
+{
+    MBB_YesNo               =0,
+    MBB_OKCancel            =1,
+    MBB_OK                  =2,
+    MBB_YesNoCancel         =3,
+    MBB_OKCancelEdit        =4,
+    MBB_MAX                 =5,
+};
+enum MenuSound
+{
+    MS_MenuUp               =0,
+    MS_MenuDown             =1,
+    MS_MenuAction           =2,
+    MS_MenuEntry            =3,
+    MS_OptionHL             =4,
+    MS_GameStart            =5,
+    MS_ExitGame             =6,
+    MS_SubMenuActivate      =7,
+    MS_MAX                  =8,
+};
+enum FrameHitTest
+{
+    HT_NW                   =0,
+    HT_N                    =1,
+    HT_NE                   =2,
+    HT_W                    =3,
+    HT_E                    =4,
+    HT_SW                   =5,
+    HT_S                    =6,
+    HT_SE                   =7,
+    HT_TitleBar             =8,
+    HT_DragHandle           =9,
+    HT_None                 =10,
+    HT_MAX                  =11,
+};
+enum TextAlign
+{
+    TA_Left                 =0,
+    TA_Right                =1,
+    TA_Center               =2,
+    TA_MAX                  =3,
+};
+#define UCONST_DE_Click_Y 21
+#define UCONST_DE_Click_X 20
+#define UCONST_DE_Click_B 19
+#define UCONST_DE_Click_A 2
+#define UCONST_DE_FocusLost 18
+#define UCONST_DE_FocusEntered 17
+#define UCONST_DE_TabPressed 16
+#define UCONST_DE_WheelDownPressed 15
+#define UCONST_DE_WheelUpPressed 14
+#define UCONST_DE_HelpChanged 13
+#define UCONST_DE_MouseEnter 12
+#define UCONST_DE_DoubleClick 11
+#define UCONST_DE_LMouseDown 10
+#define UCONST_DE_MouseLeave 9
+#define UCONST_DE_MouseMove 8
+#define UCONST_DE_EnterPressed 7
+#define UCONST_DE_RClick 6
+#define UCONST_DE_MClick 5
+#define UCONST_DE_Exit 4
+#define UCONST_DE_Enter 3
+#define UCONST_DE_Click 2
+#define UCONST_DE_Change 1
+#define UCONST_DE_Created 0
+#define UCONST_F_Tiny 7
+#define UCONST_F_Small 6
+#define UCONST_F_HeavyBold 5
+#define UCONST_F_Heavy 4
+#define UCONST_F_LargeBold 3
+#define UCONST_F_Large 2
+#define UCONST_F_Bold 1
+#define UCONST_F_Normal 0
 class UWINDOW_API UUWindowBase : public UObject
 {
 public:
@@ -100,6 +194,47 @@ public:
 */
 //***************************************************************************//
 
+enum EDE_Debug
+{
+    DE_Created              =0,
+    DE_Change               =1,
+    DE_Click                =2,
+    DE_Enter                =3,
+    DE_Exit                 =4,
+    DE_MClick               =5,
+    DE_RClick               =6,
+    DE_EnterPressed         =7,
+    DE_MouseMove            =8,
+    DE_MouseLeave           =9,
+    DE_LMouseDown           =10,
+    DE_DoubleClick          =11,
+    DE_MouseEnter           =12,
+    DE_HelpChanged          =13,
+    DE_WheelUpPressed       =14,
+    DE_WheelDownPressed     =15,
+    DE_TabPressed           =16,
+    DE_FocusEntered         =17,
+    DE_FocusLost            =18,
+    DE_Click_B              =19,
+    DE_Click_X              =20,
+    DE_Click_Y              =21,
+    DE_MAX                  =22,
+};
+enum WinMessage
+{
+    WM_LMouseDown           =0,
+    WM_LMouseUp             =1,
+    WM_MMouseDown           =2,
+    WM_MMouseUp             =3,
+    WM_RMouseDown           =4,
+    WM_RMouseUp             =5,
+    WM_KeyUp                =6,
+    WM_KeyDown              =7,
+    WM_KeyType              =8,
+    WM_KeyHold              =9,
+    WM_Paint                =10,
+    WM_MAX                  =11,
+};
 class UWINDOW_API UUWindowWindow : public UUWindowBase
 {
 public:
@@ -173,6 +308,27 @@ public:
 */
 //***************************************************************************//
 
+enum EUWindowMode
+{
+    EUWindowMode_Startup    =0,
+    EUWindowMode_MainMenu   =1,
+    EUWindowMode_InstallScreen=2,
+    EUWindowMode_ReturnToMainMenu=3,
+    EUWindowMode_SinglePlayer_Pause=4,
+    EUWindowMode_SinglePlayer_Credits=5,
+    EUWindowMode_MultiPlayer_Pause=6,
+    EUWindowMode_MultiPlayer_PreGameLobby=7,
+    EUWindowMode_MultiPlayer_PostGameLobby=8,
+    EUWindowMode_MultiPlayer_Scoreboard=9,
+    EUWindowMode_MultiPlayer_DigsMenu=10,
+    EUWindowMode_MultiPlayer_CustomizationMenu=11,
+    EUWindowMode_MultiPlayer_DigsPauseMenu=12,
+    EUWindowMode_MultiPlayer_DigsMoreInfoMenu=13,
+    EUWindowMode_Horde_GameStart=14,
+    EUWindowMode_Horde_GameEnd=15,
+    EUWindowMode_Horde_Pause=16,
+    EUWindowMode_MAX        =17,
+};
 class UWINDOW_API UUWindowRootWindow : public UUWindowWindow
 {
 public:
@@ -208,7 +364,7 @@ public:
     BITFIELD bAllowObjectives:1;
     BITFIELD DontCloseOnEscape:1;
     class UUWindowWindow* ScoreboardWindow GCC_PACK(4);
-    BYTE WindowMode;
+    /* EUWindowMode */ BYTE WindowMode;
     DECLARE_CLASS(UUWindowRootWindow,UUWindowWindow,0|CLASS_Config,UWindow)
     NO_DEFAULT_CONSTRUCTOR(UUWindowRootWindow)
 };

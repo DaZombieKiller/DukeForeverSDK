@@ -23,8 +23,8 @@
 
 AUTOGENERATE_NAME(Input)
 AUTOGENERATE_NAME(RegisterPrecacheComponents)
-AUTOGENERATE_NAME(SetAnimGridState)
 AUTOGENERATE_NAME(COND_ShouldStepAside)
+AUTOGENERATE_NAME(SetAnimGridState)
 AUTOGENERATE_NAME(bLink)
 AUTOGENERATE_NAME(Execute)
 AUTOGENERATE_NAME(EnableBlinking)
@@ -379,6 +379,68 @@ AUTOGENERATE_NAME(GetAnimName)
 */
 //***************************************************************************//
 
+enum EAIWeaponClearShotType
+{
+    AIWeaponClearShot_NoCheck=0,
+    AIWeaponClearShot_TargetVisible=1,
+    AIWeaponClearShot_ClearTrace=2,
+    AIWeaponClearShot_MAX   =3,
+};
+#define UCONST_AimInterval 0.7
+#define UCONST_PostFireInterval 0.2
+#define UCONST_PreFireInterval 0.2
+#define UCONST_DefaultWeaponAimUpTime 0.5
+#define UCONST_DefaultWeaponAimDownTimeFast 0.02
+#define UCONST_DefaultWeaponAimDownTime 0.35
+#define UCONST_SetFireMode_DefautFinishPeriod 0.25f
+#define UCONST_SetFireMode_DefautAbortPeriod 3.0f
+#define UCONST_SetAim_Mode_AimOff 3
+#define UCONST_SetAim_Mode_AimOn 2
+#define UCONST_SetAim_Mode_Wait 1
+#define UCONST_SetAim_Mode_None 0
+#define UCONST_SelectWeapon_Mode_QuickSwitch 4
+#define UCONST_SelectWeapon_Mode_Draw 3
+#define UCONST_SelectWeapon_Mode_Holster 2
+#define UCONST_SelectWeapon_Mode_Wait 1
+#define UCONST_SelectWeapon_Mode_None 0
+#define UCONST_PlaceTripMine_Mode_EndAim 4
+#define UCONST_PlaceTripMine_Mode_Place 3
+#define UCONST_PlaceTripMine_Mode_Aim 2
+#define UCONST_PlaceTripMine_Mode_None 0
+#define UCONST_JumpAttack_Mode_Land 4
+#define UCONST_JumpAttack_Mode_Attack 3
+#define UCONST_JumpAttack_Mode_Fall 2
+#define UCONST_JumpAttack_Mode_TakeOff 1
+#define UCONST_JumpAttack_Mode_None 0
+#define UCONST_Jump_Mode_Stop 4
+#define UCONST_Jump_Mode_Land 3
+#define UCONST_Jump_Mode_Fall 2
+#define UCONST_Jump_Mode_TakeOff 1
+#define UCONST_Jump_Mode_None 0
+#define UCONST_GotoX_StuckDynamicThreshold 1.0f
+#define UCONST_GotoX_StuckThresholdCollision 1.0f
+#define UCONST_GotoX_StuckThresholdPush 0.5f
+#define UCONST_GotoX_StuckPercentage 0.25f
+#define UCONST_GotoX_DoorPauseTime 0.6f
+#define UCONST_GotoX_NoMaxSteps -1
+#define UCONST_Fall_Mode_Land 2
+#define UCONST_Fall_Mode_Fall 1
+#define UCONST_Fall_Mode_StartFall 0
+#define UCONST_AnimX_Mode_SyncAnim 8
+#define UCONST_AnimX_Mode_SyncWait 7
+#define UCONST_AnimX_Mode_SyncTurn 6
+#define UCONST_AnimX_Mode_SyncGoto 5
+#define UCONST_AnimX_Mode_AnimFaceTarget 4
+#define UCONST_AnimX_Mode_AnimFaceActor 3
+#define UCONST_AnimX_Mode_AnimFacePos 2
+#define UCONST_AnimX_Mode_Anim 1
+#define UCONST_AnimX_Mode_Init 0
+#define UCONST_AI_AimAccelK 0.5f
+#define UCONST_AI_MaxAimPitch 4000
+#define UCONST_AI_MaxAimYaw 8000
+#define UCONST_AI_MaxTrailTime 10.0f
+#define UCONST_AI_MaxTreeDepth 50
+#define UCONST_AI_LedgeRagdollK 4.0f
 
 struct AAIActor_eventWeaponManagerCompletelyOff_Parms
 {
@@ -559,16 +621,16 @@ struct AAIActor_eventPlayAnim_Parms
 
 struct AAIActor_eventSetAnimController_Parms
 {
-    BYTE eController;
+    /* EAIAnimController */ BYTE eController;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventGetPainAnimName_Parms
 {
     FName AnimName;
-    BYTE NextAnimCtrl;
-    BYTE WoundedPart;
-    BYTE WoundSector;
+    /* EAIAnimController */ BYTE NextAnimCtrl;
+    /* EPawnBodyPart */ BYTE WoundedPart;
+    /* EAIArcSector */ BYTE WoundSector;
     BITFIELD ReturnValue;
 };
 
@@ -621,43 +683,43 @@ struct AAIActor_eventCanUseState_FreeMoveGoto_Parms
 {
     FVector TargetPos;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveCharge_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveRest_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveHover_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveFloat_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveCircleStrafe_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_FreeMoveFlank_Parms
 {
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_UseX_Parms
@@ -669,7 +731,7 @@ struct AAIActor_eventCanUseState_UseXExplicit_Parms
 {
     class AdnUsableSomething* UsableSomething;
     class AAIInputDispatcher_Base* InputDispatcher;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_UseX_Parms
@@ -681,7 +743,7 @@ struct AAIActor_eventCanUseState_UseX_Parms
     FLOAT AttemptInterval;
     BITFIELD ForceAttach;
     BITFIELD AllowProceduralAim;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventFinalizeTurn_Parms
@@ -696,12 +758,12 @@ struct AAIActor_eventExecuteState_TurnToX_Parms
 
 struct AAIActor_eventCanUseState_TurnToTarget_Parms
 {
-    BYTE Targ;
+    /* EAITarget */ BYTE Targ;
     FLOAT ShouldTurnThresh;
     FLOAT FaceThresh;
     FLOAT ExitTime;
     FLOAT AnimThresh;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_TurnToPos_Parms
@@ -711,7 +773,7 @@ struct AAIActor_eventCanUseState_TurnToPos_Parms
     FLOAT FaceThresh;
     FLOAT ExitTime;
     FLOAT AnimThresh;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_TurnToActor_Parms
@@ -721,7 +783,7 @@ struct AAIActor_eventCanUseState_TurnToActor_Parms
     FLOAT FaceThresh;
     FLOAT ExitTime;
     FLOAT AnimThresh;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_Stun_Parms
@@ -732,7 +794,7 @@ struct AAIActor_eventExecuteState_Stun_Parms
 struct AAIActor_eventCanUseState_Stun_Parms
 {
     FLOAT Time;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventSetFireModeDontIdle_Parms
@@ -749,7 +811,7 @@ struct AAIActor_eventCanUseState_SetFireMode_Parms
 {
     BITFIELD On;
     BITFIELD Expedite;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_SetAim_Parms
@@ -761,7 +823,7 @@ struct AAIActor_eventExecuteState_SetAim_Parms
 struct AAIActor_eventCanUseState_SetAim_Parms
 {
     BITFIELD On;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_SelectWeapon_Parms
@@ -773,7 +835,7 @@ struct AAIActor_eventCanUseState_SelectWeapon_Parms
 {
     class UClass* DesiredWeaponClass;
     BITFIELD QuickWeaponSwitch;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_PhysicsGotoX_Parms
@@ -783,7 +845,7 @@ struct AAIActor_eventExecuteState_PhysicsGotoX_Parms
 
 struct AAIActor_eventCanUseState_PhysicsGotoTargetActor_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_PlaceTripMine_Parms
@@ -794,7 +856,7 @@ struct AAIActor_eventExecuteState_PlaceTripMine_Parms
 struct AAIActor_eventCanUseState_PlaceTripMine_Parms
 {
     class AActor* TargetActor;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_Pause_Parms
@@ -805,7 +867,7 @@ struct AAIActor_eventExecuteState_Pause_Parms
 struct AAIActor_eventCanUseState_Pause_Parms
 {
     FLOAT Time;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_MoveUnderground_Parms
@@ -818,7 +880,7 @@ struct AAIActor_eventCanUseState_MoveUnderground_Parms
     FVector DestLocation;
     FRotator DestRotation;
     FLOAT Time;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCalcJumpAttackHeight_Parms
@@ -855,23 +917,23 @@ struct AAIActor_eventExecuteState_JumpAttack_Parms
 struct AAIActor_eventCanUseState_JumpAttackPreset_Parms
 {
     FVector PresetVelocity;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_JumpAttackPresetInstant_Parms
 {
     FVector PresetVelocity;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_JumpAttackDodge_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_JumpAttack_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_Jump_Parms
@@ -881,7 +943,7 @@ struct AAIActor_eventExecuteState_Jump_Parms
 
 struct AAIActor_eventCanUseState_JumpToTargetPos_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_JumpTakeOff_Parms
@@ -891,7 +953,7 @@ struct AAIActor_eventCanUseState_JumpTakeOff_Parms
     class AActor* FocusActor;
     FLOAT GravityScale;
     FVector TakeOffTarget;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_Jump_Parms
@@ -906,7 +968,7 @@ struct AAIActor_eventCanUseState_Jump_Parms
     BITFIELD bSnapToTargetDuringLand;
     BITFIELD bUseAccelaration;
     BITFIELD bFaceTarget;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_Hide_Parms
@@ -916,7 +978,7 @@ struct AAIActor_eventExecuteState_Hide_Parms
 
 struct AAIActor_eventCanUseState_Hide_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventShouldHaywireExplode_Parms
@@ -942,7 +1004,7 @@ struct AAIActor_eventCanUseState_Haywire_Parms
     FVector LinearAccelVar;
     FVector AngularAccel;
     FVector AngularAccelVar;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventShouldSnapToDestination_Parms
@@ -952,7 +1014,7 @@ struct AAIActor_eventShouldSnapToDestination_Parms
 
 struct AAIActor_eventExecuteState_GotoX_Parms
 {
-    BYTE Speed;
+    /* EAIMoveSpeed */ BYTE Speed;
     FLOAT SideArcTurnSpeedThresh;
     FLOAT StepBackwardsSpeedThresh;
     FLOAT StartAngleSideSector;
@@ -977,7 +1039,7 @@ struct AAIActor_eventCanUseState_GotoLandPos_Parms
 {
     FVector GoalPos;
     class AActor* FocusActor;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_GotoPos_Parms
@@ -987,29 +1049,29 @@ struct AAIActor_eventCanUseState_GotoPos_Parms
     FLOAT Range;
     FLOAT Height;
     FLOAT ClipTolerance;
-    BYTE Focus;
+    /* EAIFocus */ BYTE Focus;
     class AActor* FocusActor;
     INT MaxSteps;
     BITFIELD bDebug;
     FVector TargetExtent;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_GotoActor_Parms
 {
     class AActor* TargetActor;
     class AActor* RefActor;
-    BYTE OffsetType;
+    /* EAIOffsetType */ BYTE OffsetType;
     FLOAT Range;
     FLOAT Bearing;
     FLOAT Height;
     FLOAT ClipTolerance;
-    BYTE Focus;
+    /* EAIFocus */ BYTE Focus;
     class AActor* FocusActor;
     INT MaxSteps;
     BITFIELD bDebug;
     FVector TargetExtent;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_FUBAR_Parms
@@ -1019,7 +1081,7 @@ struct AAIActor_eventExecuteState_FUBAR_Parms
 
 struct AAIActor_eventCanUseState_FUBAR_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_FireWeapon_Parms
@@ -1030,7 +1092,7 @@ struct AAIActor_eventExecuteState_FireWeapon_Parms
 struct AAIActor_eventCanUseState_FireWeapon_Parms
 {
     INT ShotsToFire;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_Fall_Parms
@@ -1042,7 +1104,7 @@ struct AAIActor_eventCanUseState_Fall_Parms
 {
     FLOAT LandingThresh;
     FLOAT HeavyLandingThresh;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExecuteState_ControlX_Parms
@@ -1060,7 +1122,7 @@ struct AAIActor_eventCanUseState_ControlX_Parms
     class UClass* ControlType;
     FName AnimName;
     FLOAT MaxTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventIsSyncing_Parms
@@ -1085,7 +1147,7 @@ struct AAIActor_eventCanUseState_AnimSyncActor_Parms
     BITFIELD MustFinish;
     BITFIELD FinishAlone;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimSyncPosRot_Parms
@@ -1097,17 +1159,17 @@ struct AAIActor_eventCanUseState_AnimSyncPosRot_Parms
     FVector TargetFacePos;
     BITFIELD MustFinish;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFaceTarget_Parms
 {
     FName AnimName;
     BITFIELD UseExactAnimName;
-    BYTE Targ;
+    /* EAITarget */ BYTE Targ;
     FLOAT FaceThreshold;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFacePos_Parms
@@ -1117,7 +1179,7 @@ struct AAIActor_eventCanUseState_AnimFacePos_Parms
     FVector TargetFacePos;
     FLOAT FaceThreshold;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFaceActor_Parms
@@ -1127,7 +1189,7 @@ struct AAIActor_eventCanUseState_AnimFaceActor_Parms
     class AActor* TargetActor;
     FLOAT FaceThreshold;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFull_Parms
@@ -1135,7 +1197,7 @@ struct AAIActor_eventCanUseState_AnimFull_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimMustFinish_Parms
@@ -1143,7 +1205,7 @@ struct AAIActor_eventCanUseState_AnimMustFinish_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFullExitOnLand_Parms
@@ -1151,7 +1213,7 @@ struct AAIActor_eventCanUseState_AnimFullExitOnLand_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimExitOnLand_Parms
@@ -1159,7 +1221,7 @@ struct AAIActor_eventCanUseState_AnimExitOnLand_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_AnimFailOK_Parms
@@ -1167,7 +1229,7 @@ struct AAIActor_eventCanUseState_AnimFailOK_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCanUseState_Anim_Parms
@@ -1175,12 +1237,12 @@ struct AAIActor_eventCanUseState_Anim_Parms
     FName AnimName;
     BITFIELD UseExactAnimName;
     FLOAT ExitTime;
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventExitAIState_Parms
 {
-    BYTE Status;
+    /* EAIStateStatus */ BYTE Status;
     FString DbgMsg;
 };
 
@@ -1193,70 +1255,70 @@ struct AAIActor_eventExecuteState_Parms
 
 struct AAIActor_eventEndScriptOp_MoveToPodProtectorBase_Parms
 {
-    BYTE Status;
+    /* EAIOpStatus */ BYTE Status;
 };
 
 struct AAIActor_eventEndScriptOp_Example_Parms
 {
-    BYTE Status;
+    /* EAIOpStatus */ BYTE Status;
 };
 
 struct AAIActor_eventEndScriptOp_Parms
 {
-    BYTE Status;
+    /* EAIOpStatus */ BYTE Status;
 };
 
 struct AAIActor_eventNotifyScriptOpExitState_Parms
 {
-    BYTE Status;
+    /* EAIStateStatus */ BYTE Status;
 };
 
 struct AAIActor_eventScriptOpAllowsLook_Parms
 {
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventIsOverrideScriptOp_Parms
 {
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventShouldScriptOpFinish_Parms
 {
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventMustScriptOpFinish_Parms
 {
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventExecuteScriptOp_Parms
 {
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     BITFIELD ReturnValue;
 };
 
 struct AAIActor_eventCanUseScriptOp_Parms
 {
-    BYTE Op;
-    BYTE ReturnValue;
+    /* EAIOp */ BYTE Op;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventNotifyOpEnded_Parms
 {
-    BYTE Op;
-    BYTE Status;
+    /* EAIOp */ BYTE Op;
+    /* EAIOpStatus */ BYTE Status;
 };
 
 struct AAIActor_eventNotifyOpStarted_Parms
 {
-    BYTE NewOp;
-    BYTE OldOp;
+    /* EAIOp */ BYTE NewOp;
+    /* EAIOp */ BYTE OldOp;
 };
 
 struct AAIActor_eventForceGameplayOverridePhysics_Parms
@@ -1286,7 +1348,7 @@ struct AAIActor_eventGetDynamicPathingTieBreaker_Parms
 
 struct AAIActor_eventGetDynamicPathingPriority_Parms
 {
-    BYTE ReturnValue;
+    /* EAIDynamicPathPriority */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventGetGroundGravityScale_Parms
@@ -1343,107 +1405,107 @@ struct AAIActor_eventAIMustCheckActionUsable_Parms
 
 struct AAIActor_eventCOND_ShouldTeleportToAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldJumpToAirAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_HasNormalAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_HasJumpAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoJumpOrNormalAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldJumpToFlyAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldWalkToNextAPClosestTarget_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldWalkToNextAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoToNextAPCheckLOS_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldFlyToNextAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldJumpToNextAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldJumpToNextAPNoTarget_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoJumpAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldVaultAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ReleaseActionPoint_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ActionPointCompletelyCompromised_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldLateralAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldFlankAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldRetreatAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldAdvanceAP_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_AvailableActionPoint_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventChooseBestAPClosestTarget_Parms
@@ -1470,32 +1532,32 @@ struct AAIActor_eventOverridePopoutHoldTime_Parms
 
 struct AAIActor_eventCOND_ShouldMeleeActionPoint_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoActionPointFlyer_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoActionPoint_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldUseActionPoint_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_NoForcedActionPoints_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ForcedActionPoints_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventIsReturningToBerzerk_Parms
@@ -1525,22 +1587,22 @@ struct AAIActor_eventGetIdleExIndex_Parms
 
 struct AAIActor_eventCOND_ShouldAbortGotoStomp_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoStompLostTarget_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoStomp_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldUseX_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventEndTeleportOverlayEffectsOnActor_Parms
@@ -1575,7 +1637,7 @@ struct AAIActor_eventShouldDampenWhileTurning_Parms
 
 struct AAIActor_eventPrioritizePopups_Parms
 {
-    BYTE PopupType;
+    /* EAIPopUpType */ BYTE PopupType;
 };
 
 struct AAIActor_eventFindGoal_ScriptCustom_Parms
@@ -1597,48 +1659,48 @@ struct AAIActor_eventSetMaterial_Parms
 
 struct AAIActor_eventInput_Parms
 {
-    BYTE KeyType;
-    BYTE ActionType;
+    /* EControlRemapperKeyType */ BYTE KeyType;
+    /* EAIInputAction */ BYTE ActionType;
 };
 
 struct AAIActor_eventCOND_ShouldSeek_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoSearch_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldStepAside_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldEndMelee_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldMelee_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGuardAttackMelee_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldAlignWithGuardedActor_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoGuardPos_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventIsTooCloseToGuardedActor_Parms
@@ -1649,97 +1711,97 @@ struct AAIActor_eventIsTooCloseToGuardedActor_Parms
 
 struct AAIActor_eventCOND_ShouldGotoGuardAttack_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_BeginWaitState_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoSafeReload_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoReload_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldMoveAround_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldMoveSide_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoAttack_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_NeedToMoveToAttack_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldGotoAvoidGoal_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_NotSafeFromBigEnemy_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_SafeFromBiggerEnemy_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldAvoidTarget_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldNotAvoidTarget_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldAvoidDanger_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldPickupTKObj_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldThrowTKObj_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldCatchTKObj_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldAttackPipeBomb_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventCOND_ShouldTryAttackPipeBomb_Parms
 {
-    BYTE ReturnValue;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventIgnoreDangerActor_Parms
@@ -1801,7 +1863,7 @@ struct AAIActor_eventShouldTargetNoiseMaker_Parms
 
 struct AAIActor_eventEvaluateTargets_Parms
 {
-    BYTE TargetEvaluator;
+    /* EAITargetEval */ BYTE TargetEvaluator;
 };
 
 struct AAIActor_eventBlinkingEnabled_Parms
@@ -1860,7 +1922,7 @@ struct AAIActor_eventCreateTKShield_Parms
 
 struct AAIActor_eventNotifyCloakingState_Parms
 {
-    BYTE NewState;
+    /* EAICloaking */ BYTE NewState;
 };
 
 struct AAIActor_eventGetGotoMeleeRange_Parms
@@ -1880,8 +1942,8 @@ struct AAIActor_eventDie_Parms
 
 struct AAIActor_eventForceDieOp_Parms
 {
-    BYTE DieOp;
-    BYTE ReturnValue;
+    /* EAIOp */ BYTE DieOp;
+    /* EAICode */ BYTE ReturnValue;
 };
 
 struct AAIActor_eventNotifyHeadTargetLost_Parms
@@ -1906,22 +1968,22 @@ struct AAIActor_eventNotifyWeaponTargetInThreshold_Parms
 
 struct AAIActor_eventNotifyEyeAimState_Parms
 {
-    BYTE NewState;
+    /* EAIAim */ BYTE NewState;
 };
 
 struct AAIActor_eventNotifyHeadAimState_Parms
 {
-    BYTE NewState;
+    /* EAIAim */ BYTE NewState;
 };
 
 struct AAIActor_eventNotifyWeaponAimState_Parms
 {
-    BYTE NewState;
+    /* EAIAim */ BYTE NewState;
 };
 
 struct AAIActor_eventNotifyWeaponManagerMode_Parms
 {
-    BYTE NewMode;
+    /* EAIWeapManMode */ BYTE NewMode;
 };
 
 struct AAIActor_eventBumpedBy_Parms
@@ -1973,17 +2035,17 @@ struct AAIActor_eventDefaultBodyAlignRate_Parms
 
 struct AAIActor_eventSetAnimSync_Parms
 {
-    BYTE UseAnimDispSpeedMod;
-    BYTE UseAnimDispDirMod;
-    BYTE UseAnimRotationMod;
-    BYTE AnimCutSceneMod;
-    BYTE UseAccelerationMod;
+    /* EBitModifier */ BYTE UseAnimDispSpeedMod;
+    /* EBitModifier */ BYTE UseAnimDispDirMod;
+    /* EBitModifier */ BYTE UseAnimRotationMod;
+    /* EBitModifier */ BYTE AnimCutSceneMod;
+    /* EBitModifier */ BYTE UseAccelerationMod;
 };
 
 struct AAIActor_eventEnumerateUsableAnimationControllers_Parms
 {
     class UPrecacheIndex* PrecacheIndex;
-    dnArray<BYTE> UsableControllers;
+    dnArray</* EAIAnimController */ BYTE> UsableControllers;
 };
 
 struct AAIActor_eventEnumerateWeaponClasses_Parms
@@ -2022,7 +2084,7 @@ public:
     BITFIELD AllowFrozenExecution:1 GCC_PACK(4);
     FSAIDamageInfo DamageInfo GCC_PACK(4);
     dnArray<FSAIDamageScale> DamageScaleInfo;
-    BYTE Executive;
+    /* EAIExecutive */ BYTE Executive;
     BITFIELD ExecutiveSuspended:1 GCC_PACK(4);
     FLOAT DecisionTreeGate GCC_PACK(4);
     FLOAT DecisionTreeInterval;
@@ -2031,15 +2093,15 @@ public:
     dnArray<FAITransitionAction> TransitionHistory;
     dnArray<FString> StateEndMessages;
     FSAISquadChannel SquadChannel;
-    BYTE CurrentOp;
+    /* EAIOp */ BYTE CurrentOp;
     INT CurrentOpRef;
-    BYTE CurrentOpStatus;
+    /* EAIOpStatus */ BYTE CurrentOpStatus;
     BITFIELD CurrentOpMustFinish:1 GCC_PACK(4);
     BITFIELD CurrentOpShouldFinish:1;
     INT CurrentOpMode GCC_PACK(4);
-    BYTE WoundedBodyPart;
-    BYTE WoundedBodySector;
-    BYTE PostOpAnimCtrl;
+    /* EPawnBodyPart */ BYTE WoundedBodyPart;
+    /* EAIArcSector */ BYTE WoundedBodySector;
+    /* EAIAnimController */ BYTE PostOpAnimCtrl;
     BITFIELD CanSeeTargets:1 GCC_PACK(4);
     BITFIELD CanHearTargets:1;
     FLOAT ClearTargetTime GCC_PACK(4);
@@ -2174,7 +2236,7 @@ public:
     FVector RollLeftInfo;
     FVector RollRightInfo;
     FLOAT RollTime;
-    BYTE Cloaking;
+    /* EAICloaking */ BYTE Cloaking;
     FLOAT CloakValue;
     FLOAT CloakRate;
     class UMaterialEx* CloakMaterial;
@@ -2270,7 +2332,7 @@ public:
     FName TargetClearedEvent;
     FLOAT NextMessageTime;
     dnArray<FSAIMessage> MessageQueue;
-    BYTE InitialAnimController;
+    /* EAIAnimController */ BYTE InitialAnimController;
     FSAIAnimController AnimControllers[10];
     FSAICurAnimController AnimCtrl;
     FSAnimX AnimXParms;
@@ -2348,7 +2410,7 @@ public:
     BITFIELD DisableAimGrids:1;
     BITFIELD ProceduralMovingFire:1;
     dnArray<FName> ProcFireStates GCC_PACK(4);
-    dnArray<BYTE> ProcFireOps;
+    dnArray</* EAIOp */ BYTE> ProcFireOps;
     BITFIELD ProcAimingEnabledThisFrame:1 GCC_PACK(4);
     BITFIELD CanProcFire:1;
     BITFIELD CanPopupAim:1;
@@ -2374,7 +2436,7 @@ public:
     BITFIELD AimBodyAtHeadTarget:1;
     FVector GoalPos GCC_PACK(4);
     BITFIELD StartTickDisabled:1 GCC_PACK(4);
-    BYTE AttackConstraint GCC_PACK(4);
+    /* EAIAttackConstraint */ BYTE AttackConstraint GCC_PACK(4);
     BITFIELD AllowBezerk:1 GCC_PACK(4);
     BITFIELD AllowProne:1;
     FLOAT TryGotoAttackTime GCC_PACK(4);
@@ -2482,7 +2544,7 @@ public:
     FLOAT LandingThresh;
     FLOAT HeavyLandingThresh;
     FLOAT ChanceLand;
-    BYTE ForceStartJetpack;
+    /* EBitModifier */ BYTE ForceStartJetpack;
     BITFIELD DoJetPackWobble:1 GCC_PACK(4);
     BITFIELD bIsFlying:1;
     FLOAT TimeTargetNotVisible GCC_PACK(4);
@@ -2547,11 +2609,11 @@ public:
     BITFIELD bTrackPhysicsContacts:1 GCC_PACK(4);
     dnArray<class AActor*> PhysicsContactActors GCC_PACK(4);
     INT AIRotation;
-    BYTE DynamicPathingPriority;
+    /* EAIDynamicPathPriority */ BYTE DynamicPathingPriority;
     FLOAT DynamicPathingPriorityTieBreaker;
     FLOAT GroundConstraintScalerOverride;
     BITFIELD bScriptPathingEnabled:1 GCC_PACK(4);
-    BYTE ScriptPathingOverride GCC_PACK(4);
+    /* EAIDynamicPathPriority */ BYTE ScriptPathingOverride GCC_PACK(4);
     FLOAT ScriptPathingTieBreakerOverride;
     BITFIELD bSpawnedPhysicsControllerActive:1 GCC_PACK(4);
     FLOAT PathSizeOverrideHeight GCC_PACK(4);
@@ -3000,7 +3062,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_PlayAnim), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventSetAnimController(BYTE eController)
+    inline BITFIELD __fastcall eventSetAnimController(/* EAIAnimController */ BYTE eController)
     {
         AAIActor_eventSetAnimController_Parms Parms;
         Parms.ReturnValue=0;
@@ -3012,7 +3074,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNAI_InitializeAnimControllers), NULL);
     }
-    inline BITFIELD __fastcall eventGetPainAnimName(FName& AnimName, BYTE& NextAnimCtrl, BYTE& WoundedPart, BYTE& WoundSector)
+    inline BITFIELD __fastcall eventGetPainAnimName(FName& AnimName, /* EAIAnimController */ BYTE& NextAnimCtrl, /* EPawnBodyPart */ BYTE& WoundedPart, /* EAIArcSector */ BYTE& WoundSector)
     {
         AAIActor_eventGetPainAnimName_Parms Parms;
         Parms.ReturnValue=0;
@@ -3097,7 +3159,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_FreeMove), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveGoto(FVector TargetPos, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveGoto(FVector TargetPos, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveGoto_Parms Parms;
         Parms.ReturnValue=0;
@@ -3106,7 +3168,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveGoto), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveCharge(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveCharge(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveCharge_Parms Parms;
         Parms.ReturnValue=0;
@@ -3114,7 +3176,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveCharge), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveRest(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveRest(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveRest_Parms Parms;
         Parms.ReturnValue=0;
@@ -3122,7 +3184,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveRest), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveHover(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveHover(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveHover_Parms Parms;
         Parms.ReturnValue=0;
@@ -3130,7 +3192,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveHover), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveFloat(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveFloat(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveFloat_Parms Parms;
         Parms.ReturnValue=0;
@@ -3138,7 +3200,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveFloat), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveCircleStrafe(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveCircleStrafe(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveCircleStrafe_Parms Parms;
         Parms.ReturnValue=0;
@@ -3146,7 +3208,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_FreeMoveCircleStrafe), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FreeMoveFlank(FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FreeMoveFlank(FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_FreeMoveFlank_Parms Parms;
         Parms.ReturnValue=0;
@@ -3161,7 +3223,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_UseX), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_UseXExplicit(class AdnUsableSomething* UsableSomething, class AAIInputDispatcher_Base* InputDispatcher)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_UseXExplicit(class AdnUsableSomething* UsableSomething, class AAIInputDispatcher_Base* InputDispatcher)
     {
         AAIActor_eventCanUseState_UseXExplicit_Parms Parms;
         Parms.ReturnValue=0;
@@ -3170,7 +3232,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_UseXExplicit), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_UseX(class AActor* TargetActor, FName InputDispatcherTag, FName AttachedEvent, INT Attempts, FLOAT AttemptInterval, BITFIELD ForceAttach, BITFIELD AllowProceduralAim)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_UseX(class AActor* TargetActor, FName InputDispatcherTag, FName AttachedEvent, INT Attempts, FLOAT AttemptInterval, BITFIELD ForceAttach, BITFIELD AllowProceduralAim)
     {
         AAIActor_eventCanUseState_UseX_Parms Parms;
         Parms.ReturnValue=0;
@@ -3197,7 +3259,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_TurnToX), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_TurnToTarget(BYTE Targ, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_TurnToTarget(/* EAITarget */ BYTE Targ, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
     {
         AAIActor_eventCanUseState_TurnToTarget_Parms Parms;
         Parms.ReturnValue=0;
@@ -3209,7 +3271,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_TurnToTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_TurnToPos(FVector TargetPos, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_TurnToPos(FVector TargetPos, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
     {
         AAIActor_eventCanUseState_TurnToPos_Parms Parms;
         Parms.ReturnValue=0;
@@ -3221,7 +3283,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_TurnToPos), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_TurnToActor(class AActor* TargetActor, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_TurnToActor(class AActor* TargetActor, FLOAT ShouldTurnThresh, FLOAT FaceThresh, FLOAT ExitTime, FLOAT AnimThresh)
     {
         AAIActor_eventCanUseState_TurnToActor_Parms Parms;
         Parms.ReturnValue=0;
@@ -3240,7 +3302,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Stun), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Stun(FLOAT Time)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Stun(FLOAT Time)
     {
         AAIActor_eventCanUseState_Stun_Parms Parms;
         Parms.ReturnValue=0;
@@ -3261,7 +3323,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_SetFireMode), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_SetFireMode(BITFIELD On, BITFIELD Expedite)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_SetFireMode(BITFIELD On, BITFIELD Expedite)
     {
         AAIActor_eventCanUseState_SetFireMode_Parms Parms;
         Parms.ReturnValue=0;
@@ -3278,7 +3340,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_SetAim), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_SetAim(BITFIELD On)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_SetAim(BITFIELD On)
     {
         AAIActor_eventCanUseState_SetAim_Parms Parms;
         Parms.ReturnValue=0;
@@ -3293,7 +3355,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_SelectWeapon), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_SelectWeapon(class UClass* DesiredWeaponClass, BITFIELD QuickWeaponSwitch)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_SelectWeapon(class UClass* DesiredWeaponClass, BITFIELD QuickWeaponSwitch)
     {
         AAIActor_eventCanUseState_SelectWeapon_Parms Parms;
         Parms.ReturnValue=0;
@@ -3309,7 +3371,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_PhysicsGotoX), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_PhysicsGotoTargetActor()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_PhysicsGotoTargetActor()
     {
         AAIActor_eventCanUseState_PhysicsGotoTargetActor_Parms Parms;
         Parms.ReturnValue=0;
@@ -3323,7 +3385,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_PlaceTripMine), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_PlaceTripMine(class AActor* TargetActor)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_PlaceTripMine(class AActor* TargetActor)
     {
         AAIActor_eventCanUseState_PlaceTripMine_Parms Parms;
         Parms.ReturnValue=0;
@@ -3338,7 +3400,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Pause), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Pause(FLOAT Time)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Pause(FLOAT Time)
     {
         AAIActor_eventCanUseState_Pause_Parms Parms;
         Parms.ReturnValue=0;
@@ -3353,7 +3415,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_MoveUnderground), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_MoveUnderground(FVector DestLocation, FRotator DestRotation, FLOAT Time)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_MoveUnderground(FVector DestLocation, FRotator DestRotation, FLOAT Time)
     {
         AAIActor_eventCanUseState_MoveUnderground_Parms Parms;
         Parms.ReturnValue=0;
@@ -3404,7 +3466,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_JumpAttack), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpAttackPreset(FVector PresetVelocity)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpAttackPreset(FVector PresetVelocity)
     {
         AAIActor_eventCanUseState_JumpAttackPreset_Parms Parms;
         Parms.ReturnValue=0;
@@ -3412,7 +3474,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_JumpAttackPreset), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpAttackPresetInstant(FVector PresetVelocity)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpAttackPresetInstant(FVector PresetVelocity)
     {
         AAIActor_eventCanUseState_JumpAttackPresetInstant_Parms Parms;
         Parms.ReturnValue=0;
@@ -3420,14 +3482,14 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_JumpAttackPresetInstant), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpAttackDodge()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpAttackDodge()
     {
         AAIActor_eventCanUseState_JumpAttackDodge_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_JumpAttackDodge), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpAttack()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpAttack()
     {
         AAIActor_eventCanUseState_JumpAttack_Parms Parms;
         Parms.ReturnValue=0;
@@ -3441,14 +3503,14 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Jump), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpToTargetPos()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpToTargetPos()
     {
         AAIActor_eventCanUseState_JumpToTargetPos_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_JumpToTargetPos), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_JumpTakeOff(FVector JumpVel, FLOAT TakeOffIdleTime, class AActor* FocusActor, FLOAT GravityScale, FVector TakeOffTarget)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_JumpTakeOff(FVector JumpVel, FLOAT TakeOffIdleTime, class AActor* FocusActor, FLOAT GravityScale, FVector TakeOffTarget)
     {
         AAIActor_eventCanUseState_JumpTakeOff_Parms Parms;
         Parms.ReturnValue=0;
@@ -3460,7 +3522,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_JumpTakeOff), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Jump(FVector JumpVel, FLOAT HeavyLandingThresh, class AActor* FocusActor, FLOAT FlyingGravityScale, FLOAT JumpTime, FVector TargetPos, INT JumpType, BITFIELD bSnapToTargetDuringLand, BITFIELD bUseAccelaration, BITFIELD bFaceTarget)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Jump(FVector JumpVel, FLOAT HeavyLandingThresh, class AActor* FocusActor, FLOAT FlyingGravityScale, FLOAT JumpTime, FVector TargetPos, INT JumpType, BITFIELD bSnapToTargetDuringLand, BITFIELD bUseAccelaration, BITFIELD bFaceTarget)
     {
         AAIActor_eventCanUseState_Jump_Parms Parms;
         Parms.ReturnValue=0;
@@ -3484,7 +3546,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Hide), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Hide()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Hide()
     {
         AAIActor_eventCanUseState_Hide_Parms Parms;
         Parms.ReturnValue=0;
@@ -3511,7 +3573,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Haywire), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Haywire(FLOAT MinDuration, FLOAT MaxDuration, FVector LinearAccel, FVector LinearAccelVar, FVector AngularAccel, FVector AngularAccelVar)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Haywire(FLOAT MinDuration, FLOAT MaxDuration, FVector LinearAccel, FVector LinearAccelVar, FVector AngularAccel, FVector AngularAccelVar)
     {
         AAIActor_eventCanUseState_Haywire_Parms Parms;
         Parms.ReturnValue=0;
@@ -3531,7 +3593,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ShouldSnapToDestination), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventExecuteState_GotoX(BYTE Speed, FLOAT SideArcTurnSpeedThresh, FLOAT StepBackwardsSpeedThresh, FLOAT StartAngleSideSector, FLOAT StartAngleBackSector, FLOAT MoveBackwardsDistThresh, FLOAT SideStepDistThresh)
+    inline BITFIELD __fastcall eventExecuteState_GotoX(/* EAIMoveSpeed */ BYTE Speed, FLOAT SideArcTurnSpeedThresh, FLOAT StepBackwardsSpeedThresh, FLOAT StartAngleSideSector, FLOAT StartAngleBackSector, FLOAT MoveBackwardsDistThresh, FLOAT SideStepDistThresh)
     {
         AAIActor_eventExecuteState_GotoX_Parms Parms;
         Parms.ReturnValue=0;
@@ -3560,7 +3622,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_GetDefaultGotoXRange), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_GotoLandPos(FVector GoalPos, class AActor* FocusActor)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_GotoLandPos(FVector GoalPos, class AActor* FocusActor)
     {
         AAIActor_eventCanUseState_GotoLandPos_Parms Parms;
         Parms.ReturnValue=0;
@@ -3569,7 +3631,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_GotoLandPos), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_GotoPos(FVector TargetPos, class AActor* RefActor, FLOAT Range, FLOAT Height, FLOAT ClipTolerance, BYTE Focus, class AActor* FocusActor, INT MaxSteps, BITFIELD bDebug, FVector TargetExtent)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_GotoPos(FVector TargetPos, class AActor* RefActor, FLOAT Range, FLOAT Height, FLOAT ClipTolerance, /* EAIFocus */ BYTE Focus, class AActor* FocusActor, INT MaxSteps, BITFIELD bDebug, FVector TargetExtent)
     {
         AAIActor_eventCanUseState_GotoPos_Parms Parms;
         Parms.ReturnValue=0;
@@ -3586,7 +3648,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_GotoPos), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_GotoActor(class AActor* TargetActor, class AActor* RefActor, BYTE OffsetType, FLOAT Range, FLOAT Bearing, FLOAT Height, FLOAT ClipTolerance, BYTE Focus, class AActor* FocusActor, INT MaxSteps, BITFIELD bDebug, FVector TargetExtent)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_GotoActor(class AActor* TargetActor, class AActor* RefActor, /* EAIOffsetType */ BYTE OffsetType, FLOAT Range, FLOAT Bearing, FLOAT Height, FLOAT ClipTolerance, /* EAIFocus */ BYTE Focus, class AActor* FocusActor, INT MaxSteps, BITFIELD bDebug, FVector TargetExtent)
     {
         AAIActor_eventCanUseState_GotoActor_Parms Parms;
         Parms.ReturnValue=0;
@@ -3616,7 +3678,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_FUBAR), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FUBAR()
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FUBAR()
     {
         AAIActor_eventCanUseState_FUBAR_Parms Parms;
         Parms.ReturnValue=0;
@@ -3630,7 +3692,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_FireWeapon), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_FireWeapon(INT ShotsToFire)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_FireWeapon(INT ShotsToFire)
     {
         AAIActor_eventCanUseState_FireWeapon_Parms Parms;
         Parms.ReturnValue=0;
@@ -3645,7 +3707,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Fall), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Fall(FLOAT LandingThresh, FLOAT HeavyLandingThresh)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Fall(FLOAT LandingThresh, FLOAT HeavyLandingThresh)
     {
         AAIActor_eventCanUseState_Fall_Parms Parms;
         Parms.ReturnValue=0;
@@ -3667,7 +3729,7 @@ public:
         Parms.MyControl=MyControl;
         ProcessEvent(FindFunctionChecked(DNAI_AttachControlX), &Parms);
     }
-    inline BYTE __fastcall eventCanUseState_ControlX(class UClass* ControlType, FName AnimName, FLOAT MaxTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_ControlX(class UClass* ControlType, FName AnimName, FLOAT MaxTime)
     {
         AAIActor_eventCanUseState_ControlX_Parms Parms;
         Parms.ReturnValue=0;
@@ -3693,7 +3755,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState_Anim), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimSyncActor(FName AnimName, FName SyncWaitAnimName, BITFIELD UseExactAnimName, class AAIActor* TargetSyncActor, FVector TargetSyncPos, FVector TargetFacePos, BITFIELD MustFinish, BITFIELD FinishAlone, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimSyncActor(FName AnimName, FName SyncWaitAnimName, BITFIELD UseExactAnimName, class AAIActor* TargetSyncActor, FVector TargetSyncPos, FVector TargetFacePos, BITFIELD MustFinish, BITFIELD FinishAlone, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimSyncActor_Parms Parms;
         Parms.ReturnValue=0;
@@ -3709,7 +3771,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimSyncActor), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimSyncPosRot(FName AnimName, FName SyncWaitAnimName, BITFIELD UseExactAnimName, FVector TargetSyncPos, FVector TargetFacePos, BITFIELD MustFinish, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimSyncPosRot(FName AnimName, FName SyncWaitAnimName, BITFIELD UseExactAnimName, FVector TargetSyncPos, FVector TargetFacePos, BITFIELD MustFinish, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimSyncPosRot_Parms Parms;
         Parms.ReturnValue=0;
@@ -3723,7 +3785,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimSyncPosRot), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFaceTarget(FName AnimName, BITFIELD UseExactAnimName, BYTE Targ, FLOAT FaceThreshold, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFaceTarget(FName AnimName, BITFIELD UseExactAnimName, /* EAITarget */ BYTE Targ, FLOAT FaceThreshold, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFaceTarget_Parms Parms;
         Parms.ReturnValue=0;
@@ -3735,7 +3797,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFaceTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFacePos(FName AnimName, BITFIELD UseExactAnimName, FVector TargetFacePos, FLOAT FaceThreshold, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFacePos(FName AnimName, BITFIELD UseExactAnimName, FVector TargetFacePos, FLOAT FaceThreshold, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFacePos_Parms Parms;
         Parms.ReturnValue=0;
@@ -3747,7 +3809,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFacePos), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFaceActor(FName AnimName, BITFIELD UseExactAnimName, class AActor* TargetActor, FLOAT FaceThreshold, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFaceActor(FName AnimName, BITFIELD UseExactAnimName, class AActor* TargetActor, FLOAT FaceThreshold, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFaceActor_Parms Parms;
         Parms.ReturnValue=0;
@@ -3759,7 +3821,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFaceActor), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFull(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFull(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFull_Parms Parms;
         Parms.ReturnValue=0;
@@ -3769,7 +3831,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFull), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimMustFinish(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimMustFinish(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimMustFinish_Parms Parms;
         Parms.ReturnValue=0;
@@ -3779,7 +3841,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimMustFinish), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFullExitOnLand(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFullExitOnLand(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFullExitOnLand_Parms Parms;
         Parms.ReturnValue=0;
@@ -3789,7 +3851,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFullExitOnLand), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimExitOnLand(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimExitOnLand(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimExitOnLand_Parms Parms;
         Parms.ReturnValue=0;
@@ -3799,7 +3861,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimExitOnLand), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_AnimFailOK(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_AnimFailOK(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_AnimFailOK_Parms Parms;
         Parms.ReturnValue=0;
@@ -3809,7 +3871,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_AnimFailOK), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseState_Anim(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
+    inline /* EAICode */ BYTE __fastcall eventCanUseState_Anim(FName AnimName, BITFIELD UseExactAnimName, FLOAT ExitTime)
     {
         AAIActor_eventCanUseState_Anim_Parms Parms;
         Parms.ReturnValue=0;
@@ -3819,7 +3881,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseState_Anim), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventExitAIState(BYTE Status, const FString& DbgMsg)
+    inline void __fastcall eventExitAIState(/* EAIStateStatus */ BYTE Status, const FString& DbgMsg)
     {
         AAIActor_eventExitAIState_Parms Parms;
         Parms.Status=Status;
@@ -3835,31 +3897,31 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteState), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventEndScriptOp_MoveToPodProtectorBase(BYTE Status)
+    inline void __fastcall eventEndScriptOp_MoveToPodProtectorBase(/* EAIOpStatus */ BYTE Status)
     {
         AAIActor_eventEndScriptOp_MoveToPodProtectorBase_Parms Parms;
         Parms.Status=Status;
         ProcessEvent(FindFunctionChecked(DNAI_EndScriptOp_MoveToPodProtectorBase), &Parms);
     }
-    inline void __fastcall eventEndScriptOp_Example(BYTE Status)
+    inline void __fastcall eventEndScriptOp_Example(/* EAIOpStatus */ BYTE Status)
     {
         AAIActor_eventEndScriptOp_Example_Parms Parms;
         Parms.Status=Status;
         ProcessEvent(FindFunctionChecked(DNAI_EndScriptOp_Example), &Parms);
     }
-    inline void __fastcall eventEndScriptOp(BYTE Status)
+    inline void __fastcall eventEndScriptOp(/* EAIOpStatus */ BYTE Status)
     {
         AAIActor_eventEndScriptOp_Parms Parms;
         Parms.Status=Status;
         ProcessEvent(FindFunctionChecked(DNAI_EndScriptOp), &Parms);
     }
-    inline void __fastcall eventNotifyScriptOpExitState(BYTE Status)
+    inline void __fastcall eventNotifyScriptOpExitState(/* EAIStateStatus */ BYTE Status)
     {
         AAIActor_eventNotifyScriptOpExitState_Parms Parms;
         Parms.Status=Status;
         ProcessEvent(FindFunctionChecked(DNAI_NotifyScriptOpExitState), &Parms);
     }
-    inline BITFIELD __fastcall eventScriptOpAllowsLook(BYTE Op)
+    inline BITFIELD __fastcall eventScriptOpAllowsLook(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventScriptOpAllowsLook_Parms Parms;
         Parms.ReturnValue=0;
@@ -3867,7 +3929,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ScriptOpAllowsLook), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventIsOverrideScriptOp(BYTE Op)
+    inline BITFIELD __fastcall eventIsOverrideScriptOp(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventIsOverrideScriptOp_Parms Parms;
         Parms.ReturnValue=0;
@@ -3875,7 +3937,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_IsOverrideScriptOp), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventShouldScriptOpFinish(BYTE Op)
+    inline BITFIELD __fastcall eventShouldScriptOpFinish(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventShouldScriptOpFinish_Parms Parms;
         Parms.ReturnValue=0;
@@ -3883,7 +3945,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ShouldScriptOpFinish), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventMustScriptOpFinish(BYTE Op)
+    inline BITFIELD __fastcall eventMustScriptOpFinish(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventMustScriptOpFinish_Parms Parms;
         Parms.ReturnValue=0;
@@ -3891,7 +3953,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_MustScriptOpFinish), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventExecuteScriptOp(BYTE Op)
+    inline BITFIELD __fastcall eventExecuteScriptOp(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventExecuteScriptOp_Parms Parms;
         Parms.ReturnValue=0;
@@ -3899,7 +3961,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ExecuteScriptOp), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCanUseScriptOp(BYTE Op)
+    inline /* EAICode */ BYTE __fastcall eventCanUseScriptOp(/* EAIOp */ BYTE Op)
     {
         AAIActor_eventCanUseScriptOp_Parms Parms;
         Parms.ReturnValue=0;
@@ -3907,14 +3969,14 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CanUseScriptOp), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventNotifyOpEnded(BYTE Op, BYTE Status)
+    inline void __fastcall eventNotifyOpEnded(/* EAIOp */ BYTE Op, /* EAIOpStatus */ BYTE Status)
     {
         AAIActor_eventNotifyOpEnded_Parms Parms;
         Parms.Op=Op;
         Parms.Status=Status;
         ProcessEvent(FindFunctionChecked(DNAI_NotifyOpEnded), &Parms);
     }
-    inline void __fastcall eventNotifyOpStarted(BYTE NewOp, BYTE OldOp)
+    inline void __fastcall eventNotifyOpStarted(/* EAIOp */ BYTE NewOp, /* EAIOp */ BYTE OldOp)
     {
         AAIActor_eventNotifyOpStarted_Parms Parms;
         Parms.NewOp=NewOp;
@@ -3964,7 +4026,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_GetDynamicPathingTieBreaker), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventGetDynamicPathingPriority()
+    inline /* EAIDynamicPathPriority */ BYTE __fastcall eventGetDynamicPathingPriority()
     {
         AAIActor_eventGetDynamicPathingPriority_Parms Parms;
         Parms.ReturnValue=0;
@@ -4039,147 +4101,147 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_AIMustCheckActionUsable), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldTeleportToAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldTeleportToAP()
     {
         AAIActor_eventCOND_ShouldTeleportToAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldTeleportToAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldJumpToAirAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldJumpToAirAP()
     {
         AAIActor_eventCOND_ShouldJumpToAirAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldJumpToAirAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_HasNormalAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_HasNormalAP()
     {
         AAIActor_eventCOND_HasNormalAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_HasNormalAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_HasJumpAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_HasJumpAP()
     {
         AAIActor_eventCOND_HasJumpAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_HasJumpAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoJumpOrNormalAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoJumpOrNormalAP()
     {
         AAIActor_eventCOND_ShouldGotoJumpOrNormalAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoJumpOrNormalAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldJumpToFlyAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldJumpToFlyAP()
     {
         AAIActor_eventCOND_ShouldJumpToFlyAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldJumpToFlyAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldWalkToNextAPClosestTarget()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldWalkToNextAPClosestTarget()
     {
         AAIActor_eventCOND_ShouldWalkToNextAPClosestTarget_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldWalkToNextAPClosestTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldWalkToNextAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldWalkToNextAP()
     {
         AAIActor_eventCOND_ShouldWalkToNextAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldWalkToNextAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoToNextAPCheckLOS()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoToNextAPCheckLOS()
     {
         AAIActor_eventCOND_ShouldGotoToNextAPCheckLOS_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoToNextAPCheckLOS), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldFlyToNextAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldFlyToNextAP()
     {
         AAIActor_eventCOND_ShouldFlyToNextAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldFlyToNextAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldJumpToNextAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldJumpToNextAP()
     {
         AAIActor_eventCOND_ShouldJumpToNextAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldJumpToNextAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldJumpToNextAPNoTarget()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldJumpToNextAPNoTarget()
     {
         AAIActor_eventCOND_ShouldJumpToNextAPNoTarget_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldJumpToNextAPNoTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoJumpAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoJumpAP()
     {
         AAIActor_eventCOND_ShouldGotoJumpAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoJumpAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldVaultAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldVaultAP()
     {
         AAIActor_eventCOND_ShouldVaultAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldVaultAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ReleaseActionPoint()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ReleaseActionPoint()
     {
         AAIActor_eventCOND_ReleaseActionPoint_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ReleaseActionPoint), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ActionPointCompletelyCompromised()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ActionPointCompletelyCompromised()
     {
         AAIActor_eventCOND_ActionPointCompletelyCompromised_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ActionPointCompletelyCompromised), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldLateralAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldLateralAP()
     {
         AAIActor_eventCOND_ShouldLateralAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldLateralAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldFlankAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldFlankAP()
     {
         AAIActor_eventCOND_ShouldFlankAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldFlankAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldRetreatAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldRetreatAP()
     {
         AAIActor_eventCOND_ShouldRetreatAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldRetreatAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAdvanceAP()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAdvanceAP()
     {
         AAIActor_eventCOND_ShouldAdvanceAP_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAdvanceAP), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_AvailableActionPoint()
+    inline /* EAICode */ BYTE __fastcall eventCOND_AvailableActionPoint()
     {
         AAIActor_eventCOND_AvailableActionPoint_Parms Parms;
         Parms.ReturnValue=0;
@@ -4216,42 +4278,42 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_OverridePopoutHoldTime), &Parms);
         HoldTime=Parms.HoldTime;
     }
-    inline BYTE __fastcall eventCOND_ShouldMeleeActionPoint()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldMeleeActionPoint()
     {
         AAIActor_eventCOND_ShouldMeleeActionPoint_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldMeleeActionPoint), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoActionPointFlyer()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoActionPointFlyer()
     {
         AAIActor_eventCOND_ShouldGotoActionPointFlyer_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoActionPointFlyer), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoActionPoint()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoActionPoint()
     {
         AAIActor_eventCOND_ShouldGotoActionPoint_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoActionPoint), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldUseActionPoint()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldUseActionPoint()
     {
         AAIActor_eventCOND_ShouldUseActionPoint_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldUseActionPoint), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_NoForcedActionPoints()
+    inline /* EAICode */ BYTE __fastcall eventCOND_NoForcedActionPoints()
     {
         AAIActor_eventCOND_NoForcedActionPoints_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_NoForcedActionPoints), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ForcedActionPoints()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ForcedActionPoints()
     {
         AAIActor_eventCOND_ForcedActionPoints_Parms Parms;
         Parms.ReturnValue=0;
@@ -4311,28 +4373,28 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_GetIdleExIndex), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAbortGotoStomp()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAbortGotoStomp()
     {
         AAIActor_eventCOND_ShouldAbortGotoStomp_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAbortGotoStomp), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoStompLostTarget()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoStompLostTarget()
     {
         AAIActor_eventCOND_ShouldGotoStompLostTarget_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoStompLostTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoStomp()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoStomp()
     {
         AAIActor_eventCOND_ShouldGotoStomp_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoStomp), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldUseX()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldUseX()
     {
         AAIActor_eventCOND_ShouldUseX_Parms Parms;
         Parms.ReturnValue=0;
@@ -4447,7 +4509,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ShouldDampenWhileTurning), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventPrioritizePopups(BYTE PopupType)
+    inline void __fastcall eventPrioritizePopups(/* EAIPopUpType */ BYTE PopupType)
     {
         AAIActor_eventPrioritizePopups_Parms Parms;
         Parms.PopupType=PopupType;
@@ -4476,63 +4538,63 @@ public:
         Parms.NewMaterial=NewMaterial;
         ProcessEvent(FindFunctionChecked(DNAI_SetMaterial), &Parms);
     }
-    inline void __fastcall eventInput(BYTE KeyType, BYTE ActionType)
+    inline void __fastcall eventInput(/* EControlRemapperKeyType */ BYTE KeyType, /* EAIInputAction */ BYTE ActionType)
     {
         AAIActor_eventInput_Parms Parms;
         Parms.KeyType=KeyType;
         Parms.ActionType=ActionType;
         ProcessEvent(FindFunctionChecked(DNAI_Input), &Parms);
     }
-    inline BYTE __fastcall eventCOND_ShouldSeek()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldSeek()
     {
         AAIActor_eventCOND_ShouldSeek_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldSeek), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoSearch()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoSearch()
     {
         AAIActor_eventCOND_ShouldGotoSearch_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoSearch), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldStepAside()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldStepAside()
     {
         AAIActor_eventCOND_ShouldStepAside_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldStepAside), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldEndMelee()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldEndMelee()
     {
         AAIActor_eventCOND_ShouldEndMelee_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldEndMelee), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldMelee()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldMelee()
     {
         AAIActor_eventCOND_ShouldMelee_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldMelee), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGuardAttackMelee()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGuardAttackMelee()
     {
         AAIActor_eventCOND_ShouldGuardAttackMelee_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGuardAttackMelee), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAlignWithGuardedActor()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAlignWithGuardedActor()
     {
         AAIActor_eventCOND_ShouldAlignWithGuardedActor_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAlignWithGuardedActor), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoGuardPos()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoGuardPos()
     {
         AAIActor_eventCOND_ShouldGotoGuardPos_Parms Parms;
         Parms.ReturnValue=0;
@@ -4547,133 +4609,133 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_IsTooCloseToGuardedActor), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoGuardAttack()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoGuardAttack()
     {
         AAIActor_eventCOND_ShouldGotoGuardAttack_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoGuardAttack), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_BeginWaitState()
+    inline /* EAICode */ BYTE __fastcall eventCOND_BeginWaitState()
     {
         AAIActor_eventCOND_BeginWaitState_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_BeginWaitState), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoSafeReload()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoSafeReload()
     {
         AAIActor_eventCOND_ShouldGotoSafeReload_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoSafeReload), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoReload()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoReload()
     {
         AAIActor_eventCOND_ShouldGotoReload_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoReload), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldMoveAround()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldMoveAround()
     {
         AAIActor_eventCOND_ShouldMoveAround_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldMoveAround), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldMoveSide()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldMoveSide()
     {
         AAIActor_eventCOND_ShouldMoveSide_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldMoveSide), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoAttack()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoAttack()
     {
         AAIActor_eventCOND_ShouldGotoAttack_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoAttack), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_NeedToMoveToAttack()
+    inline /* EAICode */ BYTE __fastcall eventCOND_NeedToMoveToAttack()
     {
         AAIActor_eventCOND_NeedToMoveToAttack_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_NeedToMoveToAttack), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldGotoAvoidGoal()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldGotoAvoidGoal()
     {
         AAIActor_eventCOND_ShouldGotoAvoidGoal_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldGotoAvoidGoal), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_NotSafeFromBigEnemy()
+    inline /* EAICode */ BYTE __fastcall eventCOND_NotSafeFromBigEnemy()
     {
         AAIActor_eventCOND_NotSafeFromBigEnemy_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_NotSafeFromBigEnemy), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_SafeFromBiggerEnemy()
+    inline /* EAICode */ BYTE __fastcall eventCOND_SafeFromBiggerEnemy()
     {
         AAIActor_eventCOND_SafeFromBiggerEnemy_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_SafeFromBiggerEnemy), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAvoidTarget()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAvoidTarget()
     {
         AAIActor_eventCOND_ShouldAvoidTarget_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAvoidTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldNotAvoidTarget()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldNotAvoidTarget()
     {
         AAIActor_eventCOND_ShouldNotAvoidTarget_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldNotAvoidTarget), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAvoidDanger()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAvoidDanger()
     {
         AAIActor_eventCOND_ShouldAvoidDanger_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAvoidDanger), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldPickupTKObj()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldPickupTKObj()
     {
         AAIActor_eventCOND_ShouldPickupTKObj_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldPickupTKObj), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldThrowTKObj()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldThrowTKObj()
     {
         AAIActor_eventCOND_ShouldThrowTKObj_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldThrowTKObj), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldCatchTKObj()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldCatchTKObj()
     {
         AAIActor_eventCOND_ShouldCatchTKObj_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldCatchTKObj), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldAttackPipeBomb()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldAttackPipeBomb()
     {
         AAIActor_eventCOND_ShouldAttackPipeBomb_Parms Parms;
         Parms.ReturnValue=0;
         ProcessEvent(FindFunctionChecked(DNAI_COND_ShouldAttackPipeBomb), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventCOND_ShouldTryAttackPipeBomb()
+    inline /* EAICode */ BYTE __fastcall eventCOND_ShouldTryAttackPipeBomb()
     {
         AAIActor_eventCOND_ShouldTryAttackPipeBomb_Parms Parms;
         Parms.ReturnValue=0;
@@ -4768,7 +4830,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_ShouldTargetNoiseMaker), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventEvaluateTargets(BYTE TargetEvaluator)
+    inline void __fastcall eventEvaluateTargets(/* EAITargetEval */ BYTE TargetEvaluator)
     {
         AAIActor_eventEvaluateTargets_Parms Parms;
         Parms.TargetEvaluator=TargetEvaluator;
@@ -4881,7 +4943,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_CreateTKShield), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventNotifyCloakingState(BYTE NewState)
+    inline void __fastcall eventNotifyCloakingState(/* EAICloaking */ BYTE NewState)
     {
         AAIActor_eventNotifyCloakingState_Parms Parms;
         Parms.NewState=NewState;
@@ -4905,7 +4967,7 @@ public:
         Parms.HitBoneName=HitBoneName;
         ProcessEvent(FindFunctionChecked(DNAI_Die), &Parms);
     }
-    inline BYTE __fastcall eventForceDieOp(BYTE DieOp)
+    inline /* EAICode */ BYTE __fastcall eventForceDieOp(/* EAIOp */ BYTE DieOp)
     {
         AAIActor_eventForceDieOp_Parms Parms;
         Parms.ReturnValue=0;
@@ -4949,19 +5011,19 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNAI_NotifyHeadAnimEnd), NULL);
     }
-    inline void __fastcall eventNotifyEyeAimState(BYTE NewState)
+    inline void __fastcall eventNotifyEyeAimState(/* EAIAim */ BYTE NewState)
     {
         AAIActor_eventNotifyEyeAimState_Parms Parms;
         Parms.NewState=NewState;
         ProcessEvent(FindFunctionChecked(DNAI_NotifyEyeAimState), &Parms);
     }
-    inline void __fastcall eventNotifyHeadAimState(BYTE NewState)
+    inline void __fastcall eventNotifyHeadAimState(/* EAIAim */ BYTE NewState)
     {
         AAIActor_eventNotifyHeadAimState_Parms Parms;
         Parms.NewState=NewState;
         ProcessEvent(FindFunctionChecked(DNAI_NotifyHeadAimState), &Parms);
     }
-    inline void __fastcall eventNotifyWeaponAimState(BYTE NewState)
+    inline void __fastcall eventNotifyWeaponAimState(/* EAIAim */ BYTE NewState)
     {
         AAIActor_eventNotifyWeaponAimState_Parms Parms;
         Parms.NewState=NewState;
@@ -4995,7 +5057,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNAI_NotifyTakeOff), NULL);
     }
-    inline void __fastcall eventNotifyWeaponManagerMode(BYTE NewMode)
+    inline void __fastcall eventNotifyWeaponManagerMode(/* EAIWeapManMode */ BYTE NewMode)
     {
         AAIActor_eventNotifyWeaponManagerMode_Parms Parms;
         Parms.NewMode=NewMode;
@@ -5100,7 +5162,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNAI_RestoreSavedAnimSync), NULL);
     }
-    inline void __fastcall eventSetAnimSync(BYTE UseAnimDispSpeedMod, BYTE UseAnimDispDirMod, BYTE UseAnimRotationMod, BYTE AnimCutSceneMod, BYTE UseAccelerationMod)
+    inline void __fastcall eventSetAnimSync(/* EBitModifier */ BYTE UseAnimDispSpeedMod, /* EBitModifier */ BYTE UseAnimDispDirMod, /* EBitModifier */ BYTE UseAnimRotationMod, /* EBitModifier */ BYTE AnimCutSceneMod, /* EBitModifier */ BYTE UseAccelerationMod)
     {
         AAIActor_eventSetAnimSync_Parms Parms;
         Parms.UseAnimDispSpeedMod=UseAnimDispSpeedMod;
@@ -5114,7 +5176,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNAI_SaveAnimSync), NULL);
     }
-    inline void __fastcall eventEnumerateUsableAnimationControllers(class UPrecacheIndex* PrecacheIndex, dnArray<BYTE>& UsableControllers)
+    inline void __fastcall eventEnumerateUsableAnimationControllers(class UPrecacheIndex* PrecacheIndex, dnArray</* EAIAnimController */ BYTE>& UsableControllers)
     {
         AAIActor_eventEnumerateUsableAnimationControllers_Parms Parms;
         Parms.PrecacheIndex=PrecacheIndex;
@@ -5436,62 +5498,62 @@ public:
     FName m_strOwnerTag;
     FName m_strEvent;
     BITFIELD m_bStartTickDisabled:1 GCC_PACK(4);
-    BYTE SimplePawnPhysicsCollisionModifier GCC_PACK(4);
+    /* EBitModifier */ BYTE SimplePawnPhysicsCollisionModifier GCC_PACK(4);
     FLOAT m_fSpawnTimeWarp;
     BITFIELD InitialAnimControllerOverride:1 GCC_PACK(4);
-    BYTE InitialAnimController GCC_PACK(4);
+    /* EAIAnimController */ BYTE InitialAnimController GCC_PACK(4);
     BITFIELD StartShrunk:1 GCC_PACK(4);
     FName PathIDOverride GCC_PACK(4);
     BITFIELD PathForceFlySwim:1 GCC_PACK(4);
     FName PhysicsEntityGroupOverride GCC_PACK(4);
     BITFIELD MountLight:1 GCC_PACK(4);
-    BYTE bCastStencilShadowsModifier GCC_PACK(4);
-    BYTE ForceStartJetpack;
-    BYTE ChanceFlyModifier;
+    /* EBitModifier */ BYTE bCastStencilShadowsModifier GCC_PACK(4);
+    /* EBitModifier */ BYTE ForceStartJetpack;
+    /* EFloatModifier */ BYTE ChanceFlyModifier;
     FLOAT ChanceFly;
-    BYTE ChanceLandModifier;
+    /* EFloatModifier */ BYTE ChanceLandModifier;
     FLOAT ChanceLand;
-    BYTE AttackConstraint;
-    BYTE AllowBezerkModifier;
+    /* EAIAttackConstraint */ BYTE AttackConstraint;
+    /* EBitModifier */ BYTE AllowBezerkModifier;
     BITFIELD StartBezerk:1 GCC_PACK(4);
     BITFIELD DisableJumpAttack:1;
-    BYTE AllowProneModifier GCC_PACK(4);
-    BYTE AllowStasisModifier;
-    BYTE AllowHaywireModifier;
-    BYTE AllowQuickTeleports;
+    /* EBitModifier */ BYTE AllowProneModifier GCC_PACK(4);
+    /* EBitModifier */ BYTE AllowStasisModifier;
+    /* EBitModifier */ BYTE AllowHaywireModifier;
+    /* EBitModifier */ BYTE AllowQuickTeleports;
     FLOAT MeleeZone;
     dnArray<FName> ActionPointTags;
     INT ActionPointIndex;
     INT ActionPointDesiredIndex;
-    BYTE MinPlayerHateModifier;
+    /* EFloatModifier */ BYTE MinPlayerHateModifier;
     FLOAT MinPlayerHate;
-    BYTE MaxPlayerHateModifier;
+    /* EFloatModifier */ BYTE MaxPlayerHateModifier;
     FLOAT MaxPlayerHate;
-    BYTE PlayerHateRecoverRateModifier;
+    /* EFloatModifier */ BYTE PlayerHateRecoverRateModifier;
     FLOAT PlayerHateRecoverRate;
-    BYTE AvoidDangersModifier;
-    BYTE UseActionFollowModifier;
+    /* EBitModifier */ BYTE AvoidDangersModifier;
+    /* EBitModifier */ BYTE UseActionFollowModifier;
     dnArray<FSUseXItemInfo> UseableItems;
-    BYTE AvoidGuardedPlayerModifier;
+    /* EBitModifier */ BYTE AvoidGuardedPlayerModifier;
     BITFIELD DisableAllCollision:1 GCC_PACK(4);
-    BYTE SpecialStepHeightCollisionModifier GCC_PACK(4);
-    BYTE ChanceSayPainModifier;
+    /* EBitModifier */ BYTE SpecialStepHeightCollisionModifier GCC_PACK(4);
+    /* EFloatModifier */ BYTE ChanceSayPainModifier;
     FLOAT ChanceSayPain;
-    BYTE ChanceSayTakeCoverModifier;
+    /* EFloatModifier */ BYTE ChanceSayTakeCoverModifier;
     FLOAT ChanceSayTakeCover;
-    BYTE ChanceSayFireInTheHoleModifier;
+    /* EFloatModifier */ BYTE ChanceSayFireInTheHoleModifier;
     FLOAT ChanceSayFireInTheHole;
-    BYTE ChanceSayLowHealthModifier;
+    /* EFloatModifier */ BYTE ChanceSayLowHealthModifier;
     FLOAT ChanceSayLowHealth;
-    BYTE ChanceSayConfirmKillModifier;
+    /* EFloatModifier */ BYTE ChanceSayConfirmKillModifier;
     FLOAT ChanceSayConfirmKill;
-    BYTE ChanceSayReloadingModifier;
+    /* EFloatModifier */ BYTE ChanceSayReloadingModifier;
     FLOAT ChanceSayReloading;
-    BYTE ChanceSayManDownModifier;
+    /* EFloatModifier */ BYTE ChanceSayManDownModifier;
     FLOAT ChanceSayManDown;
-    BYTE ChanceSayFriendlyFireModifier;
+    /* EFloatModifier */ BYTE ChanceSayFriendlyFireModifier;
     FLOAT ChanceSayFriendlyFire;
-    BYTE ChanceSayEnemySpottedModifier;
+    /* EFloatModifier */ BYTE ChanceSayEnemySpottedModifier;
     FLOAT ChanceSayEnemySpotted;
     class UClass* VoicePackOverride;
     INT m_nHealth;
@@ -5527,57 +5589,57 @@ public:
     FName TargetAquiredEvent;
     FName TargetClearedEvent;
     FName FactoryFinishedEvent;
-    BYTE TickOnlyNearbyModifier;
-    BYTE TickOnlyRecentModifier;
-    BYTE TickOnlyZoneRecentModifier;
-    BYTE TickNearbyRadiusModifier;
+    /* EBitModifier */ BYTE TickOnlyNearbyModifier;
+    /* EBitModifier */ BYTE TickOnlyRecentModifier;
+    /* EBitModifier */ BYTE TickOnlyZoneRecentModifier;
+    /* EFloatModifier */ BYTE TickNearbyRadiusModifier;
     FLOAT TickNearbyRadiusChange;
-    BYTE TickSelfRecentTimeModifier;
+    /* EFloatModifier */ BYTE TickSelfRecentTimeModifier;
     FLOAT TickSelfRecentTimeChange;
-    BYTE TickZoneRecentTimeModifier;
+    /* EFloatModifier */ BYTE TickZoneRecentTimeModifier;
     FLOAT TickZoneRecentTimeChange;
     dnArray<class AAIActorFactoryListener*> SpawnEventListeners;
     dnArray<class AAIActorFactoryListener*> DeathEventListeners;
-    BYTE DebugTickingModifier;
-    BYTE DebugWeaponAimerModifier;
-    BYTE DebugHeadAimerModifier;
-    BYTE DebugEyeAimerModifier;
-    BYTE DebugExecutiveModifier;
-    BYTE DebugOpChangesModifier;
-    BYTE DebugDecisionTreeModifier;
-    BYTE DebugScriptExecModifier;
-    BYTE DebugTargetModifier;
-    BYTE DebugWeaponTargetEvalModifier;
-    BYTE DebugLookTargetEvalModifier;
-    BYTE DebugHeardSoundModifier;
-    BYTE DebugGoalSelectionModifier;
-    BYTE DebugGotoXModifier;
-    BYTE DebugCloakingModifier;
-    BYTE DebugPipeBombsModifier;
-    BYTE DebugDangerEvaluationModifier;
-    BYTE DebugTKModifier;
-    BYTE DebugRollsModifier;
-    BYTE DebugPropsModifier;
-    BYTE DebugLOSChecksModifier;
-    BYTE DebugContractsModifier;
-    BYTE DebugGuardingModifier;
-    BYTE DebugRangeModifier;
-    BYTE DebugDistModifier;
-    BYTE DebugTrailModifier;
-    BYTE DebugDrawExecModifier;
-    BYTE DebugActionPointsModifier;
-    BYTE DebugRelationsModifier;
-    BYTE DebugHateModifier;
-    BYTE DebugLedgesModifier;
-    BYTE DebugHealthModifier;
-    BYTE DebugDrawActionPointsModifier;
-    BYTE DebugDrawCollisionModifier;
-    BYTE DebugDrawFOVModifier;
-    BYTE DebugDrawLOSModifier;
-    BYTE DebugWeaponManager;
-    BYTE DebugStateAnimX;
-    BYTE DebugDoors;
-    BYTE DebugTurn;
+    /* EBitModifier */ BYTE DebugTickingModifier;
+    /* EBitModifier */ BYTE DebugWeaponAimerModifier;
+    /* EBitModifier */ BYTE DebugHeadAimerModifier;
+    /* EBitModifier */ BYTE DebugEyeAimerModifier;
+    /* EBitModifier */ BYTE DebugExecutiveModifier;
+    /* EBitModifier */ BYTE DebugOpChangesModifier;
+    /* EBitModifier */ BYTE DebugDecisionTreeModifier;
+    /* EBitModifier */ BYTE DebugScriptExecModifier;
+    /* EBitModifier */ BYTE DebugTargetModifier;
+    /* EBitModifier */ BYTE DebugWeaponTargetEvalModifier;
+    /* EBitModifier */ BYTE DebugLookTargetEvalModifier;
+    /* EBitModifier */ BYTE DebugHeardSoundModifier;
+    /* EBitModifier */ BYTE DebugGoalSelectionModifier;
+    /* EBitModifier */ BYTE DebugGotoXModifier;
+    /* EBitModifier */ BYTE DebugCloakingModifier;
+    /* EBitModifier */ BYTE DebugPipeBombsModifier;
+    /* EBitModifier */ BYTE DebugDangerEvaluationModifier;
+    /* EBitModifier */ BYTE DebugTKModifier;
+    /* EBitModifier */ BYTE DebugRollsModifier;
+    /* EBitModifier */ BYTE DebugPropsModifier;
+    /* EBitModifier */ BYTE DebugLOSChecksModifier;
+    /* EBitModifier */ BYTE DebugContractsModifier;
+    /* EBitModifier */ BYTE DebugGuardingModifier;
+    /* EBitModifier */ BYTE DebugRangeModifier;
+    /* EBitModifier */ BYTE DebugDistModifier;
+    /* EBitModifier */ BYTE DebugTrailModifier;
+    /* EBitModifier */ BYTE DebugDrawExecModifier;
+    /* EBitModifier */ BYTE DebugActionPointsModifier;
+    /* EBitModifier */ BYTE DebugRelationsModifier;
+    /* EBitModifier */ BYTE DebugHateModifier;
+    /* EBitModifier */ BYTE DebugLedgesModifier;
+    /* EBitModifier */ BYTE DebugHealthModifier;
+    /* EBitModifier */ BYTE DebugDrawActionPointsModifier;
+    /* EBitModifier */ BYTE DebugDrawCollisionModifier;
+    /* EBitModifier */ BYTE DebugDrawFOVModifier;
+    /* EBitModifier */ BYTE DebugDrawLOSModifier;
+    /* EBitModifier */ BYTE DebugWeaponManager;
+    /* EBitModifier */ BYTE DebugStateAnimX;
+    /* EBitModifier */ BYTE DebugDoors;
+    /* EBitModifier */ BYTE DebugTurn;
     BITFIELD bUseMyLog:1 GCC_PACK(4);
     BITFIELD DebugFactory:1;
     class AAIActor* LastSpawnedActor GCC_PACK(4);
@@ -5674,6 +5736,14 @@ public:
 */
 //***************************************************************************//
 
+#define UCONST_STATE_EDIT_USER 8
+#define UCONST_TRANS_REPLACEALL_USER_VAR 7
+#define UCONST_TRANS_REPLACE_USER_VAR 6
+#define UCONST_TRANS_REMOVE_USER_VAR 5
+#define UCONST_BROWSE_USER_VAR 4
+#define UCONST_OP_USER_VAR 3
+#define UCONST_FSM_TEST_USER_VAR 2
+#define UCONST_FSM_EDIT_USER_VAR 1
 class DNAI_API AAIBrainEditor : public AAIHUD
 {
 public:
@@ -5687,14 +5757,14 @@ public:
     FAITransition NewTransition;
     dnArray<FName> WatchList_Ident;
     dnArray<FName> WatchList_Func;
-    dnArray<BYTE> WatchList_Cond;
+    dnArray</* EAICondition */ BYTE> WatchList_Cond;
     INT MaxHistory;
     BITFIELD ShowPass:1 GCC_PACK(4);
     BITFIELD ShowFail:1;
     dnArray<FAINode> OPNodes GCC_PACK(4);
     FBGInfo TransitionHistoryBG;
     FBGInfo StateHistoryBG;
-    BYTE SelectedOP;
+    /* EAIOp */ BYTE SelectedOP;
     INT TransitionHistMax;
     DECLARE_FUNCTION(execExecuteOp);
     DECLARE_FUNCTION(execExportFSMToText);
@@ -5736,10 +5806,10 @@ public:
 class DNAI_API UAction_PopUp : public UAction
 {
 public:
-    dnArray<BYTE> Popups;
-    BYTE SelectionMethod;
+    dnArray</* EAIPopUpType */ BYTE> Popups;
+    /* EAIPopUpSelectionMethod */ BYTE SelectionMethod;
     dnArray<class UClass*> RestrictedPopups;
-    BYTE PopUpTypeIndex;
+    /* EAIPopUpType */ BYTE PopUpTypeIndex;
     INT PopUpIndex;
     DECLARE_CLASS(UAction_PopUp,UAction,0,dnAI)
 
@@ -5777,14 +5847,14 @@ public:
 
 struct UAIAnimationControllerEx_eventGetTransitionAnimName_Parms
 {
-    BYTE DesiredController;
+    /* EAIAnimController */ BYTE DesiredController;
     FName OutAnimName;
     BITFIELD ReturnValue;
 };
 
 struct UAIAnimationControllerEx_eventShouldPlayBigPain_Parms
 {
-    BYTE Part;
+    /* EPawnBodyPart */ BYTE Part;
     class UClass* DamageType;
     INT Damage;
     FVector Dir;
@@ -5807,7 +5877,7 @@ public:
     FSBoneAimConstraints BodyAimerContraints;
     DECLARE_FUNCTION(execSetAnimState);
     DECLARE_FUNCTION(execSetAnimState_RateScaled);
-    inline BITFIELD __fastcall eventGetTransitionAnimName(BYTE DesiredController, FName& OutAnimName)
+    inline BITFIELD __fastcall eventGetTransitionAnimName(/* EAIAnimController */ BYTE DesiredController, FName& OutAnimName)
     {
         UAIAnimationControllerEx_eventGetTransitionAnimName_Parms Parms;
         Parms.ReturnValue=0;
@@ -5817,7 +5887,7 @@ public:
         OutAnimName=Parms.OutAnimName;
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventShouldPlayBigPain(BYTE Part, class UClass* DamageType, INT Damage, FVector Dir)
+    inline BITFIELD __fastcall eventShouldPlayBigPain(/* EPawnBodyPart */ BYTE Part, class UClass* DamageType, INT Damage, FVector Dir)
     {
         UAIAnimationControllerEx_eventShouldPlayBigPain_Parms Parms;
         Parms.ReturnValue=0;
@@ -5931,7 +6001,7 @@ struct UScriptMethod_eventExecute_Parms
 {
     class AAIActor* MyActor;
     BITFIELD PrintDebug;
-    BYTE ReturnValue;
+    /* EScriptState */ BYTE ReturnValue;
 };
 class DNAI_API UScriptMethod : public UObject
 {
@@ -5945,7 +6015,7 @@ public:
         ProcessEvent(FindFunctionChecked(DNAI_GetMethodString), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventExecute(class AAIActor* MyActor, BITFIELD PrintDebug)
+    inline /* EScriptState */ BYTE __fastcall eventExecute(class AAIActor* MyActor, BITFIELD PrintDebug)
     {
         UScriptMethod_eventExecute_Parms Parms;
         Parms.ReturnValue=0;
@@ -5993,7 +6063,7 @@ public:
 class DNAI_API UScriptMethod_X_TEST_Op : public UScriptMethod
 {
 public:
-    BYTE Op;
+    /* EAIOp */ BYTE Op;
     DECLARE_CLASS(UScriptMethod_X_TEST_Op,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_X_TEST_Op exported:
@@ -6509,7 +6579,7 @@ class DNAI_API UScriptMethod_SetLookTarget : public UScriptMethod
 public:
     FName TargetActorTag;
     FName TargetBoneName;
-    BYTE TargetStackOp;
+    /* EAITargetStackOp */ BYTE TargetStackOp;
     FLOAT TargetLifeTime;
     FLOAT BlendTime;
     FLOAT AngularThresh;
@@ -6548,7 +6618,7 @@ class DNAI_API UScriptMethod_SetHeadTarget : public UScriptMethod
 public:
     FName TargetActorTag;
     FName TargetBoneName;
-    BYTE TargetStackOp;
+    /* EAITargetStackOp */ BYTE TargetStackOp;
     FLOAT TargetLifeTime;
     FLOAT BlendTime;
     FLOAT AngularThresh;
@@ -6626,7 +6696,7 @@ class DNAI_API UScriptMethod_SetEyeTarget : public UScriptMethod
 public:
     FName TargetActorTag;
     FName TargetBoneName;
-    BYTE TargetStackOp;
+    /* EAITargetStackOp */ BYTE TargetStackOp;
     FLOAT TargetLifeTime;
     FLOAT BlendTime;
     FLOAT AngularThresh;
@@ -6694,8 +6764,8 @@ public:
 class DNAI_API UScriptMethod_SetDamageReactions : public UScriptMethod
 {
 public:
-    BYTE Invulnerable;
-    BYTE ShowPain;
+    /* EBitModifier */ BYTE Invulnerable;
+    /* EBitModifier */ BYTE ShowPain;
     DECLARE_CLASS(UScriptMethod_SetDamageReactions,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_SetDamageReactions exported:
@@ -6725,12 +6795,12 @@ public:
 class DNAI_API UScriptMethod_SetCollision : public UScriptMethod
 {
 public:
-    BYTE CollideWorld;
-    BYTE CollideActors;
-    BYTE BlockActors;
-    BYTE BlockPlayers;
-    BYTE BlockKarma;
-    BYTE AssumeValid;
+    /* EBitModifier */ BYTE CollideWorld;
+    /* EBitModifier */ BYTE CollideActors;
+    /* EBitModifier */ BYTE BlockActors;
+    /* EBitModifier */ BYTE BlockPlayers;
+    /* EBitModifier */ BYTE BlockKarma;
+    /* EBitModifier */ BYTE AssumeValid;
     DECLARE_CLASS(UScriptMethod_SetCollision,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_SetCollision exported:
@@ -6746,7 +6816,7 @@ class DNAI_API UScriptMethod_SetBodyTarget : public UScriptMethod
 {
 public:
     FName TargetActorTag;
-    BYTE TargetStackOp;
+    /* EAITargetStackOp */ BYTE TargetStackOp;
     FLOAT TargetLifeTime;
     FLOAT BlendTime;
     FLOAT AngularThresh;
@@ -6767,7 +6837,7 @@ public:
 class DNAI_API UScriptMethod_SetAttackConstraint : public UScriptMethod
 {
 public:
-    BYTE AttackConstraint;
+    /* EAIAttackConstraint */ BYTE AttackConstraint;
     DECLARE_CLASS(UScriptMethod_SetAttackConstraint,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_SetAttackConstraint exported:
@@ -6782,7 +6852,7 @@ public:
 class DNAI_API UScriptMethod_SetAnimController : public UScriptMethod
 {
 public:
-    BYTE NewController;
+    /* EAIAnimController */ BYTE NewController;
     DECLARE_CLASS(UScriptMethod_SetAnimController,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_SetAnimController exported:
@@ -6988,7 +7058,7 @@ public:
 class DNAI_API UScriptMethod_PopUp : public UScriptMethod
 {
 public:
-    BYTE PopupType;
+    /* EAIPopUpType */ BYTE PopupType;
     DECLARE_CLASS(UScriptMethod_PopUp,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_PopUp exported:
@@ -7080,7 +7150,7 @@ public:
 class DNAI_API UScriptMethod_PlayExplicitAnim : public UScriptMethod
 {
 public:
-    BYTE AnimType;
+    /* EAIAnimXType */ BYTE AnimType;
     FName SequenceName;
     FName ChannelName;
     FLOAT Rate;
@@ -7115,7 +7185,7 @@ public:
 class DNAI_API UScriptMethod_PlayAnim : public UScriptMethod
 {
 public:
-    BYTE AnimType;
+    /* EAIAnimXType */ BYTE AnimType;
     FName AnimName;
     BITFIELD UseExactAnimName:1 GCC_PACK(4);
     FLOAT ExitTime GCC_PACK(4);
@@ -7500,7 +7570,7 @@ class DNAI_API UScriptMethod_GotoBase : public UScriptMethod
 {
 public:
     BITFIELD bScriptPathingEnabled:1 GCC_PACK(4);
-    BYTE ScriptPathingOverride GCC_PACK(4);
+    /* EAIDynamicPathPriority */ BYTE ScriptPathingOverride GCC_PACK(4);
     FLOAT ScriptPathingTieBreakerOverride;
     BITFIELD bDebugPathing:1 GCC_PACK(4);
     DECLARE_CLASS(UScriptMethod_GotoBase,UScriptMethod,0,dnAI)
@@ -7590,7 +7660,7 @@ public:
     FVector TargetPosVar;
     FLOAT Range;
     FLOAT RangeVar;
-    BYTE Focus;
+    /* EAIFocus */ BYTE Focus;
     FName FocusActorTag;
     BITFIELD FocusTarget:1 GCC_PACK(4);
     BITFIELD Run:1;
@@ -7612,7 +7682,7 @@ public:
     FVector TargetPosVar;
     FLOAT Range;
     FLOAT RangeVar;
-    BYTE Focus;
+    /* EAIFocus */ BYTE Focus;
     FName FocusActorTag;
     BITFIELD FocusTarget:1 GCC_PACK(4);
     BITFIELD Run:1;
@@ -7631,13 +7701,13 @@ class DNAI_API UScriptMethod_GotoActor : public UScriptMethod_GotoBase
 {
 public:
     FName TargetActorTag;
-    BYTE OffsetType;
+    /* EAIOffsetType */ BYTE OffsetType;
     FLOAT Range;
     FLOAT RangeVar;
     FLOAT Bearing;
     FLOAT BearingVar;
     FLOAT Height;
-    BYTE Focus;
+    /* EAIFocus */ BYTE Focus;
     FName FocusActorTag;
     BITFIELD FocusTarget:1 GCC_PACK(4);
     BITFIELD Run:1;
@@ -7670,7 +7740,7 @@ public:
 class DNAI_API UScriptMethod_ForceFire : public UScriptMethod
 {
 public:
-    BYTE ForceFire;
+    /* EBitModifier */ BYTE ForceFire;
     BITFIELD bForceFireImmediately:1 GCC_PACK(4);
     DECLARE_CLASS(UScriptMethod_ForceFire,UScriptMethod,0,dnAI)
 };
@@ -7707,7 +7777,7 @@ class DNAI_API UScriptMethod_FreeMove : public UScriptMethod
 {
 public:
     BITFIELD bRun:1 GCC_PACK(4);
-    BYTE Direction GCC_PACK(4);
+    /* EAIArcSector */ BYTE Direction GCC_PACK(4);
     BITFIELD Infinite:1 GCC_PACK(4);
     FLOAT Time GCC_PACK(4);
     BITFIELD bDisableCollsion:1 GCC_PACK(4);
@@ -7760,7 +7830,7 @@ public:
 class DNAI_API UScriptMethod_EditPathingSettings : public UScriptMethod
 {
 public:
-    BYTE PathingOverride;
+    /* EAIDynamicPathPriority */ BYTE PathingOverride;
     FLOAT PathingTieBreakerOverride;
     DECLARE_CLASS(UScriptMethod_EditPathingSettings,UScriptMethod,0,dnAI)
 };
@@ -7776,7 +7846,7 @@ public:
 class DNAI_API UScriptMethod_ExplicitAnim : public UScriptMethod
 {
 public:
-    BYTE AnimType;
+    /* EAIAnimXType */ BYTE AnimType;
     FName SequenceName;
     FName ChannelName;
     FLOAT Rate;
@@ -7833,8 +7903,8 @@ public:
 class DNAI_API UScriptMethod_DebugGoalSelection : public UScriptMethod
 {
 public:
-    BYTE GoalType;
-    BYTE GotoOp;
+    /* EAIGoalType */ BYTE GoalType;
+    /* EAIOp */ BYTE GotoOp;
     DECLARE_CLASS(UScriptMethod_DebugGoalSelection,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_DebugGoalSelection exported:
@@ -7874,10 +7944,17 @@ public:
 */
 //***************************************************************************//
 
+enum EBlinkAction
+{
+    BLINK_Force             =0,
+    BLINK_Enable            =1,
+    BLINK_Disable           =2,
+    BLINK_MAX               =3,
+};
 class DNAI_API UScriptMethod_Blink : public UScriptMethod
 {
 public:
-    BYTE Action;
+    /* EBlinkAction */ BYTE Action;
     DECLARE_CLASS(UScriptMethod_Blink,UScriptMethod,0,dnAI)
 };
 // Class ScriptMethod_Blink exported:
@@ -7934,7 +8011,7 @@ public:
 class DNAI_API UScriptMethod_Anim : public UScriptMethod
 {
 public:
-    BYTE AnimType;
+    /* EAIAnimXType */ BYTE AnimType;
     FName AnimName;
     BITFIELD UseExactAnimName:1 GCC_PACK(4);
     FLOAT ExitTime GCC_PACK(4);
@@ -7984,7 +8061,7 @@ public:
 class DNAI_API UPopUpCfg : public UObject
 {
 public:
-    BYTE AnimCtrler;
+    /* EAIAnimController */ BYTE AnimCtrler;
     FStringNoInit AnimExtension;
     BITFIELD SingleAnim:1 GCC_PACK(4);
     BITFIELD FullAnim:1;

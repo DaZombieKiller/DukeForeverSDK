@@ -114,6 +114,74 @@ AUTOGENERATE_NAME(CheckRules)
 */
 //***************************************************************************//
 
+enum EAchievement
+{
+    ACH_SomeKills           =0,
+    ACH_MoreKills           =1,
+    ACH_ManyKills           =2,
+    ACH_StompKills          =3,
+    ACH_Executions          =4,
+    ACH_TripMineKills       =5,
+    ACH_FrozenKills         =6,
+    ACH_MonsterTruckKills   =7,
+    ACH_ForkliftKills       =8,
+    ACH_ExplosiveKills      =9,
+    ACH_PhysicsImpactKills  =10,
+    ACH_SteroidKills        =11,
+    ACH_FoodEaten           =12,
+    ACH_HeadShotKills       =13,
+    ACH_SubstanceAbuse      =14,
+    ACH_TripleKill          =15,
+    ACH_KnockedDown         =16,
+    ACH_PooGrabbed          =17,
+    ACH_JizzedOn            =18,
+    ACH_AlienFighterKills   =19,
+    ACH_CalendarFullyViewed =20,
+    ACH_TripmineStuck       =21,
+    ACH_GunskipKill         =22,
+    ACH_AirHockeyWon        =23,
+    ACH_PinballScore        =24,
+    ACH_BeerImbibed         =25,
+    ACH_SteroidsEaten       =26,
+    ACH_HolodukeActivated   =27,
+    ACH_WhiteboardDrawing   =28,
+    ACH_MaxEgoAchieved      =29,
+    ACH_GoldPistolCompletion=30,
+    ACH_EasyCompleted       =31,
+    ACH_NormalCompleted     =32,
+    ACH_HardCompleted       =33,
+    ACH_ExpertCompleted     =34,
+    ACH_CreditsViewed       =35,
+    ACH_HelmetsDiscovered   =36,
+    ACH_PhoneMessages       =37,
+    ACH_DrankAllBeer        =38,
+    ACH_CatfishKilled       =39,
+    ACH_BlimpDestroyed      =40,
+    ACH_TalentKnockedOut    =41,
+    ACH_AliensAborted       =42,
+    ACH_CompanionBarrel     =43,
+    ACH_CycloidDefeated0    =44,
+    ACH_BattlelordDefeated0 =45,
+    ACH_AlienQueenDefeated  =46,
+    ACH_BattlelordDefeated1 =47,
+    ACH_OctakingDefeated    =48,
+    ACH_LeechDefeated       =49,
+    ACH_BubbleBuster        =50,
+    ACH_Threesome           =51,
+    ACH_PassiveAggressive   =52,
+    ACH_MoonBuggyKills      =53,
+    ACH_SciencePinballScore =54,
+    ACH_SingKaraoke         =55,
+    ACH_DefeatDrProton      =56,
+    ACH_EasyCompletedDLC03  =57,
+    ACH_NormalCompletedDLC03=58,
+    ACH_HardCompletedDLC03  =59,
+    ACH_ExpertCompletedDLC03=60,
+    ACH_MaxEgoAchievedDLC03 =61,
+    ACH_Chauvinist          =62,
+    ACH_Deprecated2         =63,
+    ACH_MAX                 =64,
+};
 
 struct ADukePlayer_eventHintAddInventory_Parms
 {
@@ -122,12 +190,12 @@ struct ADukePlayer_eventHintAddInventory_Parms
 
 struct ADukePlayer_eventClearAchievement_Parms
 {
-    BYTE Achievement;
+    /* EAchievement */ BYTE Achievement;
 };
 
 struct ADukePlayer_eventAwardAchievement_Parms
 {
-    BYTE Achievement;
+    /* EAchievement */ BYTE Achievement;
 };
 
 struct ADukePlayer_eventDrawDeathEffects_Parms
@@ -287,13 +355,13 @@ public:
         Parms.Item=Item;
         ProcessEvent(FindFunctionChecked(DNGAME_HintAddInventory), &Parms);
     }
-    inline void __fastcall eventClearAchievement(BYTE Achievement)
+    inline void __fastcall eventClearAchievement(/* EAchievement */ BYTE Achievement)
     {
         ADukePlayer_eventClearAchievement_Parms Parms;
         Parms.Achievement=Achievement;
         ProcessEvent(FindFunctionChecked(DNGAME_ClearAchievement), &Parms);
     }
-    inline void __fastcall eventAwardAchievement(BYTE Achievement)
+    inline void __fastcall eventAwardAchievement(/* EAchievement */ BYTE Achievement)
     {
         ADukePlayer_eventAwardAchievement_Parms Parms;
         Parms.Achievement=Achievement;
@@ -358,6 +426,50 @@ public:
 */
 //***************************************************************************//
 
+enum VOTrigger
+{
+    VOT_Kill                =0,
+    VOT_MeleeKill           =1,
+    VOT_MessyKill           =2,
+    VOT_HeadshotKill        =3,
+    VOT_ExecutionKill       =4,
+    VOT_GrabBabe            =5,
+    VOT_KillBabeCarrier     =6,
+    VOT_CaptureBabe         =7,
+    VOT_FinishPissing       =8,
+    VOT_StartedPissing      =9,
+    VOT_Beer01              =10,
+    VOT_Beer02              =11,
+    VOT_KilledDrinker       =12,
+    VOT_CFWin               =13,
+    VOT_CFLose              =14,
+    VOT_Remark_Death        =15,
+    VOT_Remark_Matchstart   =16,
+    VOT_Remark_SoloLoss     =17,
+    VOT_Remark_SoloWin      =18,
+    VOT_Remark_LeadGain     =19,
+    VOT_Remark_LeadLose     =20,
+    VOT_Remark_TeamLoss     =21,
+    VOT_Remark_TeamWin      =22,
+    VOT_Taunt               =23,
+    VOT_LevelUp             =24,
+    VOT_MAX                 =25,
+};
+enum EPowerupEffect
+{
+    PE_Invincibility        =0,
+    PE_DamageBooster        =1,
+    PE_All                  =2,
+    PE_MAX                  =3,
+};
+enum EDeathCamStatus
+{
+    DCS_None                =0,
+    DCS_Rising              =1,
+    DCS_Tracking            =2,
+    DCS_MAX                 =3,
+};
+#define UCONST_TEABAG_THRESHOLD 300
 
 struct ADukeMultiPlayer_eventStartTurning_Parms
 {
@@ -513,7 +625,7 @@ public:
     FLOAT JetpackTapOffTime;
     FLOAT RocketJumpDamageResistanceFactor;
     BITFIELD bOfficiallyInGame:1 GCC_PACK(4);
-    BYTE DeathCamStatus GCC_PACK(4);
+    /* EDeathCamStatus */ BYTE DeathCamStatus GCC_PACK(4);
     FLOAT BallsOfSteelDelay;
     FLOAT MaxBallsOfSteelDelay;
     class ABaseAI* ActiveHoloActor;
@@ -682,7 +794,7 @@ class DNGAME_API AUpgrade_ViewMode : public AUpgrade_SOS
 {
 public:
     BITFIELD bAffectCameraStyle:1 GCC_PACK(4);
-    BYTE SpecialCameraStyle GCC_PACK(4);
+    /* EPlayerCameraStyle */ BYTE SpecialCameraStyle GCC_PACK(4);
     class UMaterialEx* SubtleStaticMaterial;
     DECLARE_CLASS(AUpgrade_ViewMode,AUpgrade_SOS,0,dnGame)
     NO_DEFAULT_CONSTRUCTOR(AUpgrade_ViewMode)
@@ -713,6 +825,79 @@ public:
 */
 //***************************************************************************//
 
+enum EStompType
+{
+    ESTOMPTYPE_None         =0,
+    ESTOMPTYPE_Destroy      =1,
+    ESTOMPTYPE_Impulse      =2,
+    ESTOMPTYPE_MAX          =3,
+};
+enum EDecoActivityID
+{
+    DECOACT_None            =0,
+    DECOACT_Triggered       =1,
+    DECOACT_UnTriggered     =2,
+    DECOACT_Used            =3,
+    DECOACT_UnUsed          =4,
+    DECOACT_GrabUsed        =5,
+    DECOACT_GrabUnUsed      =6,
+    DECOACT_Grabbed         =7,
+    DECOACT_UnGrabbed       =8,
+    DECOACT_Touched         =9,
+    DECOACT_TouchedByPlayer =10,
+    DECOACT_UnTouched       =11,
+    DECOACT_UnTouchedByPlayer=12,
+    DECOACT_Bumped          =13,
+    DECOACT_BumpedByPlayer  =14,
+    DECOACT_HitWall         =15,
+    DECOACT_WaterEntry      =16,
+    DECOACT_WaterExit       =17,
+    DECOACT_EMPed           =18,
+    DECOACT_UnEMPed         =19,
+    DECOACT_TakeDamage      =20,
+    DECOACT_Destroyed       =21,
+    DECOACT_NotDeadYet      =22,
+    DECOACT_AnimEnd         =23,
+    DECOACT_PreLoadMap      =24,
+    DECOACT_PreBeginPlay    =25,
+    DECOACT_PreGameInit     =26,
+    DECOACT_BeginPlay       =27,
+    DECOACT_PostBeginPlay   =28,
+    DECOACT_PostLoadMap     =29,
+    DECOACT_StartMicrowaving=30,
+    DECOACT_StopMicrowaving =31,
+    DECOACT_CompleteMicrowaving=32,
+    DECOACT_TurnPowerOn     =33,
+    DECOACT_TurnPowerOff    =34,
+    DECOACT_DEPRECATED      =35,
+    DECOACT_MAX             =36,
+};
+enum EDecoActivityMethod
+{
+    DECOACTMETH_Linear      =0,
+    DECOACTMETH_LinearRetry =1,
+    DECOACTMETH_Random      =2,
+    DECOACTMETH_MAX         =3,
+};
+enum EHealthPrefab
+{
+    HEALTH_NeverBreak       =0,
+    HEALTH_Easy             =1,
+    HEALTH_Medium           =2,
+    HEALTH_SortaHard        =3,
+    HEALTH_Hard             =4,
+    HEALTH_UseHealthVar     =5,
+    HEALTH_MAX              =6,
+};
+enum EDecoState
+{
+    DECOSTATE_Alive         =0,
+    DECOSTATE_MostlyDead    =1,
+    DECOSTATE_ReallyDead    =2,
+    DECOSTATE_MAX           =3,
+};
+#define UCONST_BUMPCOUNT_DECAY 25
+#define UCONST_BUMPCOUNT_DECAY_INTERVAL 5.0f
 
 struct AdnDecoration_eventClientDecoActivity_Execute_Parms
 {
@@ -770,7 +955,7 @@ public:
     dnArray<class UDecoActivities*> DestroyedActivities;
     FLOAT DestroyActionPointRadius;
     dnArray<class AActionPoint*> DestroyableActionPoints;
-    BYTE HealthPrefab;
+    /* EHealthPrefab */ BYTE HealthPrefab;
     FLOAT DamageThrottle;
     FLOAT DamageThreshold;
     dnArray<class UClass*> DamageTypesIgnored;
@@ -782,7 +967,7 @@ public:
     FName PowerOnTag;
     FLOAT WaterSplashRadius;
     FLOAT WaterSplashStrength;
-    BYTE DecoState;
+    /* EDecoState */ BYTE DecoState;
     BITFIELD bUseDecoAnim:1 GCC_PACK(4);
     BITFIELD bWaterLogged:1;
     INT PreviousHealth GCC_PACK(4);
@@ -793,7 +978,7 @@ public:
     dnArray<FSPendingActivity> PendingActivities;
     class UDecoActivityDeclarations* ActivityDeclarations;
     BITFIELD bAnimPhysicsActive:1 GCC_PACK(4);
-    BYTE PreAnimPhysicsPhysics GCC_PACK(4);
+    /* EPhysics */ BYTE PreAnimPhysicsPhysics GCC_PACK(4);
     dnArray<INT> AnimPhysicsChannels;
     BITFIELD bPoweredBeforeEMP:1 GCC_PACK(4);
     BITFIELD bDisableUseOnEMP:1;
@@ -1060,6 +1245,59 @@ public:
 */
 //***************************************************************************//
 
+enum EFirePoint
+{
+    FPSTATE_Begin           =0,
+    FPSTATE_Tick            =1,
+    FPSTATE_End             =2,
+    FPSTATE_MAX             =3,
+};
+enum EControlEvent
+{
+    CONTROLEVENT_Custom     =0,
+    CONTROLEVENT_UserDamaged=1,
+    CONTROLEVENT_Trigger    =2,
+    CONTROLEVENT_RequestAttach=3,
+    CONTROLEVENT_RequestDetach=4,
+    CONTROLEVENT_CR_FullyAttached=5,
+    CONTROLEVENT_CR_NoUserAttached=6,
+    CONTROLEVENT_UserAttached=7,
+    CONTROLEVENT_UserDetached=8,
+    CONTROLEVENT_UserAnimEnd=9,
+    CONTROLEVENT_UserPress  =10,
+    CONTROLEVENT_UsePressed =11,
+    CONTROLEVENT_UseDown    =12,
+    CONTROLEVENT_UseReleased=13,
+    CONTROLEVENT_FirePressed=14,
+    CONTROLEVENT_FireDown   =15,
+    CONTROLEVENT_FireReleased=16,
+    CONTROLEVENT_MeleePressed=17,
+    CONTROLEVENT_MeleeDown  =18,
+    CONTROLEVENT_MeleeReleased=19,
+    CONTROLEVENT_ForwardPressed=20,
+    CONTROLEVENT_ForwardDown=21,
+    CONTROLEVENT_ForwardReleased=22,
+    CONTROLEVENT_BackwardPressed=23,
+    CONTROLEVENT_BackwardDown=24,
+    CONTROLEVENT_BackwardReleased=25,
+    CONTROLEVENT_LeftPressed=26,
+    CONTROLEVENT_LeftDown   =27,
+    CONTROLEVENT_LeftReleased=28,
+    CONTROLEVENT_RightPressed=29,
+    CONTROLEVENT_RightDown  =30,
+    CONTROLEVENT_RightReleased=31,
+    CONTROLEVENT_JumpPressed=32,
+    CONTROLEVENT_JumpDown   =33,
+    CONTROLEVENT_JumpReleased=34,
+    CONTROLEVENT_DuckPressed=35,
+    CONTROLEVENT_DuckDown   =36,
+    CONTROLEVENT_DuckReleased=37,
+    CONTROLEVENT_ZoomPressed=38,
+    CONTROLEVENT_ZoomDown   =39,
+    CONTROLEVENT_ZoomReleased=40,
+    CONTROLEVENT_MAX        =41,
+};
+#define UCONST_kControl_InvalidGlobalTransition -93
 class DNGAME_API AdnControl : public AdnUsableSomething
 {
 public:
@@ -1086,7 +1324,7 @@ public:
     FName ForceAttachStateName GCC_PACK(4);
     FName ForceDetachStateName;
     FName PawnLostStateName;
-    dnArray<BYTE> DisabledKeyTypes;
+    dnArray</* EControlRemapperKeyType */ BYTE> DisabledKeyTypes;
     BITFIELD AIHoldFire:1 GCC_PACK(4);
     BITFIELD bAlternateMovementBoneStyle:1;
     DECLARE_CLASS(AdnControl,AdnUsableSomething,0,dnGame)
@@ -1177,6 +1415,35 @@ public:
 */
 //***************************************************************************//
 
+enum EVehicleDirection
+{
+    VDIR_Forward            =0,
+    VDIR_Neutral            =1,
+    VDIR_Reverse            =2,
+    VDIR_MAX                =3,
+};
+enum EVehicleEventType
+{
+    VEVENT_PassengerEntered =0,
+    VEVENT_DriverEntered    =1,
+    VEVENT_PassengerLeft    =2,
+    VEVENT_DriverLeft       =3,
+    VEVENT_MAX              =4,
+};
+enum EVehicleZMotionType
+{
+    VZMOTION_None           =0,
+    VZMOTION_Absolute       =1,
+    VZMOTION_Thruster       =2,
+    VZMOTION_MAX            =3,
+};
+enum EVehicleControlType
+{
+    VCONTROL_MoveInPlayerHeading=0,
+    VCONTROL_StrafeTurns    =1,
+    VCONTROL_MAX            =2,
+};
+#define UCONST_MAX_AVOID_LINEAR_VELOCITY 	300.0f
 
 struct AVehicleBase_eventGetVehicleNavOrigin_Parms
 {
@@ -1241,9 +1508,9 @@ public:
     BITFIELD bHandbrakeAlwaysOn:1;
     BITFIELD bGeneratePaths:1;
     BITFIELD bAIHandleFlipped:1;
-    BYTE ControlType GCC_PACK(4);
+    /* EVehicleControlType */ BYTE ControlType GCC_PACK(4);
     FLOAT ControlStiffness;
-    BYTE ZMotionType;
+    /* EVehicleZMotionType */ BYTE ZMotionType;
     FLOAT ZMotionPower;
     FLOAT StoppedSpeed;
     FLOAT ForwardVelocityThreshold;
@@ -1314,8 +1581,8 @@ public:
     BITFIELD obWasFlipped:1;
     FLOAT oForwardVelocity GCC_PACK(4);
     FLOAT oPreviousForwardVelocity;
-    BYTE oVehicleDirection;
-    BYTE oPreviousVehicleDirection;
+    /* EVehicleDirection */ BYTE oVehicleDirection;
+    /* EVehicleDirection */ BYTE oPreviousVehicleDirection;
     FLOAT oVehicleNeutralTimer;
     FLOAT oUpness;
     FLOAT oPreviousUpness;
@@ -1463,6 +1730,13 @@ public:
 */
 //***************************************************************************//
 
+enum EAirHockeyObj
+{
+    AIRHOCKEYOBJ_Paddle1    =0,
+    AIRHOCKEYOBJ_Paddle2    =1,
+    AIRHOCKEYOBJ_Table      =2,
+    AIRHOCKEYOBJ_MAX        =3,
+};
 
 struct AAirHockeyTable_NativeBase_eventGameWon_Parms
 {
@@ -1548,10 +1822,17 @@ public:
 */
 //***************************************************************************//
 
+enum EDoorMoverSlideDirEx
+{
+    DSDEX_Left              =0,
+    DSDEX_Right             =1,
+    DSDEX_Custom            =2,
+    DSDEX_MAX               =3,
+};
 class DNGAME_API ADoorMoverEx_Sliding_NativeBase : public ADoorMoverEx
 {
 public:
-    BYTE SlideDir;
+    /* EDoorMoverSlideDirEx */ BYTE SlideDir;
     FVector SlideCustomDir;
     FLOAT SlideDistance;
     DECLARE_CLASS(ADoorMoverEx_Sliding_NativeBase,ADoorMoverEx,0,dnGame)
@@ -1565,15 +1846,28 @@ public:
 */
 //***************************************************************************//
 
+enum EDoorMoverPivotLocationEx
+{
+    DPLEX_Right             =0,
+    DPLEX_Left              =1,
+    DPLEX_MAX               =2,
+};
+enum EDoorMoverRotateDirEx
+{
+    DRDEX_Dynamic           =0,
+    DRDEX_Outward           =1,
+    DRDEX_Inward            =2,
+    DRDEX_MAX               =3,
+};
 class DNGAME_API ADoorMoverEx_Rotating_NativeBase : public ADoorMoverEx
 {
 public:
-    BYTE DoorOpenAnimStyle;
+    /* EDoorOpenAnimationStyle */ BYTE DoorOpenAnimStyle;
     INT RotateDistance;
-    BYTE RotateDirection;
+    /* EDoorMoverRotateDirEx */ BYTE RotateDirection;
     INT RotateRate;
     INT KickedRotateRate;
-    BYTE PivotLocation;
+    /* EDoorMoverPivotLocationEx */ BYTE PivotLocation;
     FLOAT PivotOffset;
     FLOAT PivotInset;
     FName HandActionOutward;
@@ -1596,6 +1890,9 @@ public:
 */
 //***************************************************************************//
 
+#define UCONST_kAvgSurvivalRate 0.30
+#define UCONST_kMaxNumParts 12
+#define UCONST_kMinNumDesiredParts 4
 class DNGAME_API AdnDestructibleBuilding : public ARenderActor
 {
 public:
@@ -1684,6 +1981,14 @@ public:
 */
 //***************************************************************************//
 
+enum EBabeState
+{
+    EBS_Standing            =0,
+    EBS_Carried             =1,
+    EBS_Dropped             =2,
+    EBS_Scored              =3,
+    EBS_MAX                 =4,
+};
 class DNGAME_API AdnDeathmatchGameReplicationInfo : public AMPGameReplicationInfo
 {
 public:
@@ -1696,8 +2001,8 @@ public:
     INT OffensiveTeam GCC_PACK(4);
     class AInteractiveActor* Cylinder;
     FLOAT HillCountdown;
-    BYTE Team0BabeState;
-    BYTE Team1BabeState;
+    /* EBabeState */ BYTE Team0BabeState;
+    /* EBabeState */ BYTE Team1BabeState;
     FLOAT StandingTimeStamp;
     DECLARE_CLASS(AdnDeathmatchGameReplicationInfo,AMPGameReplicationInfo,0|CLASS_Config,dnGame)
     NO_DEFAULT_CONSTRUCTOR(AdnDeathmatchGameReplicationInfo)
@@ -1711,13 +2016,20 @@ public:
 */
 //***************************************************************************//
 
+enum EAloneState
+{
+    AS_FirstLoad            =0,
+    AS_Alone                =1,
+    AS_Playing              =2,
+    AS_MAX                  =3,
+};
 class DNGAME_API AdnMultiplayer : public AGameInfo
 {
 public:
     BITFIELD bOvertime:1 GCC_PACK(4);
     BITFIELD bGameOver:1;
     FLOAT MatchStartTime GCC_PACK(4);
-    BYTE eAlone;
+    /* EAloneState */ BYTE eAlone;
     FLOAT RespawnDistance;
     FLOAT MinFromOtherRespawnDistance;
     FLOAT MaxCountDown;
@@ -1725,8 +2037,8 @@ public:
     FStringNoInit savedEndGameReason;
     BITFIELD bEndOfGameRequest:1 GCC_PACK(4);
     class ADukeMultiPlayer* FirstPlayer GCC_PACK(4);
-    BYTE GameType;
-    BYTE gametypeDLC;
+    /* EMGametype */ BYTE GameType;
+    /* EMGametype */ BYTE gametypeDLC;
     dnArray<class APlayerStart*> PlayerStarts;
     dnArray<class APlayerPawn*> PlayerPawns;
     BITFIELD bAllowRestart:1 GCC_PACK(4);
@@ -1755,7 +2067,7 @@ public:
 
 struct APlayerProgression_eventIncStat_Parms
 {
-    BYTE Stat;
+    /* EMPStatistics */ BYTE Stat;
     INT Delta;
     BITFIELD ReturnValue;
 };
@@ -1824,7 +2136,7 @@ public:
     BITFIELD bSeenOverdriveMsg:1 GCC_PACK(4);
     INT MaxOverDriveLevel GCC_PACK(4);
     BITFIELD bHasLeveled:1 GCC_PACK(4);
-    BYTE CurrentGameType GCC_PACK(4);
+    /* EMGametype */ BYTE CurrentGameType GCC_PACK(4);
     INT MultiKillCount;
     FLOAT LastKillTime;
     INT LongestCurrentStreak;
@@ -1921,7 +2233,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(DNGAME_Stat_StoppedSprinting), NULL);
     }
-    inline BITFIELD __fastcall eventIncStat(BYTE Stat, INT Delta)
+    inline BITFIELD __fastcall eventIncStat(/* EMPStatistics */ BYTE Stat, INT Delta)
     {
         APlayerProgression_eventIncStat_Parms Parms;
         Parms.ReturnValue=0;
@@ -2041,6 +2353,13 @@ public:
 */
 //***************************************************************************//
 
+enum EDecalTexType
+{
+    DECALTEX_User           =0,
+    DECALTEX_Blood          =1,
+    DECALTEX_BulletHole     =2,
+    DECALTEX_MAX            =3,
+};
 
 struct ADecalBomb_eventCustomInitDefaults_Parms
 {
@@ -2060,7 +2379,7 @@ public:
     BITFIELD bCopyOwnerToDecal:1;
     BITFIELD bDecalIgnoreOwner:1;
     BITFIELD bScaleByOwner:1;
-    BYTE DecalTextureType GCC_PACK(4);
+    /* EDecalTexType */ BYTE DecalTextureType GCC_PACK(4);
     INT TraceNum;
     INT TraceNumVariance;
     FRotator TraceRotationVariance;
@@ -2074,7 +2393,7 @@ public:
     dnArray<class UMaterialEx*> Decals;
     FLOAT DecalLifespan;
     FLOAT BehaviorArgument;
-    BYTE Behavior;
+    /* EBehavior */ BYTE Behavior;
     FSTraceFlags TraceFlags;
     BITFIELD bDecalIgnorePawn:1 GCC_PACK(4);
     class UClass* DecalClass GCC_PACK(4);
@@ -2129,6 +2448,13 @@ public:
 */
 //***************************************************************************//
 
+enum EFalloffStyle
+{
+    FALLOFF_None            =0,
+    FALLOFF_Linear          =1,
+    FALLOFF_Exponential     =2,
+    FALLOFF_MAX             =3,
+};
 
 struct AdnHUDEffects_eventInRangeCallback_Parms
 {
@@ -2146,7 +2472,7 @@ public:
     FLOAT EffectViewAngleFull;
     FLOAT EffectViewAngleNone;
     FLOAT ExecuteThrottle;
-    BYTE FalloffStyle;
+    /* EFalloffStyle */ BYTE FalloffStyle;
     FName EffectName;
     FName RestartTag;
     FName StopTag;
@@ -2281,6 +2607,14 @@ public:
 */
 //***************************************************************************//
 
+enum EWeaponSelectPosition
+{
+    WSP_Up                  =0,
+    WSP_Down                =1,
+    WSP_Left                =2,
+    WSP_Right               =3,
+    WSP_MAX                 =4,
+};
 
 struct ADukeHUD_eventDrawNukeSymbol_Parms
 {
@@ -2393,7 +2727,7 @@ public:
     class UTexture* InventoryDpadSplash;
     class UTexture* InventoryTex[5];
     class UTexture* InventoryActiveTex[5];
-    BYTE LastDpadDown;
+    /* EInputKey */ BYTE LastDpadDown;
     FLOAT LastDpadTime;
     class UTexture* InfinityIcon;
     FName DukeVisionInventoryName;
@@ -2683,6 +3017,9 @@ public:
 */
 //***************************************************************************//
 
+#define UCONST_PLAYING_TO_Y_POS 175
+#define UCONST_EXP_TEXT_SPACING 2.5f
+#define UCONST_kMaxScrollingCombatText 3
 
 struct AMetagameHUD_eventDrawGameTypeInfoHelper_Parms
 {
@@ -3049,7 +3386,7 @@ public:
 class DNGAME_API UDecoActivityRules_Physics : public UDecoActivityRules
 {
 public:
-    BYTE VelocitySizeComparison;
+    /* ECompare */ BYTE VelocitySizeComparison;
     FLOAT VelocitySizeValue;
     DECLARE_CLASS(UDecoActivityRules_Physics,UDecoActivityRules,0,dnGame)
 };
@@ -3062,10 +3399,17 @@ public:
 */
 //***************************************************************************//
 
+enum EHealthCheckType
+{
+    HEALTHCHECK_None        =0,
+    HEALTHCHECK_Threshold   =1,
+    HEALTHCHECK_Region      =2,
+    HEALTHCHECK_MAX         =3,
+};
 class DNGAME_API UDecoActivityRules_HealthCheck : public UDecoActivityRules
 {
 public:
-    BYTE HealthCheckStyle;
+    /* EHealthCheckType */ BYTE HealthCheckStyle;
     INT HealthMin;
     INT HealthMax;
     BITFIELD bHealthIsPercent:1 GCC_PACK(4);
@@ -3137,14 +3481,14 @@ public:
 class DNGAME_API UDecoActivities_Ticking : public UDecoActivities
 {
 public:
-    BYTE bTickOnlyNearbyModifier;
-    BYTE bTickOnlyRecentModifier;
-    BYTE bTickOnlyZoneRecentModifier;
-    BYTE bNoNativeTickModifier;
-    BYTE bDumbMeshModifier;
+    /* EBitModifier */ BYTE bTickOnlyNearbyModifier;
+    /* EBitModifier */ BYTE bTickOnlyRecentModifier;
+    /* EBitModifier */ BYTE bTickOnlyZoneRecentModifier;
+    /* EBitModifier */ BYTE bNoNativeTickModifier;
+    /* EBitModifier */ BYTE bDumbMeshModifier;
     BITFIELD bModifyTickStyle:1 GCC_PACK(4);
-    BYTE NewTickStyle GCC_PACK(4);
-    BYTE TimeWarpModifier;
+    /* ETickStyle */ BYTE NewTickStyle GCC_PACK(4);
+    /* EFloatModifier */ BYTE TimeWarpModifier;
     FLOAT TimeWarpChange;
     DECLARE_CLASS(UDecoActivities_Ticking,UDecoActivities,0,dnGame)
 };
@@ -3183,8 +3527,8 @@ public:
 class DNGAME_API UDecoActivities_Sound : public UDecoActivities
 {
 public:
-    dnArray<BYTE> SoundStopSlots;
-    dnArray<BYTE> SoundStopRules;
+    dnArray</* ESoundSlot */ BYTE> SoundStopSlots;
+    dnArray</* EStopSoundRule */ BYTE> SoundStopRules;
     dnArray<FName> SoundNames;
     FSSoundInfo SoundNormal;
     FSAmbientSoundInfo SoundAmbient;
@@ -3208,10 +3552,17 @@ public:
 */
 //***************************************************************************//
 
+enum ERadiusType
+{
+    RADIUS_Normal           =0,
+    RADIUS_ConeNormal       =1,
+    RADIUS_ConeOffset       =2,
+    RADIUS_MAX              =3,
+};
 class DNGAME_API UDecoActivities_RadiusDamage : public UDecoActivities
 {
 public:
-    BYTE RadiusType;
+    /* ERadiusType */ BYTE RadiusType;
     INT Damage;
     FLOAT Radius;
     FLOAT DamageFalloffStart;
@@ -3235,9 +3586,9 @@ class DNGAME_API UDecoActivities_Physics : public UDecoActivities
 {
 public:
     BITFIELD PhysicsSet:1 GCC_PACK(4);
-    BYTE Physics GCC_PACK(4);
+    /* EPhysics */ BYTE Physics GCC_PACK(4);
     BITFIELD ThrowPhysicsSet:1 GCC_PACK(4);
-    BYTE ThrowPhysics GCC_PACK(4);
+    /* EPhysics */ BYTE ThrowPhysics GCC_PACK(4);
     FLOAT Mass;
     FLOAT DensitySet;
     DECLARE_CLASS(UDecoActivities_Physics,UDecoActivities,0,dnGame)
@@ -3283,12 +3634,19 @@ public:
 */
 //***************************************************************************//
 
+enum EKImpulseStyle
+{
+    KIMPULSE_Impulse        =0,
+    KIMPULSE_Force          =1,
+    KIMPULSE_Torque         =2,
+    KIMPULSE_MAX            =3,
+};
 class DNGAME_API UDecoActivities_KarmaImpulse : public UDecoActivities
 {
 public:
     BITFIELD UserDirectional:1 GCC_PACK(4);
     FVector UserDirectionalScaler GCC_PACK(4);
-    BYTE ImpulseStyle;
+    /* EKImpulseStyle */ BYTE ImpulseStyle;
     FLOAT ImpulseForce;
     FLOAT ImpulseForceVariance;
     FName ImpulseBone;
@@ -3314,16 +3672,16 @@ public:
 class DNGAME_API UDecoActivities_Interaction : public UDecoActivities
 {
 public:
-    BYTE bUsableModifier;
-    BYTE bUseTriggeredModifier;
-    BYTE bGrabUsableModifier;
-    BYTE bGrabbableModifier;
-    BYTE AvoidRangeModifier;
+    /* EBitModifier */ BYTE bUsableModifier;
+    /* EBitModifier */ BYTE bUseTriggeredModifier;
+    /* EBitModifier */ BYTE bGrabUsableModifier;
+    /* EBitModifier */ BYTE bGrabbableModifier;
+    /* EFloatModifier */ BYTE AvoidRangeModifier;
     FLOAT NewAvoidRange;
     BITFIELD bNewStaticInteractionClassification:1 GCC_PACK(4);
-    BYTE NewStaticInteractionClassification GCC_PACK(4);
+    /* EStaticInteractionClassification */ BYTE NewStaticInteractionClassification GCC_PACK(4);
     BITFIELD bNewDynamicInteractionClassification:1 GCC_PACK(4);
-    BYTE NewDynamicInteractionClassification GCC_PACK(4);
+    /* EDynamicInteractionClassification */ BYTE NewDynamicInteractionClassification GCC_PACK(4);
     DECLARE_CLASS(UDecoActivities_Interaction,UDecoActivities,0,dnGame)
 };
 // Class DecoActivities_Interaction exported:
@@ -3338,14 +3696,14 @@ public:
 class DNGAME_API UDecoActivities_HUDInfo : public UDecoActivities
 {
 public:
-    BYTE bEnemyModifier;
-    BYTE bForceUsePhraseModifier;
-    BYTE bDrawUsePhraseModifier;
-    BYTE bNoUseKeyInfoModifier;
+    /* EBitModifier */ BYTE bEnemyModifier;
+    /* EBitModifier */ BYTE bForceUsePhraseModifier;
+    /* EBitModifier */ BYTE bDrawUsePhraseModifier;
+    /* EBitModifier */ BYTE bNoUseKeyInfoModifier;
     FStringNoInit UsePhrase;
-    BYTE UsePhraseModifier;
+    /* EStrModifier */ BYTE UsePhraseModifier;
     FStringNoInit GrabUsePhrase;
-    BYTE GrabUsePhraseModifier;
+    /* EStrModifier */ BYTE GrabUsePhraseModifier;
     DECLARE_CLASS(UDecoActivities_HUDInfo,UDecoActivities,0,dnGame)
 };
 // Class DecoActivities_HUDInfo exported:
@@ -3394,6 +3752,21 @@ public:
 */
 //***************************************************************************//
 
+enum ESafeCallbacks
+{
+    SCALLBACK_None          =0,
+    SCALLBACK_Trigger       =1,
+    SCALLBACK_UnTrigger     =2,
+    SCALLBACK_Use           =3,
+    SCALLBACK_UnUse         =4,
+    SCALLBACK_Touch         =5,
+    SCALLBACK_UnTouch       =6,
+    SCALLBACK_Bump          =7,
+    SCALLBACK_EMP           =8,
+    SCALLBACK_TakeDamage    =9,
+    SCALLBACK_Destroy       =10,
+    SCALLBACK_MAX           =11,
+};
 class DNGAME_API UDecoActivities_Events : public UDecoActivities
 {
 public:
@@ -3426,14 +3799,14 @@ class DNGAME_API UDecoActivities_Display : public UDecoActivities
 public:
     class UObject* RenderObject;
     dnArray<FSUpdateMaterialEx> Skins;
-    BYTE bHiddenModifier;
-    BYTE MountedHiddenModifier;
+    /* EBitModifier */ BYTE bHiddenModifier;
+    /* EBitModifier */ BYTE MountedHiddenModifier;
     FLOAT DrawScale;
     FLOAT DrawScaleVariance;
-    BYTE DrawScaleModifier;
+    /* EFloatModifier */ BYTE DrawScaleModifier;
     FVector DrawScale3D;
     FVector DrawScale3DVariance;
-    BYTE DrawScale3DModifier;
+    /* EVectModifier */ BYTE DrawScale3DModifier;
     DECLARE_CLASS(UDecoActivities_Display,UDecoActivities,0,dnGame)
 
     // properties that must be constructed special for UDecoActivities_Display:
@@ -3452,18 +3825,18 @@ public:
 class DNGAME_API UDecoActivities_Collision : public UDecoActivities
 {
 public:
-    BYTE bCollideActorsModifier;
-    BYTE bCollideWorldModifier;
-    BYTE bBlockActorsModifier;
-    BYTE bBlockPlayersModifier;
-    BYTE bBlockKarmaModifier;
-    BYTE bBlockAIModifier;
-    BYTE bTraceUsableModifier;
-    BYTE bTraceShootableModifier;
-    BYTE bCollisionAssumeValidModifier;
-    BYTE CollisionRadiusModifier;
+    /* EBitModifier */ BYTE bCollideActorsModifier;
+    /* EBitModifier */ BYTE bCollideWorldModifier;
+    /* EBitModifier */ BYTE bBlockActorsModifier;
+    /* EBitModifier */ BYTE bBlockPlayersModifier;
+    /* EBitModifier */ BYTE bBlockKarmaModifier;
+    /* EBitModifier */ BYTE bBlockAIModifier;
+    /* EBitModifier */ BYTE bTraceUsableModifier;
+    /* EBitModifier */ BYTE bTraceShootableModifier;
+    /* EBitModifier */ BYTE bCollisionAssumeValidModifier;
+    /* EFloatModifier */ BYTE CollisionRadiusModifier;
     FLOAT CollisionRadiusChange;
-    BYTE CollisionHeightModifier;
+    /* EFloatModifier */ BYTE CollisionHeightModifier;
     FLOAT CollisionHeightChange;
     DECLARE_CLASS(UDecoActivities_Collision,UDecoActivities,0,dnGame)
 };

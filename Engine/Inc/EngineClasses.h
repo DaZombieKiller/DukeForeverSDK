@@ -709,6 +709,28 @@ public:
 */
 //***************************************************************************//
 
+enum EOnlinePermission
+{
+    OP_Granted              =0,
+    OP_Restricted           =1,
+    OP_Offline              =2,
+    OP_Error                =3,
+    OP_MAX                  =4,
+};
+struct ENGINE_API FLeaderBoardData
+{
+    INT Rank;
+    FStringNoInit PlayerName;
+    INT Kills;
+    INT Deaths;
+    INT Exp;
+    INT Wins;
+    INT Losses;
+    INT TimePlayedInSeconds;
+    INT UidLeftmostDWord;
+    INT UidRightmostDWord;
+};
+
 
 struct UOnlineAgent_eventShutdownErrorMessage_Parms
 {
@@ -1013,6 +1035,404 @@ public:
 */
 //***************************************************************************//
 
+enum EInventoryChargeDisplayType
+{
+    INVCHARGEDISP_None      =0,
+    INVCHARGEDISP_Percent   =1,
+    INVCHARGEDISP_Quantity  =2,
+    INVCHARGEDISP_WeaponAmmo=3,
+    INVCHARGEDISP_MAX       =4,
+};
+enum EWeaponAnimNameType
+{
+    WANIMTYPE_LookPoses     =0,
+    WANIMTYPE_UpperBodyAnim =1,
+    WANIMTYPE_MAX           =2,
+};
+enum EInventoryMultiplePickupBehavior
+{
+    PICKMULT_None           =0,
+    PICKMULT_Disallow       =1,
+    PICKMULT_CompositeChargeClamped=2,
+    PICKMULT_Custom         =3,
+    PICKMULT_MAX            =4,
+};
+enum EPickupSource
+{
+    PICKUP_Unknown          =0,
+    PICKUP_Touch            =1,
+    PICKUP_Use              =2,
+    PICKUP_Purchase         =3,
+    PICKUP_Gameplay         =4,
+    PICKUP_TickTouch        =5,
+    PICKUP_MAX              =6,
+};
+enum EReverbEnvironment
+{
+    ENVIRONMENT_None        =0,
+    ENVIRONMENT_GenericRoom_Small=1,
+    ENVIRONMENT_GenericRoom_Medium=2,
+    ENVIRONMENT_GenericRoom_Large=3,
+    ENVIRONMENT_GenericRoom_XLarge=4,
+    ENVIRONMENT_GenericRoom_XXLarge=5,
+    ENVIRONMENT_Closet      =6,
+    ENVIRONMENT_Outdoors    =7,
+    ENVIRONMENT_Vent        =8,
+    ENVIRONMENT_Underwater  =9,
+    ENVIRONMENT_MAX         =10,
+};
+enum EInteractKeyPosition
+{
+    IKP_Top                 =0,
+    IKP_Bottom              =1,
+    IKP_Left                =2,
+    IKP_Right               =3,
+    IKP_LeftTop             =4,
+    IKP_LeftBottom          =5,
+    IKP_RightTop            =6,
+    IKP_RightBottom         =7,
+    IKP_BoostMeter          =8,
+    IKP_MAX                 =9,
+};
+enum EHUDAnchor
+{
+    ANCHOR_TopLeft          =0,
+    ANCHOR_TopMid           =1,
+    ANCHOR_TopRight         =2,
+    ANCHOR_LeftMid          =3,
+    ANCHOR_Center           =4,
+    ANCHOR_RightMid         =5,
+    ANCHOR_BottomLeft       =6,
+    ANCHOR_BottomMid        =7,
+    ANCHOR_BottomRight      =8,
+    ANCHOR_MAX              =9,
+};
+enum EBehavior
+{
+    DB_Normal               =0,
+    DB_Permanant            =1,
+    DB_DestroyAfterArgumentSeconds=2,
+    DB_DestroyNotVisibleForArgumentSeconds=3,
+    DB_MAX                  =4,
+};
+enum EIRateType
+{
+    IRATE_TimeToNextPoint   =0,
+    IRATE_UnitsPerSecond    =1,
+    IRATE_Deprecated1       =2,
+    IRATE_MAX               =3,
+};
+enum EVertexFunction
+{
+    VF_None                 =0,
+    VF_SinusoidalNormal     =1,
+    VF_MAX                  =2,
+};
+enum ENetworkSoundType
+{
+    NS_Local                =0,
+    NS_Standard             =1,
+    NS_RemoteReplicate      =2,
+    NS_Replicate            =3,
+    NS_MAX                  =4,
+};
+enum EScaleModifierCalcStyle
+{
+    CALC_Sum                =0,
+    CALC_Product            =1,
+    CALC_Max                =2,
+    CALC_Min                =3,
+    CALC_Average            =4,
+    CALC_Priority           =5,
+    CALC_MAX                =6,
+};
+enum EScaleModifier
+{
+    SCALE_Smooth            =0,
+    SCALE_Linear            =1,
+    SCALE_Pulse             =2,
+    SCALE_Damped            =3,
+    SCALE_MAX               =4,
+};
+enum EZoneFlotsamEffect
+{
+    FLOTSAM_None            =0,
+    FLOTSAM_WaterBubbles    =1,
+    FLOTSAM_WaterDirt       =2,
+    FLOTSAM_WindyDusty      =3,
+    FLOTSAM_Speckles        =4,
+    FLOTSAM_None_PhysicsVolumeOverride=5,
+    FLOTSAM_MAX             =6,
+};
+enum EMonth
+{
+    MONTH_January           =0,
+    MONTH_February          =1,
+    MONTH_March             =2,
+    MONTH_April             =3,
+    MONTH_May               =4,
+    MONTH_June              =5,
+    MONTH_July              =6,
+    MONTH_August            =7,
+    MONTH_September         =8,
+    MONTH_October           =9,
+    MONTH_November          =10,
+    MONTH_December          =11,
+    MONTH_MAX               =12,
+};
+enum EDayOfWeek
+{
+    DAY_Sunday              =0,
+    DAY_Monday              =1,
+    DAY_Tuesday             =2,
+    DAY_Wednesday           =3,
+    DAY_Thursday            =4,
+    DAY_Friday              =5,
+    DAY_Saturday            =6,
+    DAY_MAX                 =7,
+};
+enum ESpecialSeason
+{
+    SSEASON_EasterSeason    =0,
+    SSEASON_ThanksgivingSeason=1,
+    SSEASON_ChristmasSeason =2,
+    SSEASON_MAX             =3,
+};
+enum ESpecialDay
+{
+    SDAY_NewYearsDay        =0,
+    SDAY_GroundhogsDay      =1,
+    SDAY_ValentinesDay      =2,
+    SDAY_StPatricksDay      =3,
+    SDAY_AprilFools         =4,
+    SDAY_DaylightSavingsStart=5,
+    SDAY_TaxDay             =6,
+    SDAY_MothersDay         =7,
+    SDAY_MemorialDay        =8,
+    SDAY_FathersDay         =9,
+    SDAY_LaborDay           =10,
+    SDAY_DaylightSavingsEnd =11,
+    SDAY_Halloween          =12,
+    SDAY_Elections          =13,
+    SDAY_VeteransDay        =14,
+    SDAY_Thanksgiving       =15,
+    SDAY_ChristmasEve       =16,
+    SDAY_ChristmasDay       =17,
+    SDAY_NewYearsEve        =18,
+    SDAY_UserBirthday       =19,
+    SDAY_Boring             =20,
+    SDAY_Beltane            =21,
+    SDAY_FallEquinox        =22,
+    SDAY_Samhain            =23,
+    SDAY_WinterSolstice     =24,
+    SDAY_RoshHashanah       =25,
+    SDAY_YomKippur          =26,
+    SDAY_Chanukkah          =27,
+    SDAY_Passover           =28,
+    SDAY_GantanSai          =29,
+    SDAY_Lent               =30,
+    SDAY_AshWednesday       =31,
+    SDAY_GoodFriday         =32,
+    SDAY_Kwanzaa            =33,
+    SDAY_Ashura             =34,
+    SDAY_MAX                =35,
+};
+enum EBloatState
+{
+    BLOAT_Unbloated         =0,
+    BLOAT_Bloating          =1,
+    BLOAT_Bloated           =2,
+    BLOAT_Unbloating        =3,
+    BLOAT_MAX               =4,
+};
+enum EFrozenState
+{
+    FREX_Unfrozen           =0,
+    FREX_Freezing           =1,
+    FREX_Frozen             =2,
+    FREX_Unfreezing         =3,
+    FREX_MAX                =4,
+};
+enum EPostureStateEx
+{
+    PSEX_Unknown            =0,
+    PSEX_Standing           =1,
+    PSEX_StandingActive     =2,
+    PSEX_Crouching          =3,
+    PSEX_InAir              =4,
+    PSEX_InAirActive        =5,
+    PSEX_Swimming           =6,
+    PSEX_Ladder             =7,
+    PSEX_Jetpack            =8,
+    PSEX_Turret             =9,
+    PSEX_Mounted            =10,
+    PSEX_MAX                =11,
+};
+enum EControlRemapperEventType
+{
+    CRE_Start               =0,
+    CRE_Continuous          =1,
+    CRE_Stop                =2,
+    CRE_MAX                 =3,
+};
+enum EControlRemapperKeyType
+{
+    CRK_TurnLeft            =0,
+    CRK_TurnRight           =1,
+    CRK_StrafeLeft          =2,
+    CRK_StrafeRight         =3,
+    CRK_Forward             =4,
+    CRK_Backward            =5,
+    CRK_Jump                =6,
+    CRK_Duck                =7,
+    CRK_Fire                =8,
+    CRK_Melee               =9,
+    CRK_Zoom                =10,
+    CRK_Use                 =11,
+    CRK_MAX                 =12,
+};
+enum EWeaponChangeSpeed
+{
+    WEAPCHANGE_Normal       =0,
+    WEAPCHANGE_NoAnim       =1,
+    WEAPCHANGE_MAX          =2,
+};
+enum EWeaponState
+{
+    WS_Unknown              =0,
+    WS_Activating           =1,
+    WS_Deactivating         =2,
+    WS_Idle                 =3,
+    WS_Fire                 =4,
+    WS_Fire_Start           =5,
+    WS_Fire_Stop            =6,
+    WS_Reload               =7,
+    WS_Reload_Start         =8,
+    WS_Reload_Stop          =9,
+    WS_Melee                =10,
+    WS_MAX                  =11,
+};
+enum EVehiclePOV
+{
+    VPOV_FirstPerson        =0,
+    VPOV_FreeCamera         =1,
+    VPOV_MAX                =2,
+};
+enum EPlayerCameraStyle
+{
+    PCS_Normal              =0,
+    PCS_HeatVision          =1,
+    PCS_NightVision         =2,
+    PCS_MAX                 =3,
+};
+enum EAIAttitude
+{
+    AIATT_InfiniteHate      =0,
+    AIATT_Despise           =1,
+    AIATT_Hate              =2,
+    AIATT_Dislike           =3,
+    AIATT_Neutral           =4,
+    AIATT_Like              =5,
+    AIATT_Love              =6,
+    AIATT_Idolize           =7,
+    AIATT_InfiniteLove      =8,
+    AIATT_MAX               =9,
+};
+enum EAIPortalFlags
+{
+    AIPFL_Door              =0,
+    AIPFL_MAX               =1,
+};
+enum EAnimToggleState
+{
+    ATS_None                =0,
+    ATS_DumbMesh            =1,
+    ATS_AnimLight           =2,
+    ATS_MAX                 =3,
+};
+enum ETravelType
+{
+    TRAVEL_Absolute         =0,
+    TRAVEL_Partial          =1,
+    TRAVEL_Relative         =2,
+    TRAVEL_Chunk            =3,
+    TRAVEL_MAX              =4,
+};
+enum EMusicTransition
+{
+    MTRAN_None              =0,
+    MTRAN_Instant           =1,
+    MTRAN_Segue             =2,
+    MTRAN_Fade              =3,
+    MTRAN_FastFade          =4,
+    MTRAN_SlowFade          =5,
+    MTRAN_MAX               =6,
+};
+enum ENetRole
+{
+    ROLE_None               =0,
+    ROLE_DumbProxy          =1,
+    ROLE_SimulatedProxy     =2,
+    ROLE_AutonomousProxy    =3,
+    ROLE_Authority          =4,
+    ROLE_MAX                =5,
+};
+enum EDrawType
+{
+    DT_None                 =0,
+    DT_Sprite               =1,
+    DT_Mesh                 =2,
+    DT_Brush                =3,
+    DT_RopeSprite_Deprecated=4,
+    DT_VerticalSprite_Deprecated=5,
+    DT_Terraform_Deprecated =6,
+    DT_SpriteAnimOnce_Deprecated=7,
+    DT_StaticMesh           =8,
+    DT_ParticleSystem       =9,
+    DT_BeamSystem           =10,
+    DT_GeoWater             =11,
+    DT_BreakableGlass       =12,
+    DT_AntiPortal           =13,
+    DT_AIBrush_Deprecated   =14,
+    DT_ParticleSphere_Deprecated=15,
+    DT_MultiPrimitive       =16,
+    DT_MAX                  =17,
+};
+enum ETraceFireHitResponse
+{
+    THITRESPONSE_Abort      =0,
+    THITRESPONSE_Immediate  =1,
+    THITRESPONSE_Backtrace  =2,
+    THITRESPONSE_MAX        =3,
+};
+struct ENGINE_API FPointRegion
+{
+    class AZoneInfo* Zone;
+    INT iLeaf;
+    INT iZone;
+};
+
+#define UCONST_kNumReverbPresets 10
+#define UCONST_kNumInteractKeyInfoPositions 9
+#define UCONST_kControlRemapperKeyTypeCount 12
+#define UCONST_DOF_PRIORITY_Level 32.0
+#define UCONST_DOF_PRIORITY_Zone 16.0
+#define UCONST_DOF_PRIORITY_PhysicsVolume 8.0
+#define UCONST_DOF_PRIORITY_DukeVision 6.0
+#define UCONST_DOF_PRIORITY_Zoom 4.0
+#define UCONST_DOF_PRIORITY_Death 2.0
+#define UCONST_SHAKEFLAGS_ToggleNegative 	1024
+#define UCONST_SHAKEFLAGS_ToggleSign 	512
+#define UCONST_SHAKEFLAGS_Func_Max 	256
+#define UCONST_SHAKEFLAGS_Func_Negative 	128
+#define UCONST_SHAKEFLAGS_Func_Positive 	64
+#define UCONST_SHAKEFLAGS_Lerp 	32
+#define UCONST_SHAKEFLAGS_Infinite 	16
+#define UCONST_SHAKEFLAGS_Restart 	8
+#define UCONST_SHAKEFLAGS_Roll 	4
+#define UCONST_SHAKEFLAGS_Yaw 	2
+#define UCONST_SHAKEFLAGS_Pitch 	1
+#define UCONST_kNextFrame 0.00001f
 
 struct AActor_eventNU_DrawScale3D_Parms
 {
@@ -1121,15 +1541,15 @@ struct AActor_eventViewMapperDisableCrosshairHUD_Parms
 
 struct AActor_eventKeyEvent_Parms
 {
-    BYTE Key;
-    BYTE Action;
+    /* EInputKey */ BYTE Key;
+    /* EInputAction */ BYTE Action;
     FLOAT Delta;
     BITFIELD ReturnValue;
 };
 
 struct AActor_eventKeyType_Parms
 {
-    BYTE Key;
+    /* EInputKey */ BYTE Key;
     BITFIELD ReturnValue;
 };
 
@@ -1294,13 +1714,13 @@ struct AActor_eventLanded_Parms
 
 struct AActor_eventPhysicsChange_Parms
 {
-    BYTE PreviousPhysics;
+    /* EPhysics */ BYTE PreviousPhysics;
 };
 
 struct AActor_eventClientCreateDesiredRotation_Parms
 {
     FRotator NewRotationTarget;
-    BYTE NewRotationStyle;
+    /* EDesiredStyle */ BYTE NewRotationStyle;
     FLOAT NewRotationTimeTotal;
     FLOAT NewRotationTimeMid;
     FLOAT NewRotationExponent;
@@ -1312,7 +1732,7 @@ struct AActor_eventClientCreateDesiredRotation_Parms
     FName NewRotationEventAbort;
     FName NewRotationFunctionAbort;
     FSDesiredCrush NewRotationCrush;
-    BYTE NewRotationStyleStopped;
+    /* EDesiredRotationStopStyle */ BYTE NewRotationStyleStopped;
 };
 
 struct AActor_eventClientCreateDesiredLocationEx_Parms
@@ -1361,7 +1781,7 @@ struct AActor_eventTraceFireHit_Parms
     FVector HitNormal;
     FName HitBoneName;
     BITFIELD bExtentTrace;
-    BYTE ReturnValue;
+    /* ETraceFireHitResponse */ BYTE ReturnValue;
 };
 
 struct AActor_eventWeaponTraceFireHit_Parms
@@ -1638,7 +2058,7 @@ struct AActor_eventGetBodyPartForBone_Parms
 {
     class UMesh* Mesh;
     FName BoneName;
-    BYTE ReturnValue;
+    /* EPawnBodyPart */ BYTE ReturnValue;
 };
 
 struct AActor_eventCreateActorPoolsOnDestroyed_Parms
@@ -1654,7 +2074,7 @@ public:
     INT TraceTrueMaskEarly;
     INT TraceTrueMask;
     FVector Velocity;
-    BYTE Physics;
+    /* EPhysics */ BYTE Physics;
     BITFIELD bAlwaysRejectTraceEarly:1 GCC_PACK(4);
     BITFIELD bTraceUsable:1;
     BITFIELD bTraceShootable:1;
@@ -1938,18 +2358,18 @@ public:
     FLOAT NetworkTweenCompletion;
     FVector NetworkLocationDelta;
     FLOAT NetworkTweenRate;
-    BYTE TickStyle;
-    BYTE MountType;
-    BYTE DismountPhysics;
+    /* ETickStyle */ BYTE TickStyle;
+    /* EMountType */ BYTE MountType;
+    /* EPhysics */ BYTE DismountPhysics;
     FName MountParentTag;
     FVector MountOrigin;
     FRotator MountAngles;
     FName MountMeshItem;
     class AActor* MountParent;
     dnArray<FSMountedActor> MountedActorList;
-    BYTE Style;
-    BYTE DrawType;
-    BYTE AnimToggleState;
+    /* ERenderStyle */ BYTE Style;
+    /* EDrawType */ BYTE DrawType;
+    /* EAnimToggleState */ BYTE AnimToggleState;
     INT AlphaSortGroup;
     FVector PrePivot;
     FVector PostPivot;
@@ -1971,10 +2391,10 @@ public:
     class UMesh* RenderMesh;
     FLOAT LastRenderTime;
     dnArray<class UMaterialEx*> Skins;
-    BYTE OwnerSeeStyle;
+    /* EOwnerSeeStyle */ BYTE OwnerSeeStyle;
     BYTE DirtyRenderFlags;
-    BYTE TraceFireHitResponse;
-    BYTE VertexFunction;
+    /* ETraceFireHitResponse */ BYTE TraceFireHitResponse;
+    /* EVertexFunction */ BYTE VertexFunction;
     FLOAT VF_Phase;
     FLOAT VF_PhaseX;
     FLOAT VF_PhaseY;
@@ -2017,8 +2437,8 @@ public:
     FLOAT NetUpdateFrequency;
     FVector TravelLocation;
     FRotator TravelRotation;
-    BYTE Role;
-    BYTE RemoteRole;
+    /* ENetRole */ BYTE Role;
+    /* ENetRole */ BYTE RemoteRole;
     BYTE SoundVolume;
     BYTE SoundPitch;
     INT SoundRadius;
@@ -2439,7 +2859,7 @@ public:
         ProcessEvent(FindFunctionChecked(ENGINE_ViewMapperDisableCrosshairHUD), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventKeyEvent(BYTE Key, BYTE Action, FLOAT Delta)
+    inline BITFIELD __fastcall eventKeyEvent(/* EInputKey */ BYTE Key, /* EInputAction */ BYTE Action, FLOAT Delta)
     {
         AActor_eventKeyEvent_Parms Parms;
         Parms.ReturnValue=0;
@@ -2449,7 +2869,7 @@ public:
         ProcessEvent(FindFunctionChecked(ENGINE_KeyEvent), &Parms);
         return Parms.ReturnValue;
     }
-    inline BITFIELD __fastcall eventKeyType(BYTE Key)
+    inline BITFIELD __fastcall eventKeyType(/* EInputKey */ BYTE Key)
     {
         AActor_eventKeyType_Parms Parms;
         Parms.ReturnValue=0;
@@ -2736,13 +3156,13 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_MassChange), NULL);
     }
-    inline void __fastcall eventPhysicsChange(BYTE PreviousPhysics)
+    inline void __fastcall eventPhysicsChange(/* EPhysics */ BYTE PreviousPhysics)
     {
         AActor_eventPhysicsChange_Parms Parms;
         Parms.PreviousPhysics=PreviousPhysics;
         ProcessEvent(FindFunctionChecked(ENGINE_PhysicsChange), &Parms);
     }
-    inline void __fastcall eventClientCreateDesiredRotation(FRotator NewRotationTarget, BYTE NewRotationStyle, FLOAT NewRotationTimeTotal, FLOAT NewRotationTimeMid, FLOAT NewRotationExponent, FRotator NewRotationRate, BITFIELD bRelativeRotation, FName NewRotationEvent, FName NewRotationFunction, BITFIELD bShortestDistance, FName NewRotationEventAbort, FName NewRotationFunctionAbort, FSDesiredCrush NewRotationCrush, BYTE NewRotationStyleStopped)
+    inline void __fastcall eventClientCreateDesiredRotation(FRotator NewRotationTarget, /* EDesiredStyle */ BYTE NewRotationStyle, FLOAT NewRotationTimeTotal, FLOAT NewRotationTimeMid, FLOAT NewRotationExponent, FRotator NewRotationRate, BITFIELD bRelativeRotation, FName NewRotationEvent, FName NewRotationFunction, BITFIELD bShortestDistance, FName NewRotationEventAbort, FName NewRotationFunctionAbort, FSDesiredCrush NewRotationCrush, /* EDesiredRotationStopStyle */ BYTE NewRotationStyleStopped)
     {
         AActor_eventClientCreateDesiredRotation_Parms Parms;
         Parms.NewRotationTarget=NewRotationTarget;
@@ -2829,7 +3249,7 @@ public:
         Parms.HitActor=HitActor;
         ProcessEvent(FindFunctionChecked(ENGINE_PerformTraceFireEffects), &Parms);
     }
-    inline BYTE __fastcall eventTraceFireHit(class AActor* SourceActor, class UClass* TraceDamageType, FVector SourceTraceOrigin, FVector HitLocation, FVector HitNormal, FName HitBoneName, BITFIELD bExtentTrace)
+    inline /* ETraceFireHitResponse */ BYTE __fastcall eventTraceFireHit(class AActor* SourceActor, class UClass* TraceDamageType, FVector SourceTraceOrigin, FVector HitLocation, FVector HitNormal, FName HitBoneName, BITFIELD bExtentTrace)
     {
         AActor_eventTraceFireHit_Parms Parms;
         Parms.ReturnValue=0;
@@ -3184,7 +3604,7 @@ public:
         ProcessEvent(FindFunctionChecked(ENGINE_GetDestroyableBoneForBone), &Parms);
         return Parms.ReturnValue;
     }
-    inline BYTE __fastcall eventGetBodyPartForBone(class UMesh* Mesh, FName BoneName)
+    inline /* EPawnBodyPart */ BYTE __fastcall eventGetBodyPartForBone(class UMesh* Mesh, FName BoneName)
     {
         AActor_eventGetBodyPartForBone_Parms Parms;
         Parms.ReturnValue=0;
@@ -3288,6 +3708,34 @@ public:
 */
 //***************************************************************************//
 
+enum EDynamicInteractionClassification
+{
+    KDINTERACTIONCLASS_Default=0,
+    KDINTERACTIONCLASS_NoPawnInteractions=1,
+    KDINTERACTIONCLASS_HighDetail=2,
+    KDINTERACTIONCLASS_DynamicPawn=3,
+    KDINTERACTIONCLASS_Vehicle=4,
+    KDINTERACTIONCLASS_DynamicPlayerPawn=5,
+    KDINTERACTIONCLASS_DrivenVehicle=6,
+    KDINTERACTIONCLASS_NoFullSizePawnInteractions=7,
+    KDINTERACTIONCLASS_NoInteractions=8,
+    KDINTERACTIONCLASS_OnlyPawns=9,
+    KDINTERACTIONCLASS_OnlyStaticNonPawns=10,
+    KDINTERACTIONCLASS_MAX  =11,
+};
+enum EStaticInteractionClassification
+{
+    KSINTERACTIONCLASS_Default=0,
+    KSINTERACTIONCLASS_ForceDynamic=1,
+    KSINTERACTIONCLASS_OnlyPawns=2,
+    KSINTERACTIONCLASS_EverythingButPawns=3,
+    KSINTERACTIONCLASS_OnlyVehicles=4,
+    KSINTERACTIONCLASS_OnlyPlayerPawns=5,
+    KSINTERACTIONCLASS_StaticPawn=6,
+    KSINTERACTIONCLASS_OnlyPawnsAndDrivenVehicles=7,
+    KSINTERACTIONCLASS_OnlyNonPlayerPawns=8,
+    KSINTERACTIONCLASS_MAX  =9,
+};
 
 struct AKarmaActor_eventClientReceivePhysicsState_Parms
 {
@@ -3418,10 +3866,10 @@ public:
     FLOAT ImpactSoundTimer;
     FLOAT NextLegalImpactSoundTime;
     INT NextLegalImpactSoundOffset;
-    BYTE StaticInteractionClassification;
-    BYTE DynamicInteractionClassification;
-    BYTE PersistantEffectType;
-    BYTE LastPersistantEffectType;
+    /* EStaticInteractionClassification */ BYTE StaticInteractionClassification;
+    /* EDynamicInteractionClassification */ BYTE DynamicInteractionClassification;
+    /* ESoundSlot */ BYTE PersistantEffectType;
+    /* ESoundSlot */ BYTE LastPersistantEffectType;
     INT PersistantEffectDBIndex;
     INT LastPersistantEffectDBIndex;
     class USound* PersistantEffectSound;
@@ -3429,7 +3877,7 @@ public:
     FLOAT PersistantEffectPitch;
     FLOAT PersistantEffectTime;
     class UClass* PhysicsMaterial;
-    BYTE PhysicsMassType;
+    /* EPhysicsMassType */ BYTE PhysicsMassType;
     FLOAT KFriction;
     FLOAT KRestitution;
     FLOAT KImpactThreshold;
@@ -3858,10 +4306,19 @@ public:
 */
 //***************************************************************************//
 
+enum ECsgOper
+{
+    CSG_Active              =0,
+    CSG_Add                 =1,
+    CSG_Subtract            =2,
+    CSG_Intersect           =3,
+    CSG_Deintersect         =4,
+    CSG_MAX                 =5,
+};
 class ENGINE_API ABrush : public ARenderActor
 {
 public:
-    BYTE CsgOper;
+    /* ECsgOper */ BYTE CsgOper;
     FScale MainScale;
     FScale PostScale;
     FScale TempScale;
@@ -3913,11 +4370,18 @@ public:
 */
 //***************************************************************************//
 
+enum ENavVolumeType
+{
+    NAV_BlockPath           =0,
+    NAV_UnBlockPath         =1,
+    NAV_Door                =2,
+    NAV_MAX                 =3,
+};
 class ENGINE_API ANavVolume : public AVolume
 {
 public:
     INT Priority;
-    BYTE VolumeType;
+    /* ENavVolumeType */ BYTE VolumeType;
     dnArray<FSNavBSPInfo> NavBSPInfo;
     DECLARE_FUNCTION(execSetState);
     DECLARE_CLASS(ANavVolume,AVolume,0,Engine)
@@ -3999,8 +4463,8 @@ public:
     BITFIELD bVolumeMusicAllowReverb:1;
     BITFIELD bReverbVolume:1;
     BITFIELD bUseExtendedReverb:1;
-    BYTE ReverbPreset GCC_PACK(4);
-    BYTE VolumeFlotsamEffect;
+    /* EReverbEnvironment */ BYTE ReverbPreset GCC_PACK(4);
+    /* EZoneFlotsamEffect */ BYTE VolumeFlotsamEffect;
     FRotator VolumeFlotsamRotation;
     FLOAT GroundFriction;
     FLOAT FluidFriction;
@@ -4024,7 +4488,7 @@ public:
     FLOAT ActorTimeScale;
     class UMaterialEx* HUDEffectMaterial;
     FLOAT HUDEffectFadeTime;
-    dnArray<BYTE> HUDIgnoredVisionTypes;
+    dnArray</* EVisionType */ BYTE> HUDIgnoredVisionTypes;
     class AGeoWater* GeoWaterActor;
     class UClass* VolumeMaterial;
     class UClass* FullSubmergedMaterial;
@@ -4198,7 +4662,7 @@ class ENGINE_API ADecal : public AProjector
 {
 public:
     FLOAT BehaviorArgument;
-    BYTE Behavior;
+    /* EBehavior */ BYTE Behavior;
     BITFIELD bRandomRotation:1 GCC_PACK(4);
     BITFIELD bRandomFlipX:1;
     BITFIELD bRandomFlipY:1;
@@ -4266,6 +4730,24 @@ public:
 */
 //***************************************************************************//
 
+enum EShrunkUseStyle
+{
+    SHRUNKUSE_Never         =0,
+    SHRUNKUSE_Always        =1,
+    SHRUNKUSE_SameSize      =2,
+    SHRUNKUSE_OnlyShrunk    =3,
+    SHRUNKUSE_MAX           =4,
+};
+enum EFlushStyle
+{
+    FLUSH_None              =0,
+    FLUSH_Down              =1,
+    FLUSH_Shrink            =2,
+    FLUSH_Clog              =3,
+    FLUSH_MAX               =4,
+};
+#define UCONST_CarriedActor_PenaltyScaleMass 100.0
+#define UCONST_CarriedActor_MaxNoPenaltyMass 100.0
 
 struct AInteractiveActor_eventMimicOwner_Parms
 {
@@ -4373,19 +4855,19 @@ public:
     BITFIELD bAbsorbDamage:1;
     BITFIELD bIgnoreTestCanSeeMe:1;
     BITFIELD bCanShowSelf:1;
-    BYTE ShrunkUseStyle GCC_PACK(4);
-    BYTE ShrunkGrabStyle;
-    BYTE ThrowPhysics;
-    BYTE PostTKPhysics;
+    /* EShrunkUseStyle */ BYTE ShrunkUseStyle GCC_PACK(4);
+    /* EShrunkUseStyle */ BYTE ShrunkGrabStyle;
+    /* EPhysics */ BYTE ThrowPhysics;
+    /* EPhysics */ BYTE PostTKPhysics;
     FStringNoInit UsePhrase;
     FStringNoInit GrabUsePhrase;
     FStringNoInit GrabUseCombinePhrase;
     FStringNoInit IconGrab;
     FStringNoInit IconUse;
-    dnArray<BYTE> UsePostureSuccess;
-    dnArray<BYTE> UsePostureFailure;
-    dnArray<BYTE> UsePhysicsSuccess;
-    dnArray<BYTE> UsePhysicsFailure;
+    dnArray</* EPostureStateEx */ BYTE> UsePostureSuccess;
+    dnArray</* EPostureStateEx */ BYTE> UsePostureFailure;
+    dnArray</* EPhysics */ BYTE> UsePhysicsSuccess;
+    dnArray</* EPhysics */ BYTE> UsePhysicsFailure;
     FLOAT UseAngleThreshold;
     FLOAT EndViewingAngleMinDiff;
     class APawn* CarriedBy;
@@ -4537,6 +5019,50 @@ public:
 */
 //***************************************************************************//
 
+enum ETurnState
+{
+    TURN_None               =0,
+    TURN_Adjusting          =1,
+    TURN_Shuffling          =2,
+    TURN_MAX                =3,
+};
+enum ETeam
+{
+    TEAM_EDF                =0,
+    TEAM_PigCop             =1,
+    TEAM_Undefined          =2,
+    TEAM_MAX                =3,
+};
+enum EHealthRecoveryState
+{
+    HEALTHRECOVERY_None     =0,
+    HEALTHRECOVERY_WaitingForRecharge=1,
+    HEALTHRECOVERY_Recharge =2,
+    HEALTHRECOVERY_Failed   =3,
+    HEALTHRECOVERY_MAX      =4,
+};
+enum ETargetType
+{
+    TARGET_NoTarget         =0,
+    TARGET_Point            =1,
+    TARGET_Actor            =2,
+    TARGET_MAX              =3,
+};
+enum EConstraintAxis
+{
+    CAXIS_Forward           =0,
+    CAXIS_Strafe            =1,
+    CAXIS_Vertical          =2,
+    CAXIS_MAX               =3,
+};
+enum EConstraintGroundType
+{
+    CGROUND_Whatever        =0,
+    CGROUND_SomethingStatic =1,
+    CGROUND_WorldAnchor     =2,
+    CGROUND_MAX             =3,
+};
+#define UCONST_kMinThrowDistance 64
 
 struct APawn_eventShouldRemoveStepHeightContact_Parms
 {
@@ -4659,7 +5185,7 @@ struct APawn_eventFailedPickupAttempt_Parms
 {
     class UClass* InvClass;
     class APickup* PickupRef;
-    BYTE PickupSource;
+    /* EPickupSource */ BYTE PickupSource;
 };
 
 struct APawn_eventHandlePickup_Parms
@@ -4683,7 +5209,7 @@ struct APawn_eventInventoryIsActive_Parms
 
 struct APawn_eventSetNewPostureState_Parms
 {
-    BYTE NewPostureStateEx;
+    /* EPostureStateEx */ BYTE NewPostureStateEx;
 };
 
 struct APawn_eventStartLanding_Parms
@@ -4714,7 +5240,7 @@ struct APawn_eventNU_WeaponChange_Parms
 
 struct APawn_eventNU_PostureStateChange_Parms
 {
-    BYTE NewPS;
+    /* EPostureStateEx */ BYTE NewPS;
 };
 
 struct APawn_eventRecordShot_Parms
@@ -4724,7 +5250,7 @@ struct APawn_eventRecordShot_Parms
 
 struct APawn_eventGetEnemySpottedDialog_Parms
 {
-    BYTE ReturnValue;
+    /* EDialog */ BYTE ReturnValue;
 };
 
 struct APawn_eventSayDialog_Parms
@@ -4970,7 +5496,7 @@ public:
     BITFIELD Stompable:1;
     BITFIELD bIgnoreAimAssist:1;
     BITFIELD bCanBloat:1;
-    BYTE BloatState GCC_PACK(4);
+    /* EBloatState */ BYTE BloatState GCC_PACK(4);
     FLOAT ExpandAmount;
     FLOAT ExpandTimeWarp;
     FLOAT BloatStartTime;
@@ -4998,18 +5524,18 @@ public:
     BITFIELD SavedDisplayPropbLowerByCollision:1;
     BITFIELD bExtendedVolumeSupport:1;
     BITFIELD bPerformLipSync:1;
-    BYTE PostureStateEx GCC_PACK(4);
-    BYTE Team;
-    BYTE EnemySpottedDialog;
-    BYTE ConfirmKillDialog;
-    BYTE HealthRecoveryState;
-    BYTE EgoRecoveryState;
-    BYTE FrozenState;
-    BYTE CarriedActorMountType;
-    BYTE FootstepCategory;
-    BYTE FootprintType;
-    BYTE Gender;
-    BYTE TurnType;
+    /* EPostureStateEx */ BYTE PostureStateEx GCC_PACK(4);
+    /* ETeam */ BYTE Team;
+    /* EDialog */ BYTE EnemySpottedDialog;
+    /* EDialog */ BYTE ConfirmKillDialog;
+    /* EHealthRecoveryState */ BYTE HealthRecoveryState;
+    /* EHealthRecoveryState */ BYTE EgoRecoveryState;
+    /* EFrozenState */ BYTE FrozenState;
+    /* EMountType */ BYTE CarriedActorMountType;
+    /* EFootstepCategory */ BYTE FootstepCategory;
+    /* EFootprintType */ BYTE FootprintType;
+    /* EPawnGender */ BYTE Gender;
+    /* ETurnState */ BYTE TurnType;
     class APawn* NextPawn;
     class UClass* Faction;
     class AInventory* InventoryPhysicsItem;
@@ -5505,7 +6031,7 @@ public:
         ProcessEvent(FindFunctionChecked(ENGINE_IsZoomedIn), &Parms);
         return Parms.ReturnValue;
     }
-    inline void __fastcall eventFailedPickupAttempt(class UClass* InvClass, class APickup* PickupRef, BYTE PickupSource)
+    inline void __fastcall eventFailedPickupAttempt(class UClass* InvClass, class APickup* PickupRef, /* EPickupSource */ BYTE PickupSource)
     {
         APawn_eventFailedPickupAttempt_Parms Parms;
         Parms.InvClass=InvClass;
@@ -5541,7 +6067,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_DestroyInventory), NULL);
     }
-    inline void __fastcall eventSetNewPostureState(BYTE NewPostureStateEx)
+    inline void __fastcall eventSetNewPostureState(/* EPostureStateEx */ BYTE NewPostureStateEx)
     {
         APawn_eventSetNewPostureState_Parms Parms;
         Parms.NewPostureStateEx=NewPostureStateEx;
@@ -5584,7 +6110,7 @@ public:
         Parms.NewWeapon=NewWeapon;
         ProcessEvent(FindFunctionChecked(ENGINE_NU_WeaponChange), &Parms);
     }
-    inline void __fastcall eventNU_PostureStateChange(BYTE NewPS)
+    inline void __fastcall eventNU_PostureStateChange(/* EPostureStateEx */ BYTE NewPS)
     {
         APawn_eventNU_PostureStateChange_Parms Parms;
         Parms.NewPS=NewPS;
@@ -5596,7 +6122,7 @@ public:
         Parms.Weapon=Weapon;
         ProcessEvent(FindFunctionChecked(ENGINE_RecordShot), &Parms);
     }
-    inline BYTE __fastcall eventGetEnemySpottedDialog()
+    inline /* EDialog */ BYTE __fastcall eventGetEnemySpottedDialog()
     {
         APawn_eventGetEnemySpottedDialog_Parms Parms;
         Parms.ReturnValue=0;
@@ -5894,6 +6420,69 @@ public:
 */
 //***************************************************************************//
 
+enum ERoundState
+{
+    RS_Waiting              =0,
+    RS_Countdown            =1,
+    RS_InProgress           =2,
+    RS_EndOfRound           =3,
+    RS_Unknown              =4,
+    RS_MAX                  =5,
+};
+enum ECameraBobState
+{
+    CAMBOB_None             =0,
+    CAMBOB_Walking          =1,
+    CAMBOB_CrouchWalking    =2,
+    CAMBOB_Swimming         =3,
+    CAMBOB_Sprinting        =4,
+    CAMBOB_MAX              =5,
+};
+enum EVerticalMovementState
+{
+    MSV_Unknown             =0,
+    MSV_None                =1,
+    MSV_RiseSlow            =2,
+    MSV_RiseFast            =3,
+    MSV_FallSlow            =4,
+    MSV_FallFast            =5,
+    MSV_MAX                 =6,
+};
+enum EStrafeMovementState
+{
+    MSS_Unknown             =0,
+    MSS_None                =1,
+    MSS_StrafeLeftSlow      =2,
+    MSS_StrafeRightSlow     =3,
+    MSS_StrafeLeftFast      =4,
+    MSS_StrafeRightFast     =5,
+    MSS_MAX                 =6,
+};
+enum EForwardMovementState
+{
+    MSF_Unknown             =0,
+    MSF_None                =1,
+    MSF_ForwardSlow         =2,
+    MSF_BackwardSlow        =3,
+    MSF_ForwardFast         =4,
+    MSF_BackwardFast        =5,
+    MSF_MAX                 =6,
+};
+enum ELowerBodyOverrideState
+{
+    LBO_Standard            =0,
+    LBO_Turning             =1,
+    LBO_Landing             =2,
+    LBO_Melee               =3,
+    LBO_MAX                 =4,
+};
+#define UCONST_kMoveBlendCutoff 0.0001f
+#define UCONST_kMoveAlphaLerpFactor 0.3f
+#define UCONST_kMoveAlphaCutoff 0.1f
+#define UCONST_kNumSensitityLevels 10
+#define UCONST_PlayerPawn_DamageIndicator_FullDamage 20.0f
+#define UCONST_PlayerPawn_MaxShrunkenCarryMass 10.0f
+#define UCONST_PlayerPawn_LookUseBuffer 6.5f
 
 struct APlayerPawn_eventPostMoveFillFrom_Parms
 {
@@ -5966,7 +6555,7 @@ struct APlayerPawn_eventrClientHearActorSound_Parms
 {
     class AActor* Actor;
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -5984,7 +6573,7 @@ struct APlayerPawn_eventrClientHearActorSound_Parms
 struct APlayerPawn_eventrClientHearSound_Parms
 {
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -6003,7 +6592,7 @@ struct APlayerPawn_eventrClientShortHearActorSound_Parms
 {
     class AActor* Actor;
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -6020,7 +6609,7 @@ struct APlayerPawn_eventrClientShortHearSound_Parms
 {
     FVector SoundLocation;
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -6037,7 +6626,7 @@ struct APlayerPawn_eventrClientVeryShortHearActorSound_Parms
 {
     class AActor* Actor;
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -6049,7 +6638,7 @@ struct APlayerPawn_eventrClientVeryShortHearSound_Parms
 {
     FVector SoundLocation;
     class USound* Sound;
-    BYTE Slot;
+    /* ESoundSlot */ BYTE Slot;
     FLOAT InnerRadius;
     FLOAT Radius;
     FLOAT Pitch;
@@ -6104,7 +6693,7 @@ struct APlayerPawn_eventPlayerMove_Parms
 
 struct APlayerPawn_eventIsVisiontTypeActive_Parms
 {
-    BYTE Type;
+    /* EVisionType */ BYTE Type;
     BITFIELD ReturnValue;
 };
 
@@ -6220,7 +6809,7 @@ struct APlayerPawn_eventPostureStateExLeaving_Unknown_Parms
 
 struct APlayerPawn_eventHandlePostureStateExBase_Turning_Parms
 {
-    BYTE NewTurnType;
+    /* ETurnState */ BYTE NewTurnType;
     INT YawDelta;
 };
 
@@ -6329,14 +6918,14 @@ struct APlayerPawn_eventBrainHUD_Parms
 struct APlayerPawn_eventClientTravel_Parms
 {
     FString URL;
-    BYTE TravelType;
+    /* ETravelType */ BYTE TravelType;
     BITFIELD bItems;
 };
 
 struct APlayerPawn_eventInstigateClientTravel_Parms
 {
     FString URL;
-    BYTE TravelType;
+    /* ETravelType */ BYTE TravelType;
     BITFIELD bItems;
 };
 
@@ -6356,7 +6945,7 @@ public:
     FLOAT OrthoZoom;
     class UPlayer* Player;
     FStringNoInit StoredURL;
-    BYTE StoredTravelType;
+    /* ETravelType */ BYTE StoredTravelType;
     class UMesh* QueuedMesh;
     BITFIELD StoredbItems:1 GCC_PACK(4);
     BITFIELD bLevelTransition:1;
@@ -6394,14 +6983,14 @@ public:
     FLOAT bUnDeafenSpeed GCC_PACK(4);
     BITFIELD bFallingSound:1 GCC_PACK(4);
     BITFIELD bSnapToLevel:1;
-    BYTE PreviousPostureStateEx GCC_PACK(4);
-    BYTE LowerBodyOverrideState;
-    BYTE ForwardMovementState;
-    BYTE PreviousForwardMovementState;
-    BYTE StrafeMovementState;
-    BYTE PreviousStrafeMovementState;
-    BYTE VerticalMovementState;
-    BYTE PreviousVerticalMovementState;
+    /* EPostureStateEx */ BYTE PreviousPostureStateEx GCC_PACK(4);
+    /* ELowerBodyOverrideState */ BYTE LowerBodyOverrideState;
+    /* EForwardMovementState */ BYTE ForwardMovementState;
+    /* EForwardMovementState */ BYTE PreviousForwardMovementState;
+    /* EStrafeMovementState */ BYTE StrafeMovementState;
+    /* EStrafeMovementState */ BYTE PreviousStrafeMovementState;
+    /* EVerticalMovementState */ BYTE VerticalMovementState;
+    /* EVerticalMovementState */ BYTE PreviousVerticalMovementState;
     FLOAT ForwardMovementStateSlowThreshold;
     FLOAT ForwardMovementStateFastThreshold;
     FLOAT StrafeMovementStateSlowThreshold;
@@ -6444,7 +7033,7 @@ public:
     INT AnimationControllerCacheIndex;
     dnArray<FSPlayerPawnAnimationControllerExCacheEntry> AnimationControllerCache;
     FName LastUpperBodyState;
-    BYTE LastUpperBodyPostureState;
+    /* EPostureStateEx */ BYTE LastUpperBodyPostureState;
     FVector CalcedViewLocation;
     FRotator CalcedViewRotation;
     class AMenuCamera* CurrentMenuCamera;
@@ -6452,7 +7041,7 @@ public:
     FVector ViewLockLocation;
     class AActor* ViewLockActor;
     FVector ViewLockLocationOffset;
-    BYTE CameraStyle;
+    /* EPlayerCameraStyle */ BYTE CameraStyle;
     FLOAT BlurAmount;
     FLOAT BlurBrightnessScale;
     FLOAT BloomBrightnessScale;
@@ -6480,7 +7069,7 @@ public:
     dnArray<FSActiveViewShake> ActiveShakes;
     FRotator CurrentShake;
     dnArray<FSRumbleInfo> ActiveRumbles;
-    BYTE CameraBobState;
+    /* ECameraBobState */ BYTE CameraBobState;
     dnArray<FSViewShakeInfo> WalkingCameraBob;
     dnArray<FSViewShakeInfo> CrouchingCameraBob;
     dnArray<FSViewShakeInfo> SprintingCameraBob;
@@ -6514,10 +7103,10 @@ public:
     INT Misc2;
     class AActor* ViewMapper;
     class AActor* OverlayActor;
-    BYTE LoadGameType;
+    /* ESaveType */ BYTE LoadGameType;
     INT LoadGameNum;
-    BYTE HelpKey[10];
-    BYTE HelpKeyAlt[10];
+    /* ESpecialKeys */ BYTE HelpKey[10];
+    /* ESpecialKeys */ BYTE HelpKeyAlt[10];
     FStringNoInit HelpText[10];
     class AHUD* MyHUD;
     class UClass* HUDType;
@@ -6729,7 +7318,7 @@ public:
     FLOAT PainDebounceTime;
     FLOAT PainDelay;
     FSScreenFlash HealthRecoveryScreenFlash;
-    BYTE ViewRotationMode;
+    /* EPlayerViewRotationMode */ BYTE ViewRotationMode;
     FRotator DesiredViewRotation;
     FRotator StartViewRotation;
     FLOAT RotateViewLength;
@@ -6767,7 +7356,7 @@ public:
     FLOAT SprintRecoverTime;
     FLOAT SprintFOVScale;
     FLOAT SprintDownTime;
-    BYTE VehiclePOV;
+    /* EVehiclePOV */ BYTE VehiclePOV;
     FLOAT SizeChangeFOVScale;
     FLOAT SizeChangeFOVApplyTime;
     FLOAT SizeChangeFOVRemoveTime;
@@ -7010,7 +7599,7 @@ public:
         Parms.bActorShouldExist=bActorShouldExist;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientFindAndPlaySound), &Parms);
     }
-    inline void __fastcall eventrClientHearActorSound(class AActor* Actor, class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, INT Offset, FSSoundLocationOverride SoundLocationOverride, FName MixerGroup, FLOAT PlaybackDelay)
+    inline void __fastcall eventrClientHearActorSound(class AActor* Actor, class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, INT Offset, FSSoundLocationOverride SoundLocationOverride, FName MixerGroup, FLOAT PlaybackDelay)
     {
         APlayerPawn_eventrClientHearActorSound_Parms Parms;
         Parms.Actor=Actor;
@@ -7030,7 +7619,7 @@ public:
         Parms.PlaybackDelay=PlaybackDelay;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientHearActorSound), &Parms);
     }
-    inline void __fastcall eventrClientHearSound(class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, INT Offset, FSSoundLocationOverride SoundLocationOverride, FName MixerGroup, FLOAT PlaybackDelay)
+    inline void __fastcall eventrClientHearSound(class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, INT Offset, FSSoundLocationOverride SoundLocationOverride, FName MixerGroup, FLOAT PlaybackDelay)
     {
         APlayerPawn_eventrClientHearSound_Parms Parms;
         Parms.Sound=Sound;
@@ -7049,7 +7638,7 @@ public:
         Parms.PlaybackDelay=PlaybackDelay;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientHearSound), &Parms);
     }
-    inline void __fastcall eventrClientShortHearActorSound(class AActor* Actor, class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, FName MixerGroup, FLOAT PlaybackDelay)
+    inline void __fastcall eventrClientShortHearActorSound(class AActor* Actor, class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, FName MixerGroup, FLOAT PlaybackDelay)
     {
         APlayerPawn_eventrClientShortHearActorSound_Parms Parms;
         Parms.Actor=Actor;
@@ -7067,7 +7656,7 @@ public:
         Parms.PlaybackDelay=PlaybackDelay;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientShortHearActorSound), &Parms);
     }
-    inline void __fastcall eventrClientShortHearSound(FVector SoundLocation, class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, FName MixerGroup, FLOAT PlaybackDelay)
+    inline void __fastcall eventrClientShortHearSound(FVector SoundLocation, class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, BYTE SoundPriority, FSSoundFlags Flags, FSSoundFadeInfo FadeInfo, FName SoundEndCallback, FName MixerGroup, FLOAT PlaybackDelay)
     {
         APlayerPawn_eventrClientShortHearSound_Parms Parms;
         Parms.SoundLocation=SoundLocation;
@@ -7085,7 +7674,7 @@ public:
         Parms.PlaybackDelay=PlaybackDelay;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientShortHearSound), &Parms);
     }
-    inline void __fastcall eventrClientVeryShortHearActorSound(class AActor* Actor, class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, FName MixerGroup)
+    inline void __fastcall eventrClientVeryShortHearActorSound(class AActor* Actor, class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, FName MixerGroup)
     {
         APlayerPawn_eventrClientVeryShortHearActorSound_Parms Parms;
         Parms.Actor=Actor;
@@ -7098,7 +7687,7 @@ public:
         Parms.MixerGroup=MixerGroup;
         ProcessEvent(FindFunctionChecked(ENGINE_rClientVeryShortHearActorSound), &Parms);
     }
-    inline void __fastcall eventrClientVeryShortHearSound(FVector SoundLocation, class USound* Sound, BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, FName MixerGroup)
+    inline void __fastcall eventrClientVeryShortHearSound(FVector SoundLocation, class USound* Sound, /* ESoundSlot */ BYTE Slot, FLOAT InnerRadius, FLOAT Radius, FLOAT Pitch, FLOAT Volume, FName MixerGroup)
     {
         APlayerPawn_eventrClientVeryShortHearSound_Parms Parms;
         Parms.SoundLocation=SoundLocation;
@@ -7176,7 +7765,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_DuckDown), NULL);
     }
-    inline BITFIELD __fastcall eventIsVisiontTypeActive(BYTE Type)
+    inline BITFIELD __fastcall eventIsVisiontTypeActive(/* EVisionType */ BYTE Type)
     {
         APlayerPawn_eventIsVisiontTypeActive_Parms Parms;
         Parms.ReturnValue=0;
@@ -7322,7 +7911,7 @@ public:
         Parms.bImmediate=bImmediate;
         ProcessEvent(FindFunctionChecked(ENGINE_PostureStateExLeaving_Unknown), &Parms);
     }
-    inline void __fastcall eventHandlePostureStateExBase_Turning(BYTE NewTurnType, INT YawDelta)
+    inline void __fastcall eventHandlePostureStateExBase_Turning(/* ETurnState */ BYTE NewTurnType, INT YawDelta)
     {
         APlayerPawn_eventHandlePostureStateExBase_Turning_Parms Parms;
         Parms.NewTurnType=NewTurnType;
@@ -7481,7 +8070,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_PrepareForExportTravel), NULL);
     }
-    inline void __fastcall eventClientTravel(const FString& URL, BYTE TravelType, BITFIELD bItems)
+    inline void __fastcall eventClientTravel(const FString& URL, /* ETravelType */ BYTE TravelType, BITFIELD bItems)
     {
         APlayerPawn_eventClientTravel_Parms Parms;
         Parms.URL=URL;
@@ -7489,7 +8078,7 @@ public:
         Parms.bItems=bItems;
         ProcessEvent(FindFunctionChecked(ENGINE_ClientTravel), &Parms);
     }
-    inline void __fastcall eventInstigateClientTravel(const FString& URL, BYTE TravelType, BITFIELD bItems)
+    inline void __fastcall eventInstigateClientTravel(const FString& URL, /* ETravelType */ BYTE TravelType, BITFIELD bItems)
     {
         APlayerPawn_eventInstigateClientTravel_Parms Parms;
         Parms.URL=URL;
@@ -7585,6 +8174,805 @@ public:
 */
 //***************************************************************************//
 
+enum EAIPopUpSelectionMethod
+{
+    AIPOPUPSEL_Default      =0,
+    AIPOPUPSEL_RoundRobin   =1,
+    AIPOPUPSEL_Random       =2,
+    AIPOPUPSEL_User         =3,
+    AIPOPUPSEL_MAX          =4,
+};
+enum EAIPopUpType
+{
+    AIPOPUP_Left            =0,
+    AIPOPUP_Right           =1,
+    AIPOPUP_Crouch          =2,
+    AIPOPUP_CrouchLeft      =3,
+    AIPOPUP_CrouchRight     =4,
+    AIPOPUP_PeekLeft        =5,
+    AIPOPUP_PeekRight       =6,
+    AIPOPUP_PeekCrouch      =7,
+    AIPOPUP_PeekCrouchLeft  =8,
+    AIPOPUP_PeekCrouchRight =9,
+    AIPOPUP_WaitLeft        =10,
+    AIPOPUP_WaitRight       =11,
+    AIPOPUP_CrouchWaitLeft  =12,
+    AIPOPUP_CrouchWaitRight =13,
+    AIPOPUP_StandFire       =14,
+    AIPOPUP_CrouchFire      =15,
+    AIPOPUP_ProneFire       =16,
+    AIPOPUP_Vault           =17,
+    AIPOPUP_MAX             =18,
+};
+enum EAIAttackConstraint
+{
+    ATTACKCONSTRAINT_None   =0,
+    ATTACKCONSTRAINT_Melee  =1,
+    ATTACKCONSTRAINT_Ranged =2,
+    ATTACKCONSTRAINT_Bezerk =3,
+    ATTACKCONSTRAINT_PipeBomb=4,
+    ATTACKCONSTRAINT_MAX    =5,
+};
+enum EAIGoalType
+{
+    AIGOALTYPE_Cover        =0,
+    AIGOALTYPE_StandingCover=1,
+    AIGOALTYPE_ActionPoint  =2,
+    AIGOALTYPE_ActionPointClosestFlyer=3,
+    AIGOALTYPE_ActionPointClosestUsable=4,
+    AIGOALTYPE_ActionPointClosestJumpable=5,
+    AIGOALTYPE_ActionPointReload=6,
+    AIGOALTYPE_ActionPointTeleport=7,
+    AIGOALTYPE_WeaponRange  =8,
+    AIGOALTYPE_WeaponRangeAir=9,
+    AIGOALTYPE_WeaponRangeAir_AssaultCommander=10,
+    AIGOALTYPE_WeaponRangeRear=11,
+    AIGOALTYPE_Land         =12,
+    AIGOALTYPE_Avoid        =13,
+    AIGOALTYPE_AvoidDanger  =14,
+    AIGOALTYPE_MoveAround   =15,
+    AIGOALTYPE_BackOff      =16,
+    AIGOALTYPE_MoveSide     =17,
+    AIGOALTYPE_AssaultCommander_Advance=18,
+    AIGOALTYPE_GuardPos     =19,
+    AIGOALTYPE_StepAside    =20,
+    AIGOALTYPE_Vehicle      =21,
+    AIGOALTYPE_ActionPointClosestTarget=22,
+    AIGOALTYPE_MAX          =23,
+};
+enum EAIAnimController
+{
+    AIANIMCON_None          =0,
+    AIANIMCON_Normal        =1,
+    AIANIMCON_Crouch        =2,
+    AIANIMCON_Prone         =3,
+    AIANIMCON_Search        =4,
+    AIANIMCON_Combat        =5,
+    AIANIMCON_Wounded       =6,
+    AIANIMCON_Swim          =7,
+    AIANIMCON_Jetpack       =8,
+    AIANIMCON_Scared        =9,
+    AIANIMCON_Blind         =10,
+    AIANIMCON_MAX           =11,
+};
+enum EAITarget
+{
+    AITARGET_Primary        =0,
+    AITARGET_Follow         =1,
+    AITARGET_MAX            =2,
+};
+enum EAITargetType
+{
+    AITARGETTYPE_None       =0,
+    AITARGETTYPE_Pos        =1,
+    AITARGETTYPE_Actor      =2,
+    AITARGETTYPE_Primary    =3,
+    AITARGETTYPE_MAX        =4,
+};
+enum EAIExecutive
+{
+    AIEXECUTIVE_None        =0,
+    AIEXECUTIVE_ScriptExec  =1,
+    AIEXECUTIVE_DecisionTree=2,
+    AIEXECUTIVE_AIDebugger  =3,
+    AIEXECUTIVE_MAX         =4,
+};
+enum EAIInputAction
+{
+    AIINPUTACTION_Press     =0,
+    AIINPUTACTION_Release   =1,
+    AIINPUTACTION_Hold      =2,
+    AIINPUTACTION_Tap       =3,
+    AIINPUTACTION_MAX       =4,
+};
+enum EAIMount
+{
+    AIMOUNT_Default         =0,
+    AIMOUNT_Yes             =1,
+    AIMOUNT_No              =2,
+    AIMOUNT_MAX             =3,
+};
+enum EAIInventory
+{
+    AIINVEN_None            =0,
+    AIINVEN_Flashlight      =1,
+    AIINVEN_BookSigning     =2,
+    AIINVEN_Jetpack         =3,
+    AIINVEN_MAX             =4,
+};
+enum EAIMessageType
+{
+    AIMSG_Help              =0,
+    AIMSG_WitnessAttack     =1,
+    AIMSG_MAX               =2,
+};
+enum EAIGroup
+{
+    AIGROUP_All             =0,
+    AIGROUP_Good            =1,
+    AIGROUP_Evil            =2,
+    AIGROUP_MAX             =3,
+};
+enum EScriptState
+{
+    SCRIPTSTATE_Transient   =0,
+    SCRIPTSTATE_Latent      =1,
+    SCRIPTSTATE_End         =2,
+    SCRIPTSTATE_MAX         =3,
+};
+enum EAIScriptState
+{
+    AISCR_Finished          =0,
+    AISCR_Latent            =1,
+    AISCR_MAX               =2,
+};
+enum EAILogType
+{
+    AILOG_Error             =0,
+    AILOG_Decision          =1,
+    AILOG_MAX               =2,
+};
+enum EAIAccuracy
+{
+    AIACCURACY_VeryPoor     =0,
+    AIACCURACY_Poor         =1,
+    AIACCURACY_Average      =2,
+    AIACCURACY_Good         =3,
+    AIACCURACY_VeryGood     =4,
+    AIACCURACY_Excellent    =5,
+    AIACCURACY_MAX          =6,
+};
+enum EAICloaking
+{
+    AICLOAKING_NotCloaked   =0,
+    AICLOAKING_Cloaking     =1,
+    AICLOAKING_Cloaked      =2,
+    AICLOAKING_DeCloaking   =3,
+    AICLOAKING_MAX          =4,
+};
+enum EAIAnimXType
+{
+    AIANIMXTYPE_Default     =0,
+    AIANIMXTYPE_Full        =1,
+    AIANIMXTYPE_FaceActor   =2,
+    AIANIMXTYPE_FacePos     =3,
+    AIANIMXTYPE_MAX         =4,
+};
+enum EAIInstigatorType
+{
+    AIINSTIGATORTYPE_None   =0,
+    AIINSTIGATORTYPE_Any    =1,
+    AIINSTIGATORTYPE_Player =2,
+    AIINSTIGATORTYPE_Enemy  =3,
+    AIINSTIGATORTYPE_Friend =4,
+    AIINSTIGATORTYPE_ExplicitTag=5,
+    AIINSTIGATORTYPE_MAX    =6,
+};
+enum EAITargetEval
+{
+    AITARGETEVAL_None       =0,
+    AITARGETEVAL_WeaponStandard=1,
+    AITARGETEVAL_LookStandard=2,
+    AITARGETEVAL_Rat        =3,
+    AITARGETEVAL_ScriptBase =4,
+    AITARGETEVAL_MAX        =5,
+};
+enum EAIAim
+{
+    AIAIM_Off               =0,
+    AIAIM_On                =1,
+    AIAIM_MAX               =2,
+};
+enum EAIChargeState
+{
+    CHARGESTATE_Charging    =0,
+    CHARGESTATE_FollowThrough=1,
+    CHARGESTATE_Cooldown    =2,
+    CHARGESTATE_MAX         =3,
+};
+enum EAIFreeMoveMode
+{
+    FREEMOVE_CircleStrafe   =0,
+    FREEMOVE_Flank          =1,
+    FREEMOVE_Float          =2,
+    FREEMOVE_Charge         =3,
+    FREEMOVE_Hover          =4,
+    FREEMOVE_Goto           =5,
+    FREEMOVE_Stop           =6,
+    FREEMOVE_MAX            =7,
+};
+enum EAIFlyToXMode
+{
+    FLYTOX_Mode_None        =0,
+    FLYTOX_Mode_Takeoff     =1,
+    FLYTOX_Mode_Fly         =2,
+    FLYTOX_Mode_LandStart   =3,
+    FLYTOX_Mode_LandLoop    =4,
+    FLYTOX_Mode_LandEnd     =5,
+    FLYTOX_Mode_MAX         =6,
+};
+enum EAIDodgeType
+{
+    DODGETYPE_Physics       =0,
+    DODGETYPE_SingleAnim    =1,
+    DODGETYPE_MAX           =2,
+};
+enum EAIJumpAttackType
+{
+    JUMPATTACK_NoAnim       =0,
+    JUMPATTACK_SingleAnim   =1,
+    JUMPATTACK_MultiAnim    =2,
+    JUMPATTACK_MAX          =3,
+};
+enum EAIJumpType
+{
+    JUMP_Default            =0,
+    JUMP_Physics            =1,
+    JUMP_MAX                =2,
+};
+enum EAIGotoXMode
+{
+    GOTOX_Mode_None         =0,
+    GOTOX_Mode_Move         =1,
+    GOTOX_Mode_MoveBackwards=2,
+    GOTOX_Mode_Turn         =3,
+    GOTOX_Mode_StepLeft     =4,
+    GOTOX_Mode_StepRight    =5,
+    GOTOX_Mode_WaitDoor     =6,
+    GOTOX_Mode_OpenDoor     =7,
+    GOTOX_Mode_Jump         =8,
+    GOTOX_Mode_Fall         =9,
+    GOTOX_Mode_Land         =10,
+    GOTOX_Mode_Hurl         =11,
+    GOTOX_Mode_WaitPath     =12,
+    GOTOX_Mode_Done         =13,
+    GOTOX_Mode_MAX          =14,
+};
+enum EAIMoveSpeed
+{
+    AIMOVESPEED_Stop        =0,
+    AIMOVESPEED_Walk        =1,
+    AIMOVESPEED_Run         =2,
+    AIMOVESPEED_MAX         =3,
+};
+enum EAIOffsetType
+{
+    AIOFFSETTTYPE_None      =0,
+    AIOFFSETTTYPE_Horiz     =1,
+    AIOFFSETTTYPE_3D        =2,
+    AIOFFSETTTYPE_Targets_Horiz=3,
+    AIOFFSETTTYPE_Targets_3D=4,
+    AIOFFSETTTYPE_RelTargetsDir_Horiz=5,
+    AIOFFSETTTYPE_RelTargetsDir_3D=6,
+    AIOFFSETTTYPE_RelDirToTarget_Horiz=7,
+    AIOFFSETTTYPE_RelDirToTarget_3D=8,
+    AIOFFSETTTYPE_RelDirToPrimaryTarget_Horiz=9,
+    AIOFFSETTTYPE_MAX       =10,
+};
+enum EAITargetStackOp
+{
+    AITARGETSTACKOP_Set     =0,
+    AITARGETSTACKOP_ClearAllAndSet=1,
+    AITARGETSTACKOP_Clear   =2,
+    AITARGETSTACKOP_ClearAll=3,
+    AITARGETSTACKOP_MAX     =4,
+};
+enum EAIFocus
+{
+    AIFOCUS_None            =0,
+    AIFOCUS_Pos             =1,
+    AIFOCUS_ReciprocalPos   =2,
+    AIFOCUS_Actor           =3,
+    AIFOCUS_ActorFullBody   =4,
+    AIFOCUS_MAX             =5,
+};
+enum EAICondition
+{
+    COND_Always             =0,
+    COND_Never              =1,
+    COND_HasTarget          =2,
+    COND_ValidTarget        =3,
+    COND_ValidTarget1       =4,
+    COND_ValidTarget3       =5,
+    COND_ValidTarget10      =6,
+    COND_NoTarget           =7,
+    COND_TargetValidNoContact=8,
+    COND_TargetLost3        =9,
+    COND_TargetLost10       =10,
+    COND_Rnd10              =11,
+    COND_Rnd20              =12,
+    COND_Rnd30              =13,
+    COND_Rnd40              =14,
+    COND_Rnd50              =15,
+    COND_Rnd60              =16,
+    COND_Rnd70              =17,
+    COND_Rnd80              =18,
+    COND_Rnd90              =19,
+    COND_InMeleeZone        =20,
+    COND_NotInMeleeZone     =21,
+    COND_InMeleeRange       =22,
+    COND_NotInMeleeRange    =23,
+    COND_InWeaponRange      =24,
+    COND_NotInWeaponRange   =25,
+    COND_InJumpAttackRange  =26,
+    COND_NotInJumpAttackRange=27,
+    COND_NeedReload         =28,
+    COND_DontNeedReload     =29,
+    COND_NoAmmoLoaded       =30,
+    COND_StandingCombat     =31,
+    COND_NotStandingCombat  =32,
+    COND_StandingPassive    =33,
+    COND_NotStandingPassive =34,
+    COND_StandingScared     =35,
+    COND_NotStandingScared  =36,
+    COND_Crouched           =37,
+    COND_NotCrouched        =38,
+    COND_Prone              =39,
+    COND_NotProne           =40,
+    COND_FacingTarget       =41,
+    COND_FacingTarget5      =42,
+    COND_FacingTarget10     =43,
+    COND_FacingTarget15     =44,
+    COND_FacingTarget30     =45,
+    COND_FacingTarget45     =46,
+    COND_FacingTarget90     =47,
+    COND_NotFacingTarget    =48,
+    COND_NotFacingTarget5   =49,
+    COND_NotFacingTarget10  =50,
+    COND_NotFacingTarget15  =51,
+    COND_NotFacingTarget30  =52,
+    COND_NotFacingTarget45  =53,
+    COND_NotFacingTarget90  =54,
+    COND_DeCloaking         =55,
+    COND_JetPacking         =56,
+    COND_NotJetPacking      =57,
+    COND_NewAvoidGoal       =58,
+    COND_TargetVisible      =59,
+    COND_TargetNotVisible   =60,
+    COND_InRangeLOS         =61,
+    COND_CrouchingLOSToTarget=62,
+    COND_NoCrouchingLOSToTarget=63,
+    COND_StandingLOSToTarget=64,
+    COND_NoStandingLOSToTarget=65,
+    COND_ProneLOSToTarget   =66,
+    COND_NoProneLOSToTarget =67,
+    COND_CrouchingCover     =68,
+    COND_NoCrouchingCover   =69,
+    COND_StandingCover      =70,
+    COND_NoStandingCover    =71,
+    COND_RollForwardClear   =72,
+    COND_RollLeftClear      =73,
+    COND_RollRightClear     =74,
+    COND_Guarding           =75,
+    COND_NotGuarding        =76,
+    COND_GuardingActor      =77,
+    COND_GuardingPos        =78,
+    COND_InGuardRange       =79,
+    COND_NotInGuardRange    =80,
+    COND_InGuardMaxPursuitRange=81,
+    COND_NotInGuardMaxPursuitRange=82,
+    COND_ShouldDrawWeapon   =83,
+    COND_ShouldStepAside    =84,
+    COND_TargetInGuardMaxPursuitRange=85,
+    COND_TargetNotInGuardMaxPursuitRange=86,
+    COND_ValidTKObj         =87,
+    COND_NoTKObj            =88,
+    COND_TKFailed           =89,
+    COND_InChargeRange      =90,
+    COND_ClearPathToTarget  =91,
+    COND_NoClearPathToTarget=92,
+    COND_Swimming           =93,
+    COND_TargetShrunk       =94,
+    COND_NoShrunkTarget     =95,
+    COND_NotInStompVertRange=96,
+    COND_TargetIsTargetingMe=97,
+    COND_ClearChargePath    =98,
+    COND_SemiClearShot      =99,
+    COND_OnValidNAV         =100,
+    COND_InStompRange       =101,
+    COND_TargetInStrTap     =102,
+    COND_ClearShotFromWeapon=103,
+    COND_SemiClearShotFromWeapon=104,
+    COND_ClearProjectileShot=105,
+    COND_FrozenTarget       =106,
+    COND_NoFrozenTarget     =107,
+    COND_MAX                =108,
+};
+enum EAICode
+{
+    AICODE_Ok               =0,
+    AICODE_Unspecified      =1,
+    AICODE_WindowClosed     =2,
+    AICODE_ValidTarget      =3,
+    AICODE_NoTarget         =4,
+    AICODE_TargetLost       =5,
+    AICODE_NoFocus          =6,
+    AICODE_FacingActor      =7,
+    AICODE_FacingPos        =8,
+    AICODE_InRange          =9,
+    AICODE_PathFailed       =10,
+    AICODE_TargetOutsidePath=11,
+    AICODE_AlreadySelected  =12,
+    AICODE_NotInInventory   =13,
+    AICODE_NoAmmo           =14,
+    AICODE_AlreadyOn        =15,
+    AICODE_AlreadyOff       =16,
+    AICODE_AnimNotFound     =17,
+    AICODE_TargetTooClose   =18,
+    AICODE_TargetTooFar     =19,
+    AICODE_TargetTooHigh    =20,
+    AICODE_TargetTooLow     =21,
+    AICODE_NotDirectlyReachable=22,
+    AICODE_TargetFalling    =23,
+    AICODE_AimNotUsed       =24,
+    AICODE_RndFailed        =25,
+    AICODE_ScriptEventNotFound=26,
+    AICODE_NoLOS            =27,
+    AICODE_WeaponFullyLoaded=28,
+    AICODE_NoWeapon         =29,
+    AICODE_WeaponNotActive  =30,
+    AICODE_WeaponNeedsReload=31,
+    AICODE_WeaponLoaded     =32,
+    AICODE_Crouching        =33,
+    AICODE_Prone            =34,
+    AICODE_StandingCombat   =35,
+    AICODE_StandingPassive  =36,
+    AICODE_StandingScared   =37,
+    AICODE_StandingWounded  =38,
+    AICODE_NotStanding      =39,
+    AICODE_NotStandingCombat=40,
+    AICODE_CurrentOpMustFinish=41,
+    AICODE_CurrentOpShouldFinish=42,
+    AICODE_NoDamageInfo     =43,
+    AICODE_ShowPainIsDisabled=44,
+    AICODE_NoHealth         =45,
+    AICODE_NoValidInfoNode  =46,
+    AICODE_AlreadyAtInfoNode=47,
+    AICODE_NotFacingTarget  =48,
+    AICODE_AlreadyCloaked   =49,
+    AICODE_NotCloaking      =50,
+    AICODE_JetPacking       =51,
+    AICODE_NotJetPacking    =52,
+    AICODE_FailedToFindAGoal=53,
+    AICODE_NewGoalTooClose  =54,
+    AICODE_TargetNotVisible =55,
+    AICODE_TargetNotAimingAtMe=56,
+    AICODE_TooLongSinceDamaged=57,
+    AICODE_InCrouchingCover =58,
+    AICODE_InStandingCover  =59,
+    AICODE_TooLittleTimeElapsed=60,
+    AICODE_LOSToTarget      =61,
+    AICODE_HealthTooHigh    =62,
+    AICODE_NotGuarding      =63,
+    AICODE_NotGuardingPawn  =64,
+    AICODE_NotInTheWay      =65,
+    AICODE_CannotJump       =66,
+    AICODE_NoPipeBombs      =67,
+    AICODE_TargetNotInRequiredPhysicsMode=68,
+    AICODE_NotInDanger      =69,
+    AICODE_ValidTKObj       =70,
+    AICODE_NoTKObj          =71,
+    AICODE_ConstrainedToRangedAttacks=72,
+    AICODE_ConstrainedToMeleeAttacks=73,
+    AICODE_ClearPathToTarget=74,
+    AICODE_NoClearPathToTarget=75,
+    AICODE_IncorrectWeapon  =76,
+    AICODE_WeaponAimerOn    =77,
+    AICODE_IncorrectPhysics =78,
+    AICODE_NoProp           =79,
+    AICODE_ConstrainedToLocation=80,
+    AICODE_NoContracts      =81,
+    AICODE_CannotPerformContract=82,
+    AICODE_PartyCannotPerformContract=83,
+    AICODE_PartyIsNotAI     =84,
+    AICODE_NotAgreed        =85,
+    AICODE_WrongClass       =86,
+    AICode_NegotiationGateClosed=87,
+    AICode_NotInContract    =88,
+    AICODE_InvalidClass     =89,
+    AICODE_WrongAnimController=90,
+    AICODE_PartiesNotLevel  =91,
+    AICODE_EMPGateClosed    =92,
+    AICODE_NotShrunk        =93,
+    AICODE_TargetShrunk     =94,
+    AICODE_PopUpDisabled    =95,
+    AICODE_NotUsingActionPoints=96,
+    AICODE_NoActionPoint    =97,
+    AICODE_AtActionPoint    =98,
+    AICODE_NotAtActionPoint =99,
+    AICODE_ActionPointNotUseable=100,
+    AICODE_ActionPointOutsideParms=101,
+    AICODE_ActionPointOK    =102,
+    AICODE_TargetMounted    =103,
+    AICODE_FinishingMoveNotAllowed=104,
+    AICODE_GlobalGateCheckFailed=105,
+    AICODE_MAX              =106,
+};
+enum EAIWindow
+{
+    WIN_Always              =0,
+    WIN_OnIdle              =1,
+    WIN_OnSuccess           =2,
+    WIN_OnFailure           =3,
+    WIN_MAX                 =4,
+};
+enum EAIStateStatus
+{
+    AISTATESTATUS_None      =0,
+    AISTATESTATUS_Working   =1,
+    AISTATESTATUS_Succeeded =2,
+    AISTATESTATUS_Failed    =3,
+    AISTATESTATUS_MAX       =4,
+};
+enum EAINodeStatus
+{
+    AINODESTATUS_Invalid    =0,
+    AINODESTATUS_Ready      =1,
+    AINODESTATUS_Working    =2,
+    AINODESTATUS_Succeeded  =3,
+    AINODESTATUS_Failed     =4,
+    AINODESTATUS_MAX        =5,
+};
+enum EAIOpStatus
+{
+    AIOPSTATUS_None         =0,
+    AIOPSTATUS_Working      =1,
+    AIOPSTATUS_Succeeded    =2,
+    AIOPSTATUS_Failed       =3,
+    AIOPSTATUS_MAX          =4,
+};
+enum EAIOp
+{
+    AIOP_None               =0,
+    AIOP_FUBAR              =1,
+    AIOP_AggressiveIdle     =2,
+    AIOP_AimOn              =3,
+    AIOP_AimOff             =4,
+    AIOP_AlignWithGuardedActor=5,
+    AIOP_AnimPreset         =6,
+    AIOP_BallModeStart      =7,
+    AIOP_BallModeEnd        =8,
+    AIOP_Bezerk             =9,
+    AIOP_BladeSpinStart     =10,
+    AIOP_BladeSpinStop      =11,
+    AIOP_Bound              =12,
+    AIOP_CatchTKObj         =13,
+    AIOP_Charge             =14,
+    AIOP_ChargeStart        =15,
+    AIOP_Cloak              =16,
+    AIOP_CombatTurn         =17,
+    AIOP_Contract           =18,
+    AIOP_Cower              =19,
+    AIOP_Crouch             =20,
+    AIOP_DeCloak            =21,
+    AIOP_Destroy            =22,
+    AIOP_Die                =23,
+    AIOP_Disable            =24,
+    AIOP_DodgeLeft          =25,
+    AIOP_DodgeRight         =26,
+    AIOP_Extend             =27,
+    AIOP_Fall               =28,
+    AIOP_Fidget             =29,
+    AIOP_Fire               =30,
+    AIOP_FireBoth           =31,
+    AIOP_FireLeft           =32,
+    AIOP_FireRight          =33,
+    AIOP_FireDelay          =34,
+    AIOP_FireWeapon         =35,
+    AIOP_FreeMoveCircleStrafe=36,
+    AIOP_FreeMoveFlank      =37,
+    AIOP_FreeMoveFloat      =38,
+    AIOP_FreeMoveRest       =39,
+    AIOP_FreeMoveSpreadOut  =40,
+    AIOP_GotoActorClosestNavPos=41,
+    AIOP_GotoActorClosestNavPosSlow=42,
+    AIOP_GotoGoalClippedMoveFocusTarget=43,
+    AIOP_GotoGoalFocusGuardedActor=44,
+    AIOP_GotoGoalFocusGuardedActorFullBody=45,
+    AIOP_GotoGoalFocusGuardedActorSlow=46,
+    AIOP_GotoGoalFocusPos   =47,
+    AIOP_GotoGoalFocusPosOneStep=48,
+    AIOP_GotoGoalFocusPosSlow=49,
+    AIOP_GotoGoalFocusReciprocalPos=50,
+    AIOP_GotoGoalFocusReciprocalPosSlow=51,
+    AIOP_GotoGoalFocusTarget=52,
+    AIOP_GotoGoalFocusTargetFullBody=53,
+    AIOP_GotoGoalFocusTargetFullBodySlow=54,
+    AIOP_GotoGoalFocusTargetSlow=55,
+    AIOP_GotoJumpAttackRangeFocusActor=56,
+    AIOP_GotoJumpAttackRangeFocusPos=57,
+    AIOP_GotoJumpAttackRangeSlowFocusActor=58,
+    AIOP_GotoJumpAttackRangeSlowFocusPos=59,
+    AIOP_GotoLandPos        =60,
+    AIOP_GotoMeleeRangeFocusActor=61,
+    AIOP_GotoMeleeRangeFocusFullBody=62,
+    AIOP_GotoMeleeRangeFocusPos=63,
+    AIOP_GotoMeleeRangePhysics=64,
+    AIOP_GotoMeleeRangeSlowFocusActor=65,
+    AIOP_GotoMeleeRangeSlowFocusFullBody=66,
+    AIOP_GotoPreset         =67,
+    AIOP_GotoPresetSlow     =68,
+    AIOP_GotoRnd3DFocusPos  =69,
+    AIOP_GotoRnd3DFocusActorFullBody=70,
+    AIOP_GotoSearchPos      =71,
+    AIOP_GotoSearchPosSlow  =72,
+    AIOP_GotoWeaponRangeFocusActor=73,
+    AIOP_GotoWeaponRangeFocusFullBody=74,
+    AIOP_GotoWeaponRangeFocusPos=75,
+    AIOP_GotoWeaponRangeSlowFocusActor=76,
+    AIOP_GotoWeaponRangeSlowFocusFullBody=77,
+    AIOP_GotoWanderGoalFocusPos=78,
+    AIOP_HaltFireMelee      =79,
+    AIOP_Haywire            =80,
+    AIOP_Hide               =81,
+    AIOP_HoldFire           =82,
+    AIOP_Hover              =83,
+    AIOP_HurlProp           =84,
+    AIOP_Idle               =85,
+    AIOP_IdleEX             =86,
+    AIOP_Jump               =87,
+    AIOP_JumpPreset         =88,
+    AIOP_JumpAttack         =89,
+    AIOP_Land               =90,
+    AIOP_LookAround         =91,
+    AIOP_MeleeAttack        =92,
+    AIOP_MoveStart          =93,
+    AIOP_MoveStop           =94,
+    AIOP_MultiAnim          =95,
+    AIOP_Pain               =96,
+    AIOP_Pause              =97,
+    AIOP_PickupProp         =98,
+    AIOP_PlaceTripMinePreset=99,
+    AIOP_PopUp              =100,
+    AIOP_Prone              =101,
+    AIOP_Rappel             =102,
+    AIOP_ReleaseTKObj       =103,
+    AIOP_Reload             =104,
+    AIOP_ResumeFire         =105,
+    AIOP_Retract            =106,
+    AIOP_RoarFocusActor     =107,
+    AIOP_RollForward        =108,
+    AIOP_RollForwardToCrouch=109,
+    AIOP_RollLeft           =110,
+    AIOP_RollLeftToCrouch   =111,
+    AIOP_RollRight          =112,
+    AIOP_RollRightToCrouch  =113,
+    AIOP_SelectBestWeapon   =114,
+    AIOP_SelectPresetWeapon =115,
+    AIOP_SelectPresetWeaponQuick=116,
+    AIOP_ShootProjectile    =117,
+    AIOP_ShootProjectileEnd =118,
+    AIOP_StandCombat        =119,
+    AIOP_StandPassive       =120,
+    AIOP_StandScared        =121,
+    AIOP_StandWounded       =122,
+    AIOP_StrafeMeleeFocusPos=123,
+    AIOP_StrafeMeleeFocusActor=124,
+    AIOP_StrafeMeleeFocusActorFullBody=125,
+    AIOP_StrafeMeleeSlowFocusPos=126,
+    AIOP_StrafeMeleeSlowFocusActor=127,
+    AIOP_StrafeMeleeSlowFocusActorFullBody=128,
+    AIOP_StrafeWeaponFocusPos=129,
+    AIOP_StrafeWeaponFocusActor=130,
+    AIOP_StrafeWeaponFocusActorFullBody=131,
+    AIOP_StrafeWeaponSlowFocusPos=132,
+    AIOP_StrafeWeaponSlowFocusActor=133,
+    AIOP_StrafeWeaponSlowFocusActorFullBody=134,
+    AIOP_Stomp              =135,
+    AIOP_Stun               =136,
+    AIOP_TakeOff            =137,
+    AIOP_Teleport           =138,
+    AIOP_ThrowPipeBomb      =139,
+    AIOP_ThrowProp          =140,
+    AIOP_ThrowTKObj         =141,
+    AIOP_TriggerScriptTag   =142,
+    AIOP_TurnToGuardedActor =143,
+    AIOP_TurnToPreset       =144,
+    AIOP_TurnToPrimaryTarget=145,
+    AIOP_UsePreset          =146,
+    AIOP_ScriptBase         =147,
+    AIOP_ScriptExample      =148,
+    AIOP_MoveToPodProtectorBase=149,
+    AIOP_Dummy              =150,
+    AIOP_MAX                =151,
+};
+enum EAIWeapManMode
+{
+    WEAPMAN_Mode_None       =0,
+    WEAPMAN_Mode_AimOff     =1,
+    WEAPMAN_Mode_Wait       =2,
+    WEAPMAN_Mode_StartAimAtTarget=3,
+    WEAPMAN_Mode_StartAimAtScanTarget=4,
+    WEAPMAN_Mode_StopAim    =5,
+    WEAPMAN_Mode_StopAimFast=6,
+    WEAPMAN_Mode_AimerStopAim=7,
+    WEAPMAN_Mode_Scan       =8,
+    WEAPMAN_Mode_PreFire    =9,
+    WEAPMAN_Mode_Charge     =10,
+    WEAPMAN_Mode_Fire       =11,
+    WEAPMAN_Mode_PostFire   =12,
+    WEAPMAN_Mode_MAX        =13,
+};
+enum EAIDynamicPathPriority
+{
+    AIDPATH_AlwaysDynamicPath=0,
+    AIDPATH_Default         =1,
+    AIDPATH_NPC             =2,
+    AIDPATH_Rat             =3,
+    AIDPATH_Medium          =4,
+    AIDPATH_Large           =5,
+    AIDPATH_Player          =6,
+    AIDPATH_Scripted        =7,
+    AIDPATH_MAX             =8,
+};
+enum EAIPathFailMode
+{
+    AIPATHFAIL_FailAndQuit  =0,
+    AIPATHFAIL_WaitForever  =1,
+    AIPATHFAIL_MAX          =2,
+};
+enum EAIPathResult
+{
+    AIPATH_Succeeded        =0,
+    AIPATH_Failed           =1,
+    AIPATH_OpenDoor         =2,
+    AIPATH_MAX              =3,
+};
+enum EAIMoveToResult
+{
+    AIMOVETORESULT_Succeeded=0,
+    AIMOVETORESULT_Failed   =1,
+    AIMOVETORESULT_Turn     =2,
+    AIMOVETORESULT_Move     =3,
+    AIMOVETORESULT_MAX      =4,
+};
+enum EAIArcSector
+{
+    AIARCSECTOR_Forward     =0,
+    AIARCSECTOR_Backward    =1,
+    AIARCSECTOR_Left        =2,
+    AIARCSECTOR_Right       =3,
+    AIARCSECTOR_MAX         =4,
+};
+#define UCONST_ATWGHT_InfiniteHate -1000
+#define UCONST_ATWGHT_Despise -3
+#define UCONST_ATWGHT_Hate -2
+#define UCONST_ATWGHT_Dislike -1
+#define UCONST_ATWGHT_Neutral 0
+#define UCONST_ATWGHT_Like 1
+#define UCONST_ATWGHT_Love 2
+#define UCONST_ATWGHT_Idolize 3
+#define UCONST_ATWGHT_InfiniteLove 1000
+#define UCONST_AI_Infinite 2147483646
+#define UCONST_AI_NoExitTime -1.0f
+#define UCONST_AI_DefaultNoThreshold -1.0f
+#define UCONST_AI_DefaultBlendOffTime 0.5f
+#define UCONST_AI_DefaultEyeBlendTime 0.25f
+#define UCONST_AI_DefaultHeadBlendTime 0.5f
+#define UCONST_AI_DefaultSetAimTime 0.2f
+#define UCONST_AI_DefaultClipTolerance 60.0f
+#define UCONST_AI_NoMaxLifeTime -1.0f
+#define UCONST_AI_InvalidRefID -1
 
 struct ABaseAI_eventShouldOpenDoor_Parms
 {
@@ -7837,6 +9225,166 @@ public:
 */
 //***************************************************************************//
 
+enum EPSystemSoundType
+{
+    PSST_SystemCreated      =0,
+    PSST_SystemDestroyed    =1,
+    PSST_SystemEnabled      =2,
+    PSST_SystemDisabled     =3,
+    PSST_SystemTriggered    =4,
+    PSST_MAX                =5,
+};
+enum EPSoundType
+{
+    PST_ParticleCreated     =0,
+    PST_ParticleDied        =1,
+    PST_ParticleBounced     =2,
+    PST_MAX                 =3,
+};
+enum EFriendStyle
+{
+    FRIEND_All              =0,
+    FRIEND_OneRandom        =1,
+    FRIEND_OneLinear        =2,
+    FRIEND_MAX              =3,
+};
+enum EParticleVolumeResponse
+{
+    PVR_AlwaysSpawn         =0,
+    PVR_OnlyWater           =1,
+    PVR_OnlyNonWater        =2,
+    PVR_MAX                 =3,
+};
+enum EParticleSpawnShape
+{
+    PSHAPE_None             =0,
+    PSHAPE_Sphere           =1,
+    PSHAPE_Cone             =2,
+    PSHAPE_MuzzleCone       =3,
+    PSHAPE_SphereEdge       =4,
+    PSHAPE_ConeEdge         =5,
+    PSHAPE_MAX              =6,
+};
+enum EMaxParticleTest
+{
+    PMAXTEST_Skip           =0,
+    PMAXTEST_Random         =1,
+    PMAXTEST_Oldest         =2,
+    PMAXTEST_MAX            =3,
+};
+enum ESoftParticleSystemTriggerType
+{
+    SPT_None                =0,
+    SPT_Enable              =1,
+    SPT_Disable             =2,
+    SPT_Toggle              =3,
+    SPT_Pulse               =4,
+    SPT_UpdateEnable        =5,
+    SPT_UpdateDisable       =6,
+    SPT_UpdateToggle        =7,
+    SPT_UpdatePulse         =8,
+    SPT_Prime               =9,
+    SPT_TimeWarpEnable      =10,
+    SPT_TimeWarpDisable     =11,
+    SPT_TimeWarpToggle      =12,
+    SPT_TimeWarpPulse       =13,
+    SPT_TimeWarpPulseUp     =14,
+    SPT_PulseOnce           =15,
+    SPT_MAX                 =16,
+};
+enum EParticleDetail
+{
+    PD_High                 =0,
+    PD_Medium               =1,
+    PD_Low                  =2,
+    PD_MAX                  =3,
+};
+enum EPLightingType
+{
+    PLT_NoLight             =0,
+    PLT_PerSystem           =1,
+    PLT_PerParticle         =2,
+    PLT_MAX                 =3,
+};
+struct ENGINE_API FParticle
+{
+    FLOAT SortKey;
+    INT SpawnNumber;
+    FVector Velocity;
+    FLOAT Rotation;
+    FRotator Rotation3d;
+    FVector Location;
+    FVector PreviousLocation;
+    FLOAT CurTextureScaleX;
+    FLOAT CurTextureScaleY;
+    FLOAT MidTextureScaleX;
+    FLOAT MidTextureScaleY;
+    FLOAT Alpha;
+    FLOAT DrawScale;
+    FLOAT Lifetime;
+    FLOAT RemainingLifetime;
+    FLOAT RotationInitial;
+    FRotator RotationInitial3d;
+    FPointRegion Region;
+    class UMaterialEx* Texture;
+    dnTextureAnimController* TextureAnimControllers;
+    FLOAT SystemSizeScale;
+    class ASoftParticleSystem* ControllerSystem;
+    BITFIELD RespectControllerSystem:1 GCC_PACK(4);
+    BITFIELD HaveCollisionActor:1;
+    BITFIELD PhysicsTerminated:1;
+    BITFIELD ParticleCollidesWithWorld:1;
+    BITFIELD OscillateDir:1;
+    BITFIELD SkipControllerDelta:1;
+    FVector Acceleration GCC_PACK(4);
+    FLOAT LinearDamping;
+    FLOAT AngularDamping;
+    FLOAT RotationVelocity;
+    FLOAT RotationAcceleration;
+    FRotator RotationVelocity3d;
+    FRotator RotationAcceleration3d;
+    class APhysicsVolume* PhysVolume;
+    FLOAT InitialAlpha;
+    FLOAT AlphaMid;
+    FLOAT FinalAlpha;
+    FLOAT NextFrameDelay;
+    INT OscillateCount;
+    FLOAT PRandomFriendsTimer;
+    FLOAT InitialDrawScale;
+    FLOAT MidDrawScale;
+    FLOAT FinalDrawScale;
+    FLOAT DrawScaleMidLife;
+    FLOAT InitialTextureScaleX;
+    FLOAT FinalTextureScaleX;
+    FLOAT InitialTextureScaleY;
+    FLOAT FinalTextureScaleY;
+    class AActor* Base;
+};
+
+struct ENGINE_API FSPRenderData
+{
+    FLOAT SortKey;
+    INT SpawnNumber;
+    FVector Velocity;
+    FLOAT Rotation;
+    FRotator Rotation3d;
+    FVector Location;
+    FVector PreviousLocation;
+    FLOAT CurTextureScaleX;
+    FLOAT CurTextureScaleY;
+    FLOAT MidTextureScaleX;
+    FLOAT MidTextureScaleY;
+    FLOAT Alpha;
+    FLOAT DrawScale;
+    FLOAT Lifetime;
+    FLOAT RemainingLifetime;
+    FLOAT RotationInitial;
+    FRotator RotationInitial3d;
+    FPointRegion Region;
+    class UMaterialEx* Texture;
+    dnTextureAnimController* TexAnimController;
+};
+
 class ENGINE_API ASoftParticleSystem : public AParticleSystemBase
 {
 public:
@@ -7974,7 +9522,7 @@ public:
     FLOAT LifetimeVariance;
     FLOAT SpawnPeriodVariance;
     INT SpawnNumberVariance;
-    BYTE MaxSpawnLimitTest;
+    /* EMaxParticleTest */ BYTE MaxSpawnLimitTest;
     INT OscillateLifetimeCount;
     INT OscillateLifetimeCountVariance;
     FVector SpawnOffset;
@@ -8089,9 +9637,9 @@ public:
     INT nRePrimeCount;
     FLOAT fRePrimeTime;
     FLOAT fRePrimeTimeIncrement;
-    BYTE ParticleDetail;
+    /* EParticleDetail */ BYTE ParticleDetail;
     FLOAT TriggerAfterSeconds;
-    BYTE TriggerType;
+    /* ESoftParticleSystemTriggerType */ BYTE TriggerType;
     FLOAT PulseSeconds;
     FLOAT PulseSecondsVariance;
     FLOAT PulseMagnitude;
@@ -8102,7 +9650,7 @@ public:
     INT ParticlesPerCollision;
     INT NumCollisionActors;
     class UClass* CollisionActorClass;
-    BYTE SpawnShape;
+    /* EParticleSpawnShape */ BYTE SpawnShape;
     FVector SpawnShapeScale;
     FRotator SpawnShapeRotation;
     FLOAT ZoneUpdateTime;
@@ -8286,6 +9834,27 @@ public:
 */
 //***************************************************************************//
 
+enum EParticleTriggerReaction
+{
+    PTG_None                =0,
+    PTG_Disable             =1,
+    PTG_Enable              =2,
+    PTG_Toggle              =3,
+    PTG_Pulse               =4,
+    PTG_MAX                 =5,
+};
+enum EParticleAffectorType
+{
+    PAT_None                =0,
+    PAT_Magnet              =1,
+    PAT_Noise               =2,
+    PAT_Force               =3,
+    PAT_Teleport            =4,
+    PAT_Destroy             =5,
+    PAT_Wake                =6,
+    PAT_Vortex              =7,
+    PAT_MAX                 =8,
+};
 class ENGINE_API ASoftParticleAffector : public AParticleSystem
 {
 public:
@@ -8294,12 +9863,12 @@ public:
     BITFIELD FindSystemsOnStartup:1;
     BITFIELD AlwaysAffectGroup:1;
     INT AffectedGroupID GCC_PACK(4);
-    BYTE Type;
+    /* EParticleAffectorType */ BYTE Type;
     FLOAT VortexMagnitude;
     FLOAT Magnitude;
     FLOAT PulseApexMagnitude;
     FLOAT PulseDuration;
-    BYTE TriggerReaction;
+    /* EParticleTriggerReaction */ BYTE TriggerReaction;
     FVector AffectScaler;
     FLOAT OriginalMagnitude;
     FLOAT PulseStartTime;
@@ -8320,6 +9889,63 @@ public:
 */
 //***************************************************************************//
 
+enum EBeamEdgeOrientation
+{
+    BEO_CrossProduct        =0,
+    BEO_ViewAngleUp         =1,
+    BEO_ViewAngleRight      =2,
+    BEO_ViewAngleMixed      =3,
+    BEO_MAX                 =4,
+};
+enum EBeamPlayerCameraStyleMode
+{
+    BPCS_None               =0,
+    BPCS_Equal              =1,
+    BPCS_NotEqual           =2,
+    BPCS_MAX                =3,
+};
+enum EBeamBrokenAction
+{
+    BBA_None                =0,
+    BBA_TriggerEvent        =1,
+    BBA_TriggerBeamBrokenEvent=2,
+    BBA_TriggerBreaker      =3,
+    BBA_TriggerBeam         =4,
+    BBA_TriggerOwner        =5,
+    BBA_TriggerActor        =6,
+    BBA_MAX                 =7,
+};
+enum EBeamBrokenWhen
+{
+    BBW_Never               =0,
+    BBW_PlayerProximity     =1,
+    BBW_ClassProximity      =2,
+    BBW_Shot                =3,
+    BBW_PawnProximity       =4,
+    BBW_MAX                 =5,
+};
+enum EBeamSystemTriggerType
+{
+    BSTT_None               =0,
+    BSTT_Enable             =1,
+    BSTT_Disable            =2,
+    BSTT_Toggle             =3,
+    BSTT_Reset              =4,
+    BSTT_MAX                =5,
+};
+enum EBeamType
+{
+    BST_Straight            =0,
+    BST_StraightContinuous  =1,
+    BST_RecursiveSubdivide  =2,
+    BST_SineWave            =3,
+    BST_DoubleSineWave      =4,
+    BST_Spline              =5,
+    BST_Grid                =6,
+    BST_Bezier              =7,
+    BST_Tracer              =8,
+    BST_MAX                 =9,
+};
 
 struct ABeamSystem_eventHandleLimboHit_Parms
 {
@@ -8397,20 +10023,20 @@ public:
     dnArray<FSInternalBeamSegment> RenderSegments;
     INT FirstRenderSegment;
     INT ActiveRenderSegmentCount;
-    BYTE BeamType;
+    /* EBeamType */ BYTE BeamType;
     BITFIELD DepthCued:1 GCC_PACK(4);
     BITFIELD BeamBrokenIgnoreWorld:1;
     BITFIELD bBeamOnlyCheckDynamicShootable:1;
     BITFIELD bBeamOnlyCheckPawns:1;
     BITFIELD bBeamTraceMeshAccurate:1;
-    BYTE TriggerType GCC_PACK(4);
+    /* EBeamSystemTriggerType */ BYTE TriggerType GCC_PACK(4);
     class UClass* SpawnClassOnBeamCollision;
     FLOAT SpawnClassMinInterval;
     FLOAT SpawnClassGate;
-    BYTE BeamBrokenWhen;
+    /* EBeamBrokenWhen */ BYTE BeamBrokenWhen;
     BITFIELD bDebugBrokenCheck:1 GCC_PACK(4);
     dnArray<class UClass*> BeamBrokenWhenClass GCC_PACK(4);
-    BYTE BeamBrokenAction;
+    /* EBeamBrokenAction */ BYTE BeamBrokenAction;
     class AActor* BeamTriggerActor;
     FName BeamBrokenEvent;
     BITFIELD BeamBrokenRetriggerable:1 GCC_PACK(4);
@@ -8418,10 +10044,10 @@ public:
     class UClass* BeamBrokenOtherDamageType;
     FLOAT BeamBrokenOtherDamageDelay;
     FLOAT BeamBrokenOtherDamageTime;
-    BYTE BeamPlayerCameraStyleMode;
-    BYTE BeamPlayerCameraStyle;
+    /* EBeamPlayerCameraStyleMode */ BYTE BeamPlayerCameraStyleMode;
+    /* EPlayerCameraStyle */ BYTE BeamPlayerCameraStyle;
     FBox WorldBox;
-    BYTE OrientationType;
+    /* EBeamEdgeOrientation */ BYTE OrientationType;
     DECLARE_FUNCTION(execTickNative);
     DECLARE_FUNCTION(execFreeSegment);
     DECLARE_FUNCTION(execAllocSegment);
@@ -8490,7 +10116,7 @@ public:
     class AInventory* NextInventory;
     class UClass* InventoryReferenceClass;
     class UClass* PickupClass;
-    BYTE MultiplePickupBehavior;
+    /* EInventoryMultiplePickupBehavior */ BYTE MultiplePickupBehavior;
     BITFIELD bIsWeapon:1 GCC_PACK(4);
     BITFIELD bIsPrimaryWeapon:1;
     BITFIELD bIsDefaultWeapon:1;
@@ -8600,7 +10226,7 @@ public:
     class UClass* InventoryDrainClass_MP;
     FName ActivateSoundName;
     FName DeactivateSoundName;
-    BYTE ActivationNetworkSoundType;
+    /* ENetworkSoundType */ BYTE ActivationNetworkSoundType;
     BITFIELD bAutoActivate:1 GCC_PACK(4);
     BITFIELD bActivatable:1;
     BITFIELD bActivatableByCategoryIteration:1;
@@ -8610,7 +10236,7 @@ public:
     BITFIELD bActivatableWhileAttached:1;
     BYTE dnInventoryCategory GCC_PACK(4);
     BYTE dnCategoryPriority;
-    BYTE ChargeDisplayType;
+    /* EInventoryChargeDisplayType */ BYTE ChargeDisplayType;
     FStringNoInit CommandAlias;
     class AHUDItem* HUDItem;
     BITFIELD bAutoActivationMount:1 GCC_PACK(4);
@@ -8784,7 +10410,7 @@ public:
     BITFIELD bDrawInfiniteAmmo:1 GCC_PACK(4);
     INT WeaponStateImpulse GCC_PACK(4);
     BYTE WeaponState;
-    BYTE ChangeSpeed;
+    /* EWeaponChangeSpeed */ BYTE ChangeSpeed;
     class AWeaponClip* InsertingClip;
     class AWeaponClip* EjectingClip;
     class UStaticMesh* FullClipRenderObject;
@@ -9189,6 +10815,15 @@ public:
 */
 //***************************************************************************//
 
+enum EDukeSauceType
+{
+    DUKESAUCE_Classic       =0,
+    DUKESAUCE_Ketchup       =1,
+    DUKESAUCE_Mayo          =2,
+    DUKESAUCE_Mustard       =3,
+    DUKESAUCE_HotSauce      =4,
+    DUKESAUCE_MAX           =5,
+};
 
 struct ADecoration_eventShouldDrawCrosshair_Parms
 {
@@ -9379,6 +11014,28 @@ public:
 */
 //***************************************************************************//
 
+enum EDoorTypeEx
+{
+    DTEX_Custom             =0,
+    DTEX_Wood               =1,
+    DTEX_Metal              =2,
+    DTEX_Tech               =3,
+    DTEX_Duke               =4,
+    DTEX_BigCurtain         =5,
+    DTEX_Bathroom           =6,
+    DTEX_Office             =7,
+    DTEX_PushDoor           =8,
+    DTEX_MAX                =9,
+};
+enum EDoorMoverStateEx
+{
+    DSEX_Closed             =0,
+    DSEX_PreOpening         =1,
+    DSEX_Opening            =2,
+    DSEX_Open               =3,
+    DSEX_Closing            =4,
+    DSEX_MAX                =5,
+};
 class ENGINE_API ADoorMoverEx : public AInteractiveActor
 {
 public:
@@ -9419,7 +11076,7 @@ public:
     dnArray<FSDoorExtraInfo> DoorExtras GCC_PACK(4);
     BITFIELD bUsesHinge:1 GCC_PACK(4);
     FLOAT AutoCloseTime GCC_PACK(4);
-    BYTE DoorState;
+    /* EDoorMoverStateEx */ BYTE DoorState;
     class ADoorHingeEx* Hinge;
     class UClass* ProximitySensorClass;
     class ADoorProximitySensorEx* ProximitySensor;
@@ -9610,10 +11267,53 @@ public:
 */
 //***************************************************************************//
 
+enum ELightFlickerType
+{
+    FLICKER_HighRange       =0,
+    FLICKER_LowRange        =1,
+    FLICKER_FullRange       =2,
+    FLICKER_Static          =3,
+    FLICKER_MAX             =4,
+};
+enum ELightTagStyle
+{
+    LIGHTTAG_NoRespect      =0,
+    LIGHTTAG_NoRespectByUser=1,
+    LIGHTTAG_Respectful     =2,
+    LIGHTTAG_MAX            =3,
+};
+enum EAttenMode
+{
+    ATTEN_Radial            =0,
+    ATTEN_Box               =1,
+    ATTEN_MAX               =2,
+};
+enum EFogMode
+{
+    FMODE_Normal            =0,
+    FMODE_Add               =1,
+    FMODE_MAX               =2,
+};
+enum EFogType
+{
+    FOG_None                =0,
+    FOG_Volume              =1,
+    FOG_Height              =2,
+    FOG_MAX                 =3,
+};
+enum ELightFlickerString
+{
+    FLICKERSTR_None         =0,
+    FLICKERSTR_String1      =1,
+    FLICKERSTR_String2      =2,
+    FLICKERSTR_String3      =3,
+    FLICKERSTR_String4      =4,
+    FLICKERSTR_MAX          =5,
+};
 class ENGINE_API ALightEx : public ARenderActor
 {
 public:
-    BYTE LightStyle;
+    /* ELightExStyle */ BYTE LightStyle;
     FLOAT LightRadius;
     FLOAT LightIntensity;
     FVector LightRadius3D;
@@ -9622,7 +11322,7 @@ public:
     class AActor* LightShadowSource;
     BITFIELD bRelativeShadowSource:1 GCC_PACK(4);
     FVector LightLastShadowCastLocation GCC_PACK(4);
-    BYTE LightStyleSave;
+    /* ELightExStyle */ BYTE LightStyleSave;
     FLOAT ShadowOpacity;
     BITFIELD bSpotLight:1 GCC_PACK(4);
     BITFIELD bLightShaft:1;
@@ -9647,10 +11347,10 @@ public:
     FLOAT ShaftEdgeFadeDist;
     FLOAT ShaftPanXSpeed;
     FLOAT ShaftPanYSpeed;
-    BYTE AttenuationMode;
+    /* EAttenMode */ BYTE AttenuationMode;
     class UTexture* AttenuationMap;
-    BYTE FogType;
-    BYTE FogMode;
+    /* EFogType */ BYTE FogType;
+    /* EFogMode */ BYTE FogMode;
     FLOAT FogDist;
     FLOAT FogHeight;
     FLOAT DirShadowMapDist;
@@ -9671,8 +11371,8 @@ public:
     FLOAT fFlickerMaxBrightness;
     FLOAT fFlickerStaticMinTime;
     FLOAT fFlickerStaticMaxTime;
-    BYTE RespectLightingTags;
-    BYTE LightFlickerString;
+    /* ELightTagStyle */ BYTE RespectLightingTags;
+    /* ELightFlickerString */ BYTE LightFlickerString;
     FName LightAmbientSoundName;
     FLOAT LightAmbientSoundMinScale;
     FLOAT LightAmbientSoundMaxScale;
@@ -9688,7 +11388,7 @@ public:
     FLOAT fFlickerInterval;
     FVector FinalColorScale;
     class UTexture* SlaveSprite;
-    BYTE LightFlickerType;
+    /* ELightFlickerType */ BYTE LightFlickerType;
     DECLARE_FUNCTION(execGetCurrentColor);
     DECLARE_FUNCTION(execMarkDirty);
     DECLARE_CLASS(ALightEx,ARenderActor,0,Engine)
@@ -9702,14 +11402,31 @@ public:
 */
 //***************************************************************************//
 
+enum ELightStateType
+{
+    LS_On                   =0,
+    LS_Off                  =1,
+    LS_TurningOn            =2,
+    LS_TurningOff           =3,
+    LS_MAX                  =4,
+};
+enum ELightToggleType
+{
+    LTOGGLE_Instant         =0,
+    LTOGGLE_Ramp            =1,
+    LTOGGLE_Flicker         =2,
+    LTOGGLE_Sputter         =3,
+    LTOGGLE_String          =4,
+    LTOGGLE_MAX             =5,
+};
 class ENGINE_API ATriggerLightEx : public ALightEx
 {
 public:
     BITFIELD bInitiallyOn:1 GCC_PACK(4);
-    BYTE eToggleOnStyle GCC_PACK(4);
-    BYTE eToggleOffStyle;
-    BYTE eForceOffToggleStyle;
-    BYTE eForceOffStyle;
+    /* ELightToggleType */ BYTE eToggleOnStyle GCC_PACK(4);
+    /* ELightToggleType */ BYTE eToggleOffStyle;
+    /* ELightToggleType */ BYTE eForceOffToggleStyle;
+    /* ELightExStyle */ BYTE eForceOffStyle;
     FLOAT fStateChangeTime;
     FStringNoInit strToggleOnString;
     FStringNoInit strToggleOffString;
@@ -9720,20 +11437,20 @@ public:
     FName TurnOnTag;
     FName TurnOffTag;
     FColor TurnOffColor;
-    BYTE TurnOffStyle;
+    /* ELightExStyle */ BYTE TurnOffStyle;
     FName strForceOffTag;
     FLOAT fForceOffTransitionTime;
     FLOAT fForceOffTime;
     FColor OriginalColor;
-    BYTE OriginalStyle;
-    BYTE LightState;
+    /* ELightExStyle */ BYTE OriginalStyle;
+    /* ELightStateType */ BYTE LightState;
     FLOAT StateTimeElapsed;
     FLOAT NextIntensityChangeTime;
     BITFIELD bForcedOff:1 GCC_PACK(4);
     FVector StartStateColor GCC_PACK(4);
     FVector EndStateColor;
     FLOAT ForceOffTimeElapsed;
-    BYTE DefaultTickStyle;
+    /* ETickStyle */ BYTE DefaultTickStyle;
     inline void __fastcall eventSetInitialLightState()
     {
         ProcessEvent(FindFunctionChecked(ENGINE_SetInitialLightState), NULL);
@@ -9875,10 +11592,16 @@ public:
 */
 //***************************************************************************//
 
+enum ESpringDamperSimulationMode
+{
+    SPRINGDAMPER_Stable     =0,
+    SPRINGDAMPER_Fast       =1,
+    SPRINGDAMPER_MAX        =2,
+};
 class ENGINE_API AKSpringDamper : public AKAffector
 {
 public:
-    BYTE SimulationMode;
+    /* ESpringDamperSimulationMode */ BYTE SimulationMode;
     FLOAT K;
     FLOAT D;
     DECLARE_FUNCTION(execSetSpringD);
@@ -9955,10 +11678,17 @@ public:
 */
 //***************************************************************************//
 
+enum ELinearJointAxisMode
+{
+    LINJAXIS_Absolute       =0,
+    LINJAXIS_Implicit       =1,
+    LINJAXIS_Relative       =2,
+    LINJAXIS_MAX            =3,
+};
 class ENGINE_API AKLinearJointLimit : public AKAffector
 {
 public:
-    BYTE AxisMode;
+    /* ELinearJointAxisMode */ BYTE AxisMode;
     FLOAT MinimumDistance;
     FLOAT MaximumDistance;
     DECLARE_FUNCTION(execSetDistanceRange);
@@ -9992,10 +11722,17 @@ public:
 */
 //***************************************************************************//
 
+enum ELinearMotorAxisMode
+{
+    LINMOTOR_Relative       =0,
+    LINMOTOR_Implicit       =1,
+    LINMOTOR_Absolute       =2,
+    LINMOTOR_MAX            =3,
+};
 class ENGINE_API AKLinearMotorAffector : public AKAffector
 {
 public:
-    BYTE MotorAxisMode;
+    /* ELinearMotorAxisMode */ BYTE MotorAxisMode;
     FLOAT DesiredVelocity;
     FLOAT MaximumForce;
     DECLARE_FUNCTION(execSetMaximumForce);
@@ -10116,12 +11853,46 @@ public:
 */
 //***************************************************************************//
 
+enum EPatchPrimitiveType
+{
+    PTYPE_Sheet             =0,
+    PTYPE_Cylinder          =1,
+    PTYPE_Bevel             =2,
+    PTYPE_InverseBevel      =3,
+    PTYPE_EndCap            =4,
+    PTYPE_Terrain           =5,
+    PTYPE_MAX               =6,
+};
+enum EPatchUVMode
+{
+    UVMODE_Fit              =0,
+    UVMODE_Natural1         =1,
+    UVMODE_Natural2         =2,
+    UVMODE_Axis             =3,
+    UVMODE_AxisX            =4,
+    UVMODE_AxisY            =5,
+    UVMODE_AxisZ            =6,
+    UVMODE_MAX              =7,
+};
+enum EPatchSize
+{
+    PSIZE_3                 =0,
+    PSIZE_5                 =1,
+    PSIZE_7                 =2,
+    PSIZE_9                 =3,
+    PSIZE_11                =4,
+    PSIZE_13                =5,
+    PSIZE_15                =6,
+    PSIZE_17                =7,
+    PSIZE_19                =8,
+    PSIZE_MAX               =9,
+};
 class ENGINE_API APatchActor : public ARenderActor
 {
 public:
-    BYTE DefaultPrimitiveMode;
-    BYTE DefaultSizeX;
-    BYTE DefaultSizeY;
+    /* EPatchPrimitiveType */ BYTE DefaultPrimitiveMode;
+    /* EPatchSize */ BYTE DefaultSizeX;
+    /* EPatchSize */ BYTE DefaultSizeY;
     BITFIELD DefaultCaps:1 GCC_PACK(4);
     BITFIELD bTerrainPatch:1;
     class UPatchData* PatchData GCC_PACK(4);
@@ -10137,6 +11908,12 @@ public:
 */
 //***************************************************************************//
 
+enum EGeoWaterPhysicsCollision
+{
+    GEOCOLL_Bounds          =0,
+    GEOCOLL_Dynamic         =1,
+    GEOCOLL_MAX             =2,
+};
 class ENGINE_API AGeoWater : public ARenderActor
 {
 public:
@@ -10164,7 +11941,7 @@ public:
     FLOAT RandomNoiseTime;
     FLOAT RandomNoiseStrength;
     FLOAT RandomNoiseRadius;
-    BYTE PhysicsCollisionType;
+    /* EGeoWaterPhysicsCollision */ BYTE PhysicsCollisionType;
     FLOAT PhysicsDepth;
     FLOAT PhysicsHeight;
     FLOAT PhysicsDensity;
@@ -10367,6 +12144,25 @@ public:
 */
 //***************************************************************************//
 
+enum EReceiveMode
+{
+    RMODE_Manual            =0,
+    RMODE_Event             =1,
+    RMODE_MAX               =2,
+};
+enum ELinkMode
+{
+    MODE_Text               =0,
+    MODE_Line               =1,
+    MODE_Binary             =2,
+    MODE_MAX                =3,
+};
+struct ENGINE_API FIpAddr
+{
+    INT Addr;
+    INT Port;
+};
+
 
 struct AInternetLink_eventResolved_Parms
 {
@@ -10375,8 +12171,8 @@ struct AInternetLink_eventResolved_Parms
 class ENGINE_API AInternetLink : public AInternetInfo
 {
 public:
-    BYTE LinkMode;
-    BYTE ReceiveMode;
+    /* ELinkMode */ BYTE LinkMode;
+    /* EReceiveMode */ BYTE ReceiveMode;
     INT Socket;
     INT Port;
     INT RemoteSocket;
@@ -10532,6 +12328,19 @@ public:
 */
 //***************************************************************************//
 
+enum ELinkState
+{
+    STATE_Initialized       =0,
+    STATE_Ready             =1,
+    STATE_Listening         =2,
+    STATE_Connecting        =3,
+    STATE_Connected         =4,
+    STATE_ListenClosePending=5,
+    STATE_ConnectClosePending=6,
+    STATE_ListenClosing     =7,
+    STATE_ConnectClosing    =8,
+    STATE_MAX               =9,
+};
 
 struct ATcpLink_eventReceivedBinary_Parms
 {
@@ -10551,7 +12360,7 @@ struct ATcpLink_eventReceivedText_Parms
 class ENGINE_API ATcpLink : public AInternetLink
 {
 public:
-    BYTE LinkState;
+    /* ELinkState */ BYTE LinkState;
     FIpAddr RemoteAddr;
     class UClass* AcceptClass;
     dnArray<BYTE> SendFIFO;
@@ -10645,13 +12454,13 @@ public:
     FVector WeaponTraceStartOffset GCC_PACK(4);
     FLOAT aForward;
     FLOAT aStrafe;
-    BYTE Physics;
+    /* EPhysics */ BYTE Physics;
     BITFIELD bJumpInProgress:1 GCC_PACK(4);
     BITFIELD bIsJumpPadLaunching:1;
     BITFIELD bIsInAirFromJumpPad:1;
     BITFIELD bIsSubmerged:1;
     FLOAT DrawScale GCC_PACK(4);
-    BYTE PostureState;
+    /* EPostureStateEx */ BYTE PostureState;
     FLOAT CollisionRadius;
     FLOAT CollisionHeight;
     FVector StartVelocity;
@@ -10677,13 +12486,13 @@ public:
     FLOAT StoredPlayer_aForward GCC_PACK(4);
     FLOAT StoredPlayer_aStrafe;
     FRotator StoredPlayerViewRotation;
-    BYTE StoredPlayerPhysics;
+    /* EPhysics */ BYTE StoredPlayerPhysics;
     BITFIELD StoredPlayerbJumpInProgress:1 GCC_PACK(4);
     BITFIELD StoredPlayerbIsJumpPadLaunching:1;
     BITFIELD StoredPlayerbIsInAirFromJumpPad:1;
     BITFIELD StoredPlayerbIsSubmerged:1;
     FLOAT StoredPlayerDrawScale GCC_PACK(4);
-    BYTE StoredPlayerPostureState;
+    /* EPostureStateEx */ BYTE StoredPlayerPostureState;
     FLOAT StoredPlayerCollisionRadius;
     FLOAT StoredPlayerCollisionHeight;
     inline void __fastcall eventCallServerMove(class APlayerPawn* P)
@@ -10902,7 +12711,7 @@ class ENGINE_API ADlcInfo : public AInfo
 {
 public:
     dnArray<FDlcPackageInfo> DlcPackages;
-    dnArray<BYTE> PreorderGroups;
+    dnArray</* EPreorderGroup */ BYTE> PreorderGroups;
     BITFIELD bPreorderUnlockDLC:1 GCC_PACK(4);
     dnArray<FString> PrecacheObjs GCC_PACK(4);
     DECLARE_CLASS(ADlcInfo,AInfo,0|CLASS_Config,Engine)
@@ -11019,6 +12828,14 @@ public:
 */
 //***************************************************************************//
 
+enum EGameState
+{
+    GS_Unknown              =0,
+    GS_Spectating           =1,
+    GS_Active               =2,
+    GS_Stasis               =3,
+    GS_MAX                  =4,
+};
 
 struct APlayerReplicationInfo_eventIsActiveInGame_Parms
 {
@@ -11044,7 +12861,7 @@ public:
     class UClass* PlayerVoicePack;
     INT Ping;
     BYTE PacketLoss;
-    BYTE Gender;
+    /* EPawnGender */ BYTE Gender;
     BITFIELD bOnlySpectator:1 GCC_PACK(4);
     BITFIELD bIsABot:1;
     BITFIELD bAdmin:1;
@@ -11056,7 +12873,7 @@ public:
     class Alocationid* PlayerLocation;
     BYTE Frags[32];
     class UClass* FragTypes[32];
-    BYTE GameState;
+    /* EGameState */ BYTE GameState;
     BITFIELD bUsingPrivateSlot:1 GCC_PACK(4);
     BITFIELD bArbRegistered:1;
     INT XUIDUpper GCC_PACK(4);
@@ -11132,7 +12949,7 @@ public:
     FSSceneInfo Scene;
     FName SkyZoneTag;
     FName GeoWaterTag;
-    BYTE ZoneFlotsamEffect;
+    /* EZoneFlotsamEffect */ BYTE ZoneFlotsamEffect;
     FRotator ZoneFlotsamRotation;
     FName SuffocationEnabledTag;
     FName SuffocationDisabledTag;
@@ -11140,7 +12957,7 @@ public:
     FLOAT ZoneMusicVolume;
     FLOAT ZoneMusicCrossfadeTime;
     FName ZoneMusicMixerGroup;
-    BYTE ReverbPreset;
+    /* EReverbEnvironment */ BYTE ReverbPreset;
     FLOAT ReverbTime;
     FLOAT ReverbPreDelay;
     FLOAT ReverbDamping;
@@ -11232,6 +13049,49 @@ public:
 */
 //***************************************************************************//
 
+enum EAISoundInfoType
+{
+    EAISOUNDINFO_Alert      =0,
+    EAISOUNDINFO_AmbientIdle=1,
+    EAISOUNDINFO_MAX        =2,
+};
+enum EPhysicsProximityDetection
+{
+    PHYSPROX_None           =0,
+    PHYSPROX_AABB_Deprecated=1,
+    PHYSPROX_Sphere_Deprecated=2,
+    PHYSPROX_SweepPrune_Deprecated=3,
+    PHYSPROX_ShockAndAwe    =4,
+    PHYSPROX_Default        =5,
+    PHYSPROX_MAX            =6,
+};
+enum ENetMode
+{
+    NM_Standalone           =0,
+    NM_DedicatedServer      =1,
+    NM_ListenServer         =2,
+    NM_Client               =3,
+    NM_MAX                  =4,
+};
+enum ELevelAction
+{
+    LEVACT_None             =0,
+    LEVACT_Loading          =1,
+    LEVACT_LoadingNoLogo    =2,
+    LEVACT_Saving           =3,
+    LEVACT_Connecting       =4,
+    LEVACT_Precaching       =5,
+    LEVACT_Failure          =6,
+    LEVACT_MAX              =7,
+};
+struct ENGINE_API FSLevelTransitionInfo
+{
+    FStringNoInit LevelName;
+    INT NumSaves;
+    INT NumLoads;
+    FStringNoInit GameState;
+};
+
 
 struct ALevelInfo_eventScheduleTraceFireHit_Parms
 {
@@ -11248,7 +13108,7 @@ struct ALevelInfo_eventScheduleTraceFireHit_Parms
 
 struct ALevelInfo_eventAISoundAllowed_Parms
 {
-    BYTE SoundType;
+    /* EAISoundInfoType */ BYTE SoundType;
     BITFIELD ReturnValue;
 };
 
@@ -11390,12 +13250,12 @@ public:
     FStringNoInit ESCText;
     FStringNoInit toSkipText;
     FStringNoInit preToSkipText;
-    BYTE LevelAction;
+    /* ELevelAction */ BYTE LevelAction;
     INT LevelLoadState;
     INT NumSaves;
     INT NumLoads;
     BITFIELD bSameLevelLoad:1 GCC_PACK(4);
-    BYTE NetMode GCC_PACK(4);
+    /* ENetMode */ BYTE NetMode GCC_PACK(4);
     FStringNoInit ComputerName;
     FStringNoInit EngineVersion;
     FStringNoInit MinNetVersion;
@@ -11414,8 +13274,8 @@ public:
     FLOAT NextSwitchCountdown GCC_PACK(4);
     FStringNoInit PhysicsEffectsDatabaseClass;
     class UPhysicsEffectsDatabase* PhysicsEffectsDatabase;
-    BYTE ProximityDetector;
-    BYTE PhysicsQuality;
+    /* EPhysicsProximityDetection */ BYTE ProximityDetector;
+    /* EPhysicsQuality */ BYTE PhysicsQuality;
     FLOAT KStartupPhysicsTime;
     BITFIELD bDoneStartupPhysics:1 GCC_PACK(4);
     BITFIELD bNoKarma:1;
@@ -11518,7 +13378,7 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_CalcMaxAITicksPerFrame), NULL);
     }
-    inline BITFIELD __fastcall eventAISoundAllowed(BYTE SoundType)
+    inline BITFIELD __fastcall eventAISoundAllowed(/* EAISoundInfoType */ BYTE SoundType)
     {
         ALevelInfo_eventAISoundAllowed_Parms Parms;
         Parms.ReturnValue=0;
@@ -11879,23 +13739,45 @@ public:
 */
 //***************************************************************************//
 
+enum EPadState
+{
+    DIRPAD_Pressed          =0,
+    DIRPAD_Released         =1,
+    DIRPAD_MAX              =2,
+};
+enum EButtonPad
+{
+    BUT_A                   =0,
+    BUT_B                   =1,
+    BUT_X                   =2,
+    BUT_Y                   =3,
+    BUT_MAX                 =4,
+};
+enum EDirectionalPadDir
+{
+    DIR_Up                  =0,
+    DIR_Down                =1,
+    DIR_Left                =2,
+    DIR_Right               =3,
+    DIR_MAX                 =4,
+};
 
 struct AGameModule_eventNotifyButtonPadChange_Parms
 {
-    BYTE Button;
-    BYTE NewState;
+    /* EButtonPad */ BYTE Button;
+    /* EPadState */ BYTE NewState;
 };
 
 struct AGameModule_eventNotifyDirectionalPadChange_Parms
 {
-    BYTE Dir;
-    BYTE NewState;
+    /* EDirectionalPadDir */ BYTE Dir;
+    /* EPadState */ BYTE NewState;
 };
 class ENGINE_API AGameModule : public AInfo
 {
 public:
-    BYTE DirectionalPadStates[4];
-    BYTE ButtonPadStates[4];
+    /* EPadState */ BYTE DirectionalPadStates[4];
+    /* EPadState */ BYTE ButtonPadStates[4];
     class UClass* PersistantDataClass;
     class AGameModulePersistantData* PersistantData;
     FName ButtonAMnemonic;
@@ -11966,14 +13848,14 @@ public:
     {
         ProcessEvent(FindFunctionChecked(ENGINE_PadPressed_Up), NULL);
     }
-    inline void __fastcall eventNotifyButtonPadChange(BYTE Button, BYTE NewState)
+    inline void __fastcall eventNotifyButtonPadChange(/* EButtonPad */ BYTE Button, /* EPadState */ BYTE NewState)
     {
         AGameModule_eventNotifyButtonPadChange_Parms Parms;
         Parms.Button=Button;
         Parms.NewState=NewState;
         ProcessEvent(FindFunctionChecked(ENGINE_NotifyButtonPadChange), &Parms);
     }
-    inline void __fastcall eventNotifyDirectionalPadChange(BYTE Dir, BYTE NewState)
+    inline void __fastcall eventNotifyDirectionalPadChange(/* EDirectionalPadDir */ BYTE Dir, /* EPadState */ BYTE NewState)
     {
         AGameModule_eventNotifyDirectionalPadChange_Parms Parms;
         Parms.Dir=Dir;
@@ -12010,7 +13892,7 @@ public:
 
 struct AChallengeInfo_eventCodeUnlockedPreorderGroup_Parms
 {
-    BYTE in_POG;
+    /* EPreorderGroup */ BYTE in_POG;
     FString out_Title;
     FString out_Description;
 };
@@ -12038,7 +13920,7 @@ public:
     DECLARE_FUNCTION(execIsEnterBonusCodeMenuItemEnabled);
     DECLARE_FUNCTION(execGetChallengeIdxFromID);
     DECLARE_FUNCTION(execStaticInit);
-    inline void __fastcall eventCodeUnlockedPreorderGroup(BYTE in_POG, FString& out_Title, FString& out_Description)
+    inline void __fastcall eventCodeUnlockedPreorderGroup(/* EPreorderGroup */ BYTE in_POG, FString& out_Title, FString& out_Description)
     {
         AChallengeInfo_eventCodeUnlockedPreorderGroup_Parms Parms;
         Parms.in_POG=in_POG;
@@ -12087,6 +13969,15 @@ public:
 */
 //***************************************************************************//
 
+enum EKillTriggerType
+{
+    KT_Enable               =0,
+    KT_Disable              =1,
+    KT_Toggle               =2,
+    KT_Random               =3,
+    KT_Reset                =4,
+    KT_MAX                  =5,
+};
 class ENGINE_API ATriggers : public AInfoActor
 {
 public:
@@ -12108,7 +13999,7 @@ public:
     FStringNoInit Message;
     FLOAT MaxDisplayTime;
     class UClass* InventoryClass;
-    dnArray<BYTE> SpecialKeys;
+    dnArray</* ESpecialKeys */ BYTE> SpecialKeys;
     dnArray<INT> SpecialKeysPressed;
     FName ForceHintOnEvent;
     FName ForceHintOffEvent;
@@ -12160,7 +14051,7 @@ public:
     BITFIELD bDispatching:1 GCC_PACK(4);
     BITFIELD bPreparing:1;
     BITFIELD bTriggeredOnce:1;
-    BYTE DefaultTickStyle GCC_PACK(4);
+    /* ETickStyle */ BYTE DefaultTickStyle GCC_PACK(4);
     BITFIELD bPauseDispatch:1 GCC_PACK(4);
     FName PauseDispatchingTag GCC_PACK(4);
     FName UnPauseDispatchingTag;
@@ -12180,14 +14071,35 @@ public:
 */
 //***************************************************************************//
 
+enum ETriggerShrunkType
+{
+    TST_Either              =0,
+    TST_OnlyShrunk          =1,
+    TST_OnlyNonShrunk       =2,
+    TST_MAX                 =3,
+};
+enum ETriggerType
+{
+    TT_PlayerProximity      =0,
+    TT_PawnProximity        =1,
+    TT_ClassProximity       =2,
+    TT_AnyProximity         =3,
+    TT_TakeDamage           =4,
+    TT_PlayerProximityAndUse=5,
+    TT_PlayerProximityAndLookUse=6,
+    TT_TagProximity         =7,
+    TT_EventProximity       =8,
+    TT_PlayerProximityAndLook=9,
+    TT_MAX                  =10,
+};
 class ENGINE_API ATrigger : public ATriggers
 {
 public:
     BITFIELD bForceInstigator:1 GCC_PACK(4);
     BITFIELD bDebug:1;
     class APawn* DukeInstigator GCC_PACK(4);
-    BYTE TriggerType;
-    BYTE TriggerShrunkType;
+    /* ETriggerType */ BYTE TriggerType;
+    /* ETriggerShrunkType */ BYTE TriggerShrunkType;
     FName LookUseTags[16];
     FName LookUseEvents[16];
     FName EnableTag;
@@ -12229,15 +14141,46 @@ public:
 */
 //***************************************************************************//
 
+enum EControlRemapperMotionType
+{
+    CRM_Turn                =0,
+    CRM_Strafe              =1,
+    CRM_Forward             =2,
+    CRM_LookUpDown          =3,
+    CRM_MAX                 =4,
+};
+enum EControlRemapperInternalEventType
+{
+    CRIE_PlayerAttachSuccess=0,
+    CRIE_PlayerAttachFail   =1,
+    CRIE_PlayerDetachSuccess=2,
+    CRIE_PlayerDetachFail   =3,
+    CRIE_MAX                =4,
+};
+enum EControlRemapperState
+{
+    CRS_NoUserAttached      =0,
+    CRS_InterpolatingIn     =1,
+    CRS_FullyAttached       =2,
+    CRS_InterpolatingOut    =3,
+    CRS_MAX                 =4,
+};
+enum EControlRemapperCoreType
+{
+    CRCORE_InterpolateLock  =0,
+    CRCORE_StaticLock       =1,
+    CRCORE_FreeRoam         =2,
+    CRCORE_MAX              =3,
+};
 class ENGINE_API AControlRemapperEx : public AInfoActor
 {
 public:
-    BYTE CoreType;
+    /* EControlRemapperCoreType */ BYTE CoreType;
     FSControlAction Actions[12];
-    BYTE DisabledTickStyle;
+    /* ETickStyle */ BYTE DisabledTickStyle;
     dnArray<FSAlternateActorMapping> MotionMappings;
     dnArray<FSControlRemapperInternalEvent> EventEvents;
-    dnArray<BYTE> DisabledKeyTypes;
+    dnArray</* EControlRemapperKeyType */ BYTE> DisabledKeyTypes;
     dnArray<class AActor*> InputForwardActors;
     dnArray<class AActor*> NotificationActors;
     BITFIELD bDisableCrosshairHUD:1 GCC_PACK(4);
@@ -12255,10 +14198,10 @@ public:
     FSControlMapperInterpolationInfo InterpolationInInfo;
     FSControlMapperInterpolationInfo InterpolationOutAlphaInfo;
     FSControlMapperInterpolationInfo InterpolationOutBetaInfo;
-    BYTE CurrentRemapperState;
+    /* EControlRemapperState */ BYTE CurrentRemapperState;
     class APlayerPawn* CurrentPlayer;
     class APawn* CurrentPawn;
-    BYTE CurrentPawnPhysics;
+    /* EPhysics */ BYTE CurrentPawnPhysics;
     BITFIELD bFreeRoamLowerWeapon:1 GCC_PACK(4);
     BITFIELD bUseHomePose:1;
     BITFIELD bAttachReady_WeaponDown:1;
@@ -12418,6 +14361,14 @@ public:
 */
 //***************************************************************************//
 
+enum EMotionType
+{
+    MOTION_Linear           =0,
+    MOTION_Spline           =1,
+    MOTION_Bezier3          =2,
+    MOTION_MAX              =3,
+};
+#define UCONST_cArcLengthSamples 100
 
 struct AInterpolationPoint_eventBuildPath_Parms
 {
@@ -12442,8 +14393,8 @@ public:
     FName TriggerEvent;
     FVector LocationVariance;
     FRotator RotationVariance;
-    BYTE MotionType;
-    BYTE RateType;
+    /* EMotionType */ BYTE MotionType;
+    /* EIRateType */ BYTE RateType;
     FLOAT RateModifierBlendBegin;
     FLOAT RateModifierBlendEnd;
     FColor PathColor;
@@ -12506,6 +14457,12 @@ public:
 */
 //***************************************************************************//
 
+enum EInvEventType
+{
+    IEVENT_Attach           =0,
+    IEVENT_Detach           =1,
+    IEVENT_MAX              =2,
+};
 class ENGINE_API AIKSystemInfo : public AInfoActor
 {
 public:
@@ -12609,10 +14566,17 @@ public:
 */
 //***************************************************************************//
 
+enum EEffectorType
+{
+    EFT_Accel               =0,
+    EFT_Sphere              =1,
+    EFT_Plane               =2,
+    EFT_MAX                 =3,
+};
 class ENGINE_API AParticleEffector : public AInfoActor
 {
 public:
-    BYTE m_eEffectorType;
+    /* EEffectorType */ BYTE m_eEffectorType;
     FLOAT m_fRadius;
     FLOAT m_fAge;
     FLOAT m_fAccelSpeed;
@@ -12664,6 +14628,32 @@ public:
 */
 //***************************************************************************//
 
+enum ETextVerticalAlign
+{
+    TVA_Top                 =0,
+    TVA_Bottom              =1,
+    TVA_Center              =2,
+    TVA_MAX                 =3,
+};
+enum ETextHorizontalAlign
+{
+    THA_Left                =0,
+    THA_Right               =1,
+    THA_Center              =2,
+    THA_MAX                 =3,
+};
+#define UCONST_HUDMessageAutoRespawn 10
+#define UCONST_HUDMessageDigsMoreInfo 9
+#define UCONST_HUDMessageCustomization 8
+#define UCONST_HUDMessageRespawn 7
+#define UCONST_HUDMessageLeveling 6
+#define UCONST_HUDMessageDialog 5
+#define UCONST_HUDMessageHintSecondary 4
+#define UCONST_HUDMessageLevelAction 3
+#define UCONST_HUDMessageCheckpoint 2
+#define UCONST_HUDMessageWeaponPickup 1
+#define UCONST_HUDMessageHint 0
+#define UCONST_kNumHUDMessages 11
 
 struct AHUD_eventSetHUDEffectByIndex_Parms
 {
@@ -12902,6 +14892,22 @@ public:
 */
 //***************************************************************************//
 
+enum ECoverType
+{
+    COVER_Generic           =0,
+    COVER_Car               =1,
+    COVER_CopCar            =2,
+    COVER_Taxi              =3,
+    COVER_Bus               =4,
+    COVER_Wall              =5,
+    COVER_Pillar            =6,
+    COVER_Crate             =7,
+    COVER_Fence             =8,
+    COVER_Sandbags          =9,
+    COVER_Truck             =10,
+    COVER_Barrier           =11,
+    COVER_MAX               =12,
+};
 
 struct AActionPoint_eventGetTeleportToLocation_Parms
 {
@@ -12947,7 +14953,7 @@ public:
     BITFIELD bCanTeleport:1;
     BITFIELD bFlyer:1;
     BITFIELD bJumpPoint:1;
-    BYTE CoverType GCC_PACK(4);
+    /* ECoverType */ BYTE CoverType GCC_PACK(4);
     BITFIELD bDrawEditorSelected:1 GCC_PACK(4);
     class AActor* User GCC_PACK(4);
     class AActor* NeighborUser;
@@ -13058,7 +15064,7 @@ class ENGINE_API AdnVisualizationController : public AActor
 public:
     class AActor* StreamSource;
     BITFIELD bSoundSource:1 GCC_PACK(4);
-    BYTE SourceSoundSlot GCC_PACK(4);
+    /* ESoundSlot */ BYTE SourceSoundSlot GCC_PACK(4);
     dnArray<FSVisEffect> Effects;
     FName EnableTag;
     FName DisableTag;
@@ -13389,7 +15395,7 @@ struct UOnlineAgentListener_eventOnChatMessageReceived_Parms
 
 struct UOnlineAgentListener_eventOnLeaderboardRefreshed_Parms
 {
-    BYTE LBUpdateState;
+    /* ELeaderBoardUpdateState */ BYTE LBUpdateState;
 };
 
 struct UOnlineAgentListener_eventOnPostBeginPlay_Parms
@@ -13488,7 +15494,7 @@ public:
     {
         ProcessDelegate(ENGINE_OnServerBrowserClosed, &__OnServerBrowserClosed__Delegate, NULL);
     }
-    inline void delegateOnLeaderboardRefreshed(BYTE LBUpdateState)
+    inline void delegateOnLeaderboardRefreshed(/* ELeaderBoardUpdateState */ BYTE LBUpdateState)
     {
         UOnlineAgentListener_eventOnLeaderboardRefreshed_Parms Parms;
         Parms.LBUpdateState=LBUpdateState;
@@ -13719,12 +15725,48 @@ public:
 */
 //***************************************************************************//
 
+enum EAgentBrowserStatus
+{
+    AgentBrowserStatus_Idle =0,
+    AgentBrowserStatus_Querying=1,
+    AgentBrowserStatus_MAX  =2,
+};
+enum EAgentBrowserSort
+{
+    ABS_Name                =0,
+    ABS_Ping                =1,
+    ABS_Map                 =2,
+    ABS_GameMode            =3,
+    ABS_Players             =4,
+    ABS_MAX                 =5,
+};
+enum EAgentSearchConstraint
+{
+    ASC_None                =0,
+    ASC_Friends             =1,
+    ASC_Dedicated           =2,
+    ASC_MAX                 =3,
+};
+struct ENGINE_API FSAgentServerInfo
+{
+    INT id;
+    FStringNoInit GameMode;
+    FStringNoInit Name;
+    FStringNoInit Map;
+    INT MaxPlayers;
+    INT PlayerCount;
+    INT Ping;
+    BITFIELD Dedicated:1 GCC_PACK(4);
+    BITFIELD Favorite:1;
+    BITFIELD Hidden:1;
+};
+
 class ENGINE_API UOnlineServerFactory : public UObject
 {
 public:
-    BYTE SearchConstraint;
-    BYTE SortState;
-    BYTE Status;
+    /* EAgentSearchConstraint */ BYTE SearchConstraint;
+    /* EAgentBrowserSort */ BYTE SortState;
+    /* EAgentBrowserStatus */ BYTE Status;
     dnArray<FSAgentServerInfo> Servers;
     class UOnlineServerFactory* Factory;
     BITFIELD Dirty:1 GCC_PACK(4);
@@ -14424,6 +16466,21 @@ public:
 */
 //***************************************************************************//
 
+enum EPUVMode
+{
+    PUVMODE_Projective      =0,
+    PUVMODE_UVSet1          =1,
+    PUVMODE_UVSet2          =2,
+    PUVMODE_Projective5Axes =3,
+    PUVMODE_MAX             =4,
+};
+enum EUVMapType
+{
+    UV_AxisX                =0,
+    UV_AxisY                =1,
+    UV_AxisZ                =2,
+    UV_MAX                  =3,
+};
 class ENGINE_API ULayerMaterial : public URenderedMaterial
 {
 public:
@@ -14578,7 +16635,7 @@ public:
     FColor Color2;
     FLOAT FadePeriod;
     FLOAT FadePhase;
-    BYTE ColorFadeType;
+    /* EColorFadeType */ BYTE ColorFadeType;
     FStringNoInit FadeString;
     FLOAT NextFlickerTime;
     FLOAT LastPercent;
@@ -14657,8 +16714,8 @@ public:
 class ENGINE_API UTexModifier : public UModifier
 {
 public:
-    BYTE TexCoordSource;
-    BYTE TexCoordCount;
+    /* ETexCoordSrc */ BYTE TexCoordSource;
+    /* ETexCoordCount */ BYTE TexCoordCount;
     BITFIELD TexCoordProjected:1 GCC_PACK(4);
     INT MatrixIndex GCC_PACK(4);
     DECLARE_CLASS(UTexModifier,UModifier,0,Engine)
@@ -14687,10 +16744,16 @@ public:
 */
 //***************************************************************************//
 
+enum ETexEnvMapType
+{
+    EM_WorldSpace           =0,
+    EM_CameraSpace          =1,
+    EM_MAX                  =2,
+};
 class ENGINE_API UTexEnvMap : public UTexModifier
 {
 public:
-    BYTE EnvMapType;
+    /* ETexEnvMapType */ BYTE EnvMapType;
     DECLARE_CLASS(UTexEnvMap,UTexModifier,0,Engine)
 };
 // Class TexEnvMap exported:
@@ -14702,11 +16765,18 @@ public:
 */
 //***************************************************************************//
 
+enum ETexRotationType
+{
+    TR_FixedRotation        =0,
+    TR_ConstantlyRotating   =1,
+    TR_OscillatingRotation  =2,
+    TR_MAX                  =3,
+};
 class ENGINE_API UTexRotator : public UTexModifier
 {
 public:
     FMatrix Matrix;
-    BYTE TexRotationType;
+    /* ETexRotationType */ BYTE TexRotationType;
     FRotator Rotation;
     FLOAT UOffset;
     FLOAT VOffset;
@@ -14798,7 +16868,7 @@ public:
 class ENGINE_API UFinalBlend : public UModifier
 {
 public:
-    BYTE FrameBufferBlending;
+    /* EFrameBufferBlending */ BYTE FrameBufferBlending;
     BITFIELD ZWrite:1 GCC_PACK(4);
     BITFIELD ZWriteTrans:1;
     BITFIELD ZTest:1;
@@ -14828,8 +16898,8 @@ public:
 class ENGINE_API UCombiner : public UMaterialEx
 {
 public:
-    BYTE CombineOperation;
-    BYTE AlphaOperation;
+    /* EColorOperation */ BYTE CombineOperation;
+    /* EAlphaOperation */ BYTE AlphaOperation;
     class UMaterialEx* Material1;
     class UMaterialEx* Material2;
     class UMaterialEx* Material3;
@@ -15186,7 +17256,7 @@ class ENGINE_API UMaterial : public UObject
 {
 public:
     FLOAT FootprintTypeOverrideTime;
-    BYTE FootprintTypeOverride;
+    /* EFootprintType */ BYTE FootprintTypeOverride;
     FSFootstepCategoryEffect FootstepCategoryEffect[8];
     FSLandedCategoryEffect LandedCategoryEffect[8];
     class UClass* PhysicsMaterial;
@@ -15577,7 +17647,7 @@ public:
     dnArray<FString> Music;
     dnArray<class UClass*> DamageTypes;
     dnArray<class UClass*> MaterialClasses;
-    dnArray<BYTE> FootstepCategories;
+    dnArray</* EFootstepCategory */ BYTE> FootstepCategories;
     class ULevel* Level;
     BITFIELD bIsMP:1 GCC_PACK(4);
     BITFIELD bPlayerCanBeShrunk:1;
@@ -15678,6 +17748,12 @@ public:
 */
 //***************************************************************************//
 
+enum EPhysicsQueryType
+{
+    PHYSQUERY_Sound         =0,
+    PHYSQUERY_Effect        =1,
+    PHYSQUERY_MAX           =2,
+};
 class ENGINE_API UPhysicsEffectsDatabase : public UObject
 {
 public:
@@ -15723,6 +17799,14 @@ public:
 */
 //***************************************************************************//
 
+enum EPaintData
+{
+    PAINTDATA_HeightMap     =0,
+    PAINTDATA_LODMap        =1,
+    PAINTDATA_VisMap        =2,
+    PAINTDATA_EdgeDir       =3,
+    PAINTDATA_MAX           =4,
+};
 class ENGINE_API UPatchData : public UObject
 {
 public:
@@ -15899,6 +17983,16 @@ public:
 */
 //***************************************************************************//
 
+enum EAnimControllerBlend
+{
+    ACBLEND_FadeOut         =0,
+    ACBLEND_FadeIn          =1,
+    ACBLEND_MAX             =2,
+};
+#define UCONST_kAnimationControllerEx_AnimationGridHashSize 7
+#define UCONST_kAnimationControllerEx_AnimationPairHashSize 7
+#define UCONST_kAnimationControllerEx_AnimationHashSize 17
+#define UCONST_kAnimationControllerEx_InvalidLink -1
 
 struct UAnimationControllerEx_eventEnumerateRawAnimationSequences_Parms
 {
@@ -15999,6 +18093,14 @@ public:
 */
 //***************************************************************************//
 
+enum EVelocityRelativeType
+{
+    VRT_World               =0,
+    VRT_Self                =1,
+    VRT_Parent              =2,
+    VRT_AwayFromParent      =3,
+    VRT_MAX                 =4,
+};
 class ENGINE_API UMotionPrefab : public UObject
 {
 public:
@@ -16006,7 +18108,7 @@ public:
     BITFIELD bUseDamageInfo:1;
     BITFIELD bUseParentVelocity:1;
     BITFIELD bUseParentRotationRate:1;
-    BYTE VelocityRelativeType GCC_PACK(4);
+    /* EVelocityRelativeType */ BYTE VelocityRelativeType GCC_PACK(4);
     FVector Velocity;
     FVector VelocityVariance;
     FRotator RotationRate;
@@ -16047,7 +18149,7 @@ public:
 
 struct UChallengeObject_eventGetDefaultStatus_Parms
 {
-    BYTE ReturnValue;
+    /* EChallengeStatus */ BYTE ReturnValue;
 };
 
 struct UChallengeObject_eventCheckChallenge_Parms
@@ -16066,7 +18168,7 @@ public:
     dnArray<INT> ChallDependencies;
     INT ChallIdx;
     FStringNoInit ExtraOptions;
-    BYTE DefaultState;
+    /* EChallengeStatus */ BYTE DefaultState;
     BITFIELD bHasDefaultStatus:1 GCC_PACK(4);
     FStringNoInit ChallName GCC_PACK(4);
     FStringNoInit Description;
@@ -16082,7 +18184,7 @@ public:
     FLOAT CheckWidth;
     FLOAT YOffset;
     BITFIELD bComplete:1 GCC_PACK(4);
-    inline BYTE __fastcall eventGetDefaultStatus()
+    inline /* EChallengeStatus */ BYTE __fastcall eventGetDefaultStatus()
     {
         UChallengeObject_eventGetDefaultStatus_Parms Parms;
         Parms.ReturnValue=0;
