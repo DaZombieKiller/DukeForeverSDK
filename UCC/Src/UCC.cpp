@@ -89,11 +89,10 @@ void MakeHeader( const TCHAR* Parms )
 		appErrorf(TEXT("Header path not specified"));
 
 	INT Len = Path.InStr(TEXT("\\"), 1);
+	UObject* Package = UObject::LoadPackage( NULL, *Pkg, LOAD_NoFail );
 
 	if( Len > 0 && !GFileManager->MakeDirectory( *Path.Left(Len), 1) )
 		appErrorf(TEXT("Failed to make directory %s"), *Path);
-
-	UObject* Package = UObject::LoadPackage( NULL, *Pkg, LOAD_NoFail );
 
 	for( TObjectIterator<UClass> It; It; ++It )
 	{
