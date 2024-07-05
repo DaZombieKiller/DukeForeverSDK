@@ -405,7 +405,7 @@ public:
 						}
 						else
 						{
-							Str = Str.Left( Index );
+							Str = Str.Left( Index + 1 );
 							Str += Data.cFileName;
 
 							if( Data.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY )
@@ -438,14 +438,18 @@ public:
 		if( GUnicodeOS )
 		{
 			TCHAR Buffer[1024]=TEXT("");
-			::GetCurrentDirectoryW(ARRAY_COUNT(Buffer),Buffer);
+			DWORD Written=::GetCurrentDirectoryW(ARRAY_COUNT(Buffer)-1,Buffer);
+			Buffer[Written] = TEXT('\\');
+			Buffer[Written + 1] = TEXT('\0');
 			return FString(Buffer);
 		}
 		else
 #endif
 		{
 			ANSICHAR Buffer[1024]="";
-			::GetCurrentDirectoryA(ARRAY_COUNT(Buffer),Buffer);
+			DWORD Written=::GetCurrentDirectoryA(ARRAY_COUNT(Buffer)-1,Buffer);
+			Buffer[Written] = TEXT('\\');
+			Buffer[Written + 1] = TEXT('\0');
 #if DNF
 			return FString( Buffer );
 #else
