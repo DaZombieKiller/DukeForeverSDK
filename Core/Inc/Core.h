@@ -26,9 +26,24 @@
 #include "dnRemap.h"
 #endif
 
+// Duke Nukem Forever.
+#if DNF
+#define IF_DNF(X) X
+#define IFNDNF(X)
+#define DNF_EXTERN_C_BEGIN extern "C" {
+#define DNF_EXTERN_C_END }
+#else
+#define IF_DNF(X)
+#define IFNDNF(X) X
+#define DNF_EXTERN_C_BEGIN
+#define DNF_EXTERN_C_END
+#endif
+
 // Compiler specific include.
 #if _MSC_VER
-	#include "tchar.h"
+	#if DNF
+		#include "tchar.h"
+	#endif
 	#include "UnVcWin32.h"
 #elif __GNUG__
 	#include <string.h>
@@ -67,9 +82,6 @@ enum ENoInit {E_NoInit = 0};
 	#endif
 	#undef TEXT
 	#define TEXT(s) L##s
-#ifndef _T	
-	#define _T(s)   TEXT(s) /* NJS: Must... have... shorter... TEXT() */
-#endif
 	#undef US
 	#define US FString(L"")
 	inline TCHAR    FromAnsi   ( ANSICHAR In ) { return (BYTE)In;                        }
@@ -83,9 +95,6 @@ enum ENoInit {E_NoInit = 0};
 	#endif
 	#undef TEXT
 	#define TEXT(s) s
-#ifndef _T	
-    #define _T(s)   TEXT(s)	/* NJS: Must... have... shorter... TEXT() */
-#endif
 	#undef US
 	#define US FString("")
 	inline TCHAR    FromAnsi   ( ANSICHAR In ) { return In;                              }
@@ -143,13 +152,13 @@ class FTransactionBase;
 class FUnknown;
 class FRepLink;
 class FArray;
-class FBitArray;
 class FLazyLoader;
 class FString;
 class FMalloc;
 
 #if DNF
 class FDnExec; // CDH
+class FBitArray;
 class dnLazyDataWorker;
 #endif
 
@@ -181,23 +190,19 @@ class CORE_API FOutputDevice
 public:
 	// FOutputDevice interface.
 	virtual void Serialize( const TCHAR* V, EName Event )=0;
-#if !DNF
-	virtual void Serialize( const char * V, EName Event )
-	{
-		// NJS: Convert to unicode and pass through standard pipe:
-		Serialize(ANSI_TO_TCHAR(V),Event);
-	}
-#endif
+
 	// Simple text printing.
 	void Log( const TCHAR* S );
+#if DNF
 	void Log( const char * S );
+#endif
 	void Log( enum EName Type, const TCHAR* S );
 	void Log( const FString& S );
 	void Log( enum EName Type, const FString& S );
 	void Logf( const TCHAR* Fmt, ... );
 	void Logf( enum EName Type, const TCHAR* Fmt, ... );
-	virtual void Flush() {}
 #if DNF
+	virtual void Flush() {}
 	virtual void FlushRealtime() {}
 	virtual void PrintfArgList( TCHAR* Buffer, size_t Size, const TCHAR* Fmt, va_list ArgList ) { _vstprintf(Buffer, Size, Fmt, ArgList); }
 #endif
@@ -369,11 +374,6 @@ public:
 	virtual void BrushCheck_Show() {};
 	virtual void BrushCheck_Clear() {};
 	virtual void BrushCheck_Add( DN_MAPCHECK_TYPE InError, void* InActor, const TCHAR* InMessage ) {};
-#else
-	virtual void MapErrors_Show() {};
-	virtual void MapErrors_ShowCondtionally() {};
-	virtual void MapErrors_Clear() {};
-	virtual void MapErrors_Add( UBOOL InError, void* InActor, const TCHAR* InMessage ) {};
 #endif
 };
 
@@ -470,6 +470,9 @@ CORE_API extern FOutputDevice*		    GThrow;
 CORE_API extern FOutputDeviceError*		GError;
 CORE_API extern FFeedbackContext*		GWarn;
 CORE_API extern FConfigCache*			GConfig;
+DNF_EXTERN_C_BEGIN
+CORE_API extern FTransactionBase*		GUndo;
+DNF_EXTERN_C_END
 CORE_API extern FOutputDevice*			GLogHook;
 CORE_API extern FExec*					GExec;
 #if !DNF
@@ -479,75 +482,79 @@ CORE_API extern FFileManager*			GFileManager;
 CORE_API extern USystem*				GSys;
 CORE_API extern UProperty*				GProperty;
 CORE_API extern BYTE*					GPropAddr;
+#if DNF
 CORE_API extern UObject*				GPropObject;
 CORE_API extern DWORD					GRuntimeUCFlags;
+#endif
 CORE_API extern USubsystem*				GWindowManager;
 CORE_API extern TCHAR				    GErrorHist[4096];
+DNF_EXTERN_C_BEGIN
+#if DNF
+CORE_API extern const TCHAR				GCmdLine[2048];
+#endif
+CORE_API extern TCHAR					GTrue[64], GFalse[64], GYes[64], GNo[64], GNone[64];
+DNF_EXTERN_C_END
 CORE_API extern TCHAR					GCdPath[];
+DNF_EXTERN_C_BEGIN
+CORE_API extern DOUBLE					GSecondsPerCycle;
+DNF_EXTERN_C_END
 CORE_API extern	DOUBLE					GTempDouble;
 CORE_API extern void					(*GTempFunc)(void*);
 CORE_API extern SQWORD					GTicks;
 CORE_API extern INT                     GScriptCycles;
+DNF_EXTERN_C_BEGIN
+CORE_API extern DWORD					GPageSize;
+CORE_API extern DWORD					GProcessorCount;
+DNF_EXTERN_C_END
 CORE_API extern DWORD					GPhysicalMemory;
 CORE_API extern DWORD                   GUglyHackFlags;
 CORE_API extern UBOOL					GIsScriptable;
-CORE_API extern UBOOL					GIsGuarded;
-CORE_API extern UBOOL					GIsStrict;
-CORE_API extern UBOOL                   GScriptEntryTag;
-CORE_API extern class FGlobalMath		GMath;
-CORE_API extern	URenderDevice*			GRenderDevice;
-CORE_API extern class FArchive*         GDummySave;
-CORE_API extern DWORD					GCurrentViewport;
-
-#if DNF
-CORE_API extern FDnExec*				GDnExec; // CDH
-CORE_API extern INT						GPreloadSize;
-CORE_API extern INT						GTexturePreloadSize;
-CORE_API extern DOUBLE					GPreloadSerializeTime;
-#endif
-
-#if DNF
-extern "C"
-{
-#endif
-
-#if DNF
-CORE_API extern const TCHAR				GCmdLine[2048];
-CORE_API extern UBOOL					GIsWinXP;
-CORE_API extern UBOOL					GIsGame;
-CORE_API extern UBOOL					GIsHackConverting;
-CORE_API extern UBOOL					g_UCCAllowDLCFiles;
-#endif
-
-CORE_API extern dnTransactionBase*		GUndo;
-CORE_API extern TCHAR					GTrue[64], GFalse[64], GYes[64], GNo[64], GNone[64];
-CORE_API extern DOUBLE					GSecondsPerCycle;
-CORE_API extern DWORD					GPageSize;
-CORE_API extern DWORD					GProcessorCount;
+DNF_EXTERN_C_BEGIN
 CORE_API extern UBOOL					GIsEditor;
+#if DNF
 CORE_API extern UBOOL					GIsUCC;
+CORE_API extern UBOOL					GIsGame;
+#endif
 CORE_API extern UBOOL					GIsClient;
 CORE_API extern UBOOL					GIsServer;
 CORE_API extern UBOOL					GIsCriticalError;
 CORE_API extern UBOOL					GIsStarted;
 CORE_API extern UBOOL					GIsRunning;
+#if DNF
 CORE_API extern UBOOL					GIsRunningInternal;
+#endif
 CORE_API extern UBOOL					GIsSlowTask;
+DNF_EXTERN_C_END
+CORE_API extern UBOOL					GIsGuarded;
+DNF_EXTERN_C_BEGIN
 CORE_API extern UBOOL					GIsRequestingExit;
+DNF_EXTERN_C_END
+CORE_API extern UBOOL					GIsStrict;
+CORE_API extern UBOOL                   GScriptEntryTag;
+DNF_EXTERN_C_BEGIN
 CORE_API extern UBOOL					GLazyLoad;
 CORE_API extern UBOOL					GUnicode;
 CORE_API extern UBOOL					GUnicodeOS;
-
+DNF_EXTERN_C_END
 #if DNF
-}
+CORE_API extern FDnExec*				GDnExec; // CDH
+CORE_API extern INT						GPreloadSize;
+CORE_API extern INT						GTexturePreloadSize;
+CORE_API extern DOUBLE					GPreloadSerializeTime;
+DNF_EXTERN_C_BEGIN
+CORE_API extern UBOOL					GIsWinXP;
+CORE_API extern UBOOL					GIsHackConverting;
+CORE_API extern UBOOL					g_UCCAllowDLCFiles;
+DNF_EXTERN_C_END
 #endif
+
+CORE_API extern class FGlobalMath		GMath;
+CORE_API extern	URenderDevice*			GRenderDevice;
+CORE_API extern class FArchive*         GDummySave;
+CORE_API extern DWORD					GCurrentViewport;
 
 // Per module globals.
-#if DNF
-extern "C" CORE_API TCHAR GPackage[];
-#else
 extern "C" DLL_EXPORT TCHAR GPackage[];
-#endif
 
 // Normal includes.
 #include "UnFile.h"			// Low level utility code.
@@ -562,23 +569,13 @@ extern "C" DLL_EXPORT TCHAR GPackage[];
 #include "UnClass.h"		// Class definition.
 #include "UnType.h"			// Base property type.
 #include "UnScript.h"		// Script class.
-#include "UnLinker.h"
 #include "UFactory.h"		// Factory definition.
 #include "UExporter.h"		// Exporter definition.
 #include "UnCache.h"		// Cache based memory management.
 #include "UnMem.h"			// Stack based memory management.
-#include "UnCid.h"          // Cache ID's.
+#include "UnCId.h"          // Cache ID's.
 #include "UnBits.h"         // Bitstream archiver.
 #include "UnMath.h"         // Vector math functions.
-
-#if !DNF
-typedef struct {
-	UBOOL bError;
-	AActor* Actor;
-	FString Message;
-} MAPERROR;
-#endif
-
 #if DNF
 #include "DnExec.h"			// CDH: DNF Exec extensions
 #endif

@@ -55,7 +55,7 @@ const TCHAR* appSpc( INT Num )
 //
 // Get a string from a text string.
 //
-PARSE_API UBOOL Parse
+IFNDNF(CORE_API) UBOOL Parse
 (
 	const TCHAR* Stream, 
 	const TCHAR* Match,
@@ -99,7 +99,7 @@ PARSE_API UBOOL Parse
 //
 // See if a command-line parameter exists in the stream.
 //
-UBOOL PARSE_API ParseParam( const TCHAR* Stream, const TCHAR* Param )
+UBOOL IFNDNF(CORE_API) ParseParam( const TCHAR* Stream, const TCHAR* Param )
 {
 	const TCHAR* Start = Stream;
 	if( *Stream )
@@ -154,7 +154,7 @@ UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SQWORD& Value )
 //
 // Get an object from a text stream.
 //
-PARSE_API UBOOL ParseObject( const TCHAR* Stream, const TCHAR* Match, UClass* Class, UObject*& DestRes, UObject* InParent )
+IFNDNF(CORE_API) UBOOL ParseObject( const TCHAR* Stream, const TCHAR* Match, UClass* Class, UObject*& DestRes, UObject* InParent )
 {
 	TCHAR TempStr[256];
 	if( !Parse( Stream, Match, TempStr, NAME_SIZE ) )
@@ -181,7 +181,7 @@ PARSE_API UBOOL ParseObject( const TCHAR* Stream, const TCHAR* Match, UClass* Cl
 //
 // Get a name.
 //
-PARSE_API UBOOL Parse
+IFNDNF(CORE_API) UBOOL Parse
 (
 	const TCHAR* Stream, 
 	const TCHAR* Match, 
@@ -200,7 +200,7 @@ PARSE_API UBOOL Parse
 //
 // Get a DWORD.
 //
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, DWORD& Value )
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, DWORD& Value )
 {
 
 	const TCHAR* Temp = appStrfind(Stream,Match);
@@ -215,7 +215,7 @@ PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, DWORD& Value )
 //
 // Get a byte.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, BYTE& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, BYTE& Value )
 {
 
 	const TCHAR* Temp = appStrfind(Stream,Match);
@@ -230,7 +230,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, BYTE& Value )
 //
 // Get a signed byte.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, SBYTE& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, SBYTE& Value )
 {
 	const TCHAR* Temp = appStrfind(Stream,Match);
 	if( Temp==NULL )
@@ -243,7 +243,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, SBYTE& Value )
 //
 // Get a word.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, _WORD& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, _WORD& Value )
 {
 	const TCHAR* Temp = appStrfind( Stream, Match );
 	if( Temp==NULL )
@@ -256,7 +256,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, _WORD& Value )
 //
 // Get a signed word.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, SWORD& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, SWORD& Value )
 {
 	const TCHAR* Temp = appStrfind( Stream, Match );
 	if( Temp==NULL )
@@ -269,7 +269,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, SWORD& Value )
 //
 // Get a floating-point number.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, FLOAT& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, FLOAT& Value )
 {
 	const TCHAR* Temp = appStrfind( Stream, Match );
 	if( Temp==NULL )
@@ -281,7 +281,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, FLOAT& Value )
 //
 // Get a signed double word.
 //
-UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, INT& Value )
+UBOOL IFNDNF(CORE_API) Parse( const TCHAR* Stream, const TCHAR* Match, INT& Value )
 {
 	const TCHAR* Temp = appStrfind( Stream, Match );
 	if( Temp==NULL )
@@ -293,7 +293,7 @@ UBOOL PARSE_API Parse( const TCHAR* Stream, const TCHAR* Match, INT& Value )
 //
 // Get a boolean value.
 //
-UBOOL PARSE_API ParseUBOOL( const TCHAR* Stream, const TCHAR* Match, UBOOL& OnOff )
+UBOOL IFNDNF(CORE_API) ParseUBOOL( const TCHAR* Stream, const TCHAR* Match, UBOOL& OnOff )
 {
 	TCHAR TempStr[16];
 	if( Parse( Stream, Match, TempStr, 16 ) )
@@ -311,7 +311,7 @@ UBOOL PARSE_API ParseUBOOL( const TCHAR* Stream, const TCHAR* Match, UBOOL& OnOf
 //
 // Get a globally unique identifier.
 //
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FGuid& Guid )
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FGuid& Guid )
 {
 
 	TCHAR Temp[256];
@@ -336,7 +336,7 @@ PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FGuid& Gui
 // skips through the command and blanks past it.  Returns 1 of match,
 // 0 if not.
 //
-PARSE_API UBOOL ParseCommand
+IFNDNF(CORE_API) UBOOL ParseCommand
 (
 	const TCHAR** Stream, 
 	const TCHAR*  Match
@@ -366,7 +366,7 @@ PARSE_API UBOOL ParseCommand
 //
 // Get next command.  Skips past comments and cr's.
 //
-PARSE_API void ParseNext( const TCHAR** Stream )
+IFNDNF(CORE_API) void ParseNext( const TCHAR** Stream )
 {
 
 	// Skip over spaces, tabs, cr's, and linefeeds.
@@ -389,7 +389,7 @@ PARSE_API void ParseNext( const TCHAR** Stream )
 // Grab the next space-delimited string from the input stream.
 // If quoted, gets entire quoted string.
 //
-PARSE_API UBOOL ParseToken( const TCHAR*& Str, TCHAR* Result, INT MaxLen, UBOOL UseEscape )
+IFNDNF(CORE_API) UBOOL ParseToken( const TCHAR*& Str, TCHAR* Result, INT MaxLen, UBOOL UseEscape )
 {
 	INT Len=0;
 
@@ -426,7 +426,7 @@ PARSE_API UBOOL ParseToken( const TCHAR*& Str, TCHAR* Result, INT MaxLen, UBOOL 
 	Result[Len]=0;
 	return Len!=0;
 }
-PARSE_API UBOOL ParseToken( const TCHAR*& Str, FString& Arg, UBOOL UseEscape )
+IFNDNF(CORE_API) UBOOL ParseToken( const TCHAR*& Str, FString& Arg, UBOOL UseEscape )
 {
 	TCHAR Buffer[1024];
 	if( ParseToken( Str, Buffer, ARRAY_COUNT(Buffer), UseEscape ) )
@@ -436,7 +436,7 @@ PARSE_API UBOOL ParseToken( const TCHAR*& Str, FString& Arg, UBOOL UseEscape )
 	}
 	return 0;
 }
-PARSE_API FString ParseToken( const TCHAR*& Str, UBOOL UseEscape )
+IFNDNF(CORE_API) FString ParseToken( const TCHAR*& Str, UBOOL UseEscape )
 {
 	TCHAR Buffer[1024];
 	if( ParseToken( Str, Buffer, ARRAY_COUNT(Buffer), UseEscape ) )
@@ -449,7 +449,7 @@ PARSE_API FString ParseToken( const TCHAR*& Str, UBOOL UseEscape )
 // Get a line of Stream (everything up to, but not including, CR/LF.
 // Returns 0 if ok, nonzero if at end of stream and returned 0-length string.
 //
-PARSE_API UBOOL ParseLine
+IFNDNF(CORE_API) UBOOL ParseLine
 (
 	const TCHAR**	Stream,
 	TCHAR*			Result,
@@ -499,7 +499,7 @@ PARSE_API UBOOL ParseLine
 	*Result=0;
 	return **Stream!=0 || GotStream;
 }
-PARSE_API UBOOL ParseLine
+IFNDNF(CORE_API) UBOOL ParseLine
 (
 	const TCHAR**	Stream,
 	FString&		Result,

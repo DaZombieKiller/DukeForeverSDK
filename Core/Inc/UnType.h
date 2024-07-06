@@ -19,14 +19,12 @@ enum EPropertyPortFlags
 //
 class CORE_API UProperty : public UField
 {
-public:
-    INT         Offset;
-
 	DECLARE_ABSTRACT_CLASS(UProperty,UField,0)
 	DECLARE_WITHIN(UField)
 
 	// Persistent variables.
 #if DNF
+	INT			Offset;
 	_WORD		ArrayDim;
 	_WORD		ElementSize;
 #else
@@ -39,9 +37,14 @@ public:
 #endif
 	FName		Category;
 	_WORD		RepOffset;
+#if DNF
 	FString		CommentString; // CDH: comment or description string if desired
+#endif
 
 	// In memory variables.
+#if !DNF
+	INT			Offset;
+#endif
 	_WORD		RepIndex;
 #if DNF
 	DWORD		Unknown2;
@@ -84,6 +87,7 @@ public:
 #endif
 
 	// Inlines.
+#if DNF
     INT GetOffset() const
     {
         return Offset;
@@ -92,21 +96,28 @@ public:
 	{
 		return(Offset + Index*ElementSize);
 	}
+#endif
 	UBOOL Matches( const void* A, const void* B, INT ArrayIndex ) const
 	{
+		guardSlow(UProperty::Matches);
 		INT Ofs = Offset + ArrayIndex * ElementSize;
 		return Identical( (BYTE*)A + Ofs, B ? (BYTE*)B + Ofs : NULL );
+		unguardobjSlow;
 	}
 	INT GetSize() const
 	{
+		guardSlow(UProperty::GetSize);
 		return ArrayDim * ElementSize;
+		unguardobjSlow;
 	}
 	UBOOL ShouldSerializeValue( FArchive& Ar ) const
 	{
+		guardSlow(UProperty::ShouldSerializeValue);
 		UBOOL Skip
 		=	((PropertyFlags & CPF_Native   )                      )
 		||	((PropertyFlags & CPF_Transient) && Ar.IsPersistent() );
 		return !Skip;
+		unguardobjSlow;
 	}
 };
 
@@ -237,6 +248,7 @@ class CORE_API UBoolProperty : public UProperty
 	:	UProperty( EC_CppProperty, InOffset, InCategory, InFlags )
 	,	BitMask( 1 )
 	{}
+
 	// UObject interface.
 	void Serialize( FArchive& Ar );
 
@@ -376,20 +388,26 @@ class CORE_API UNameProperty : public UProperty
 	DECLARE_CLASS(UNameProperty,UProperty,0)
 
 	// Variables
+#if DNF
 	FName NameOptionNameA, NameOptionNameB; // CDH: various uses based on property flags
 	UObject* NameOptionObjectA, *NameOptionObjectB; // CDH: various uses based on property flags
+#endif
 
 	// Constructors.
 	UNameProperty()
 	{}
 	UNameProperty( ECppProperty, INT InOffset, const TCHAR* InCategory, DWORD InFlags )
 	:	UProperty( EC_CppProperty, InOffset, InCategory, InFlags )
+#if DNF
 	,	NameOptionNameA(NAME_None), NameOptionNameB(NAME_None)
 	,	NameOptionObjectA(NULL), NameOptionObjectB(NULL)
+#endif
 	{}
 
 	// UObject interface.
+#if DNF
 	void Serialize( FArchive& Ar );
+#endif
 
 	// UProperty interface.
 	void Link( FArchive& Ar, UProperty* Prev );
@@ -648,28 +666,29 @@ class CORE_API UDelegateProperty : public UProperty
 //
 template <class T> T* FindField( UStruct* Owner, const TCHAR* FieldName )
 {
+	guard(FindField);
 	for( TFieldIterator<T>It( Owner ); It; ++It )
 		if( appStricmp( It->GetName(), FieldName )==0 )
 			return *It;
 	return NULL;
+	unguard;
 }
 
 /*-----------------------------------------------------------------------------
 	UObject accessors that depend on UClass.
 -----------------------------------------------------------------------------*/
 
-
 //
 // See if this object belongs to the specified class.
 //
-
-UBOOL __forceinline UObject::IsA( class UClass* SomeBase ) const
+inline UBOOL UObject::IsA( class UClass* SomeBase ) const
 {
+	guardSlow(UObject::IsA);
 	for( UClass* TempClass=Class; TempClass; TempClass=(UClass*)TempClass->SuperField )
 		if( TempClass==SomeBase )
 			return 1;
-
 	return SomeBase==NULL;
+	unguardobjSlow;
 }
 
 //
@@ -677,10 +696,12 @@ UBOOL __forceinline UObject::IsA( class UClass* SomeBase ) const
 //
 inline UBOOL UObject::IsIn( class UObject* SomeOuter ) const
 {
+	guardSlow(UObject::IsA);
 	for( UObject* It=GetOuter(); It; It=It->GetOuter() )
 		if( It==SomeOuter )
 			return 1;
 	return SomeOuter==NULL;
+	unguardobjSlow;
 }
 
 //
@@ -688,10 +709,12 @@ inline UBOOL UObject::IsIn( class UObject* SomeOuter ) const
 //
 inline UBOOL UObject::IsProbing( FName ProbeName )
 {
+	guardSlow(UObject::IsProbing);
 	return	(ProbeName.GetIndex() <  NAME_PROBEMIN)
 	||		(ProbeName.GetIndex() >= NAME_PROBEMAX)
 	||		(!StateFrame)
 	||		(StateFrame->ProbeMask & ((QWORD)1 << (ProbeName.GetIndex() - NAME_PROBEMIN)));
+	unguardobjSlow;
 }
 
 /*-----------------------------------------------------------------------------
@@ -701,12 +724,14 @@ inline UBOOL UObject::IsProbing( FName ProbeName )
 //
 // UStruct inline comparer.
 //
-__forceinline UBOOL UStruct::StructCompare( const void* A, const void* B )
+inline UBOOL UStruct::StructCompare( const void* A, const void* B )
 {
+	guardSlow(UStruct::StructCompare);
 	for( TFieldIterator<UProperty> It(this); It; ++It )
 		for( INT i=0; i<It->ArrayDim; i++ )
 			if( !It->Matches(A,B,i) )
 				return 0;
+	unguardobjSlow;
 	return 1;
 }
 
@@ -720,5 +745,3 @@ __forceinline UBOOL UStruct::StructCompare( const void* A, const void* B )
 /*-----------------------------------------------------------------------------
 	The End.
 -----------------------------------------------------------------------------*/
-
-

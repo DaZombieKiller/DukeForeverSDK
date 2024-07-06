@@ -81,11 +81,17 @@ enum EClassFlags
 	CLASS_NoUserCreate      = 0x00200,  // Don't allow users to create in the editor.
 	CLASS_PerObjectConfig   = 0x00400,  // Handle object configuration on a per-object basis, rather than per-class.
 	CLASS_NativeReplication = 0x00800,  // Replication handled in C++.
+#if DNF
 	CLASS_Obsolete			= 0x01000,	// CDH: Class is obsolete and any current instances should be removed so class can be deleted.
 	CLASS_Placeable			= 0x02000,	// Class is placeable in a level.
+#endif
 
 	// Flags to inherit from base class.
+#if DNF
 	CLASS_Inherit           = CLASS_Transient | CLASS_Config | CLASS_Localized | CLASS_SafeReplace | CLASS_RuntimeStatic | CLASS_PerObjectConfig | CLASS_Obsolete | CLASS_Placeable,
+#else
+	CLASS_Inherit           = CLASS_Transient | CLASS_Config | CLASS_Localized | CLASS_SafeReplace | CLASS_RuntimeStatic | CLASS_PerObjectConfig,
+#endif
 	CLASS_RecompilerClear   = CLASS_Inherit | CLASS_Abstract | CLASS_NoExport | CLASS_NativeReplication,
 };
 
@@ -118,15 +124,21 @@ enum EPropertyFlags
 	CPF_OnDemand     = 0x00100000, // Object or dynamic array loaded on demand only.
 	CPF_New			 = 0x00200000, // Automatically create inner object.
 	CPF_NeedCtorLink = 0x00400000, // Fields need construction/destruction.
+#if DNF
 	CPF_Comment		 = 0x00800000, // CDH: Property has a comment string.
 	CPF_Static		 = 0x01000000, // CDH: Property is a static variable (not stored on instances)
 	CPF_Unbound		 = 0x02000000, // CDH: Property is an unbound instance variable
 	CPF_StateName	 = 0x04000000, // CDH: Property is the name of a state, only useful for name properties
 	CPF_FuncName	 = 0x08000000, // CDH: Property is the name of a function, only useful for name properties
+#endif
 
 	// Combinations of flags.
 	CPF_ParmFlags           = CPF_OptionalParm | CPF_Parm | CPF_OutParm | CPF_SkipParm | CPF_ReturnParm | CPF_CoerceParm,
+#if DNF
 	CPF_PropagateFromStruct = CPF_Const | CPF_Native | CPF_Transient | CPF_Static,
+#else
+	CPF_PropagateFromStruct = CPF_Const | CPF_Native | CPF_Transient,
+#endif
 };
 
 //
@@ -176,13 +188,17 @@ enum EObjectFlags
 	RF_ScriptMask		= RF_Transactional | RF_Public | RF_Final | RF_Transient | RF_NotForClient | RF_NotForServer | RF_NotForEdit // Script-accessible flags.
 };
 
-// For saveing and loading games	(defined in object.uc as well!!!)
+#if DNF
+// For saving and loading games
 enum ESaveType
 {
-	SAVE_Normal = 0,
-	SAVE_Quick	= 1,
-	SAVE_Auto	= 2,
+	SAVE_Normal		= 0,
+	SAVE_Quick		= 1,
+	SAVE_Auto		= 2,
+	SAVE_Restart	= 3,
+	SAVE_AutoFinal	= 4,
 };
+#endif
 
 /*----------------------------------------------------------------------------
 	Core types.
@@ -206,7 +222,9 @@ public:
 		{return X.A!=Y.A || X.B!=Y.B || X.C!=Y.C || X.D!=Y.D;}
 	friend FArchive& operator<<( FArchive& Ar, FGuid& G )
 	{
+		guard(FGuid<<);
 		return Ar << G.A << G.B << G.C << G.D;
+		unguard;
 	}
 #if DNF
 	void String( TCHAR* Dest, SIZE_T Size ) const
@@ -232,6 +250,17 @@ inline INT CompareGuids( FGuid* A, FGuid* B )
 	Diff = A->D-B->D; if( Diff ) return Diff;
 	return 0;
 }
+
+//
+// COM IUnknown interface.
+//
+class CORE_API FUnknown
+{
+public:
+	virtual DWORD STDCALL QueryInterface( const FGuid& RefIID, void** InterfacePtr ) {return 0;}
+	virtual DWORD STDCALL AddRef() {return 0;}
+	virtual DWORD STDCALL Release() {return 0;}
+};
 
 //
 // Information about a driver class.
@@ -265,6 +294,7 @@ public:
 	{}
 };
 
+#if DNF
 //
 // Information about models
 //
@@ -297,6 +327,7 @@ public:
 	: Group(), Members(), Description()
 	{}
 };
+#endif
 
 /*----------------------------------------------------------------------------
 	Core macros.
@@ -437,7 +468,11 @@ struct CORE_API FScriptDelegate
 //
 // The base class of all objects.
 //
-class CORE_API UObject 
+#if DNF
+class CORE_API UObject
+#else
+class CORE_API UObject : public FUnknown
+#endif
 {
 	// Declarations.
 	DECLARE_BASE_CLASS(UObject,UObject,CLASS_Abstract)
@@ -455,10 +490,6 @@ class CORE_API UObject
 	friend struct FObjectExport;
 
 private:
-	enum { UOBJECT_MAGIC='UObj',
-		   UOBJECT_FREE ='Free'
-	};
-
 	// Internal per-object variables.
 	INT						Index;				// Index of object into table.
 	UObject*				HashNext;			// Next object in this hash bin.
@@ -488,8 +519,10 @@ private:
 	static TArray<UObject*> GObjRegistrants;		// Registrants during ProcessRegistrants call.
 	static TArray<FPreferencesInfo>         GObjPreferences; // Prefereces cache.
 	static TArray<FRegistryObjectInfo>      GObjDrivers; // Drivers cache.
+#if DNF
     static TArray<FModelDataSpecification>  GObjModelData; // Model Data
     static TArray<FModelDataGroup>          GObjModelDataGroups; // Model Data Groups
+#endif
 	static TMultiMap<FName,FName>* GObjPackageRemap; // Remap table for loading renamed packages.
 	static TCHAR GLanguage[64];
 
@@ -521,10 +554,16 @@ public:
 	// Destructors.
 	virtual ~UObject();
 	void operator delete( void* Object, size_t Size )
-		{appFree( Object );}
+		{guard(UObject::operator delete); appFree( Object ); unguard;}
+
+#if !DNF
+	// FUnknown interface.
+	virtual DWORD STDCALL QueryInterface( const FGuid& RefIID, void** InterfacePtr );
+	virtual DWORD STDCALL AddRef();
+	virtual DWORD STDCALL Release();
+#endif
 
 	// UObject interface.
-	//virtual void Validate() { check(this); check(Magic==UOBJECT_MAGIC); }
 	virtual void ProcessEvent( UFunction* Function, void* Parms, void* Result=NULL );
 #if DNF
 	virtual void ProcessDelegate( FName DelegateName, FScriptDelegate* Delegate, void* Parms, void* Result=NULL );
@@ -543,7 +582,7 @@ public:
 	virtual UBOOL IsGory() const {return 0;}
 #else
 	virtual UBOOL IsPendingKill() {return 0;}
-	EGotoState __fastcall GotoState( FName State, UBOOL PurgeStack );
+	EGotoState GotoState( FName State, UBOOL PurgeStack );
 	virtual INT GotoLabel( FName Label );
 #endif
 	virtual void InitExecution();
@@ -603,8 +642,10 @@ public:
 	static void ResetConfig( UClass* Class );
 	static void GetRegistryObjects( TArray<FRegistryObjectInfo>& Results, UClass* Class, UClass* MetaClass, UBOOL ForceRefresh );
 	static void GetPreferences( TArray<FPreferencesInfo>& Results, const TCHAR* Category, UBOOL ForceRefresh );
+#if DNF
     static void GetModelDataSpecifications( TArray<FModelDataSpecification>& Results, const TCHAR* Parent, const TCHAR* Category, UBOOL ForceRefresh );
     static void GetModelDataGroups( TArray<FModelDataGroup>& Results, const TCHAR* GroupName, UBOOL ForceRefresh );
+#endif
 	static UBOOL GetInitialized();
 	static UPackage* GetTransientPackage();
 	static void VerifyLinker( ULinkerLoad* Linker );
@@ -636,20 +677,20 @@ public:
 	UBOOL ConditionalDestroy();
 	void ConditionalPostLoad();
 	void ConditionalShutdownAfterError();
-	__forceinline  UBOOL __fastcall IsA( UClass* SomeBaseClass ) const;
+	UBOOL IF_DNF(__fastcall) IsA( UClass* SomeBaseClass ) const;
 	UBOOL IsIn( UObject* SomeOuter ) const;
 	UBOOL IsProbing( FName ProbeName );
 	void Rename( const TCHAR* NewName=NULL );
-	UField* __fastcall FindObjectField( FName InName, UBOOL Global=0 );
-	UFunction* __fastcall FindFunction( FName InName, UBOOL Global=0 );
-	UState* __fastcall FindState( FName InName );
-	UFunction* __fastcall FindFunctionChecked( FName InName, UBOOL Global=0 );
+	UField* IF_DNF(__fastcall) FindObjectField( FName InName, UBOOL Global=0 );
+	UFunction* IF_DNF(__fastcall) FindFunction( FName InName, UBOOL Global=0 );
+	UFunction* IF_DNF(__fastcall) FindFunctionChecked( FName InName, UBOOL Global=0 );
+	UState* IF_DNF(__fastcall) FindState( FName InName );
 
 	void SaveConfig( DWORD Flags=CPF_Config, const TCHAR* Filename=NULL );
 	void LoadConfig( UBOOL Propagate=0, UClass* Class=NULL, const TCHAR* Filename=NULL );
 	void LoadLocalized( UBOOL Propagate=0, UClass* Class=NULL );
 	void InitClassDefaultObject( UClass* InClass );
-	void __fastcall ProcessInternal( FFrame& TheStack, void*const Result );
+	void IF_DNF(__fastcall) ProcessInternal( FFrame& TheStack, void*const Result );
 	void ParseParms( const TCHAR* Parms );
 
 	// Accessors.
@@ -671,10 +712,7 @@ public:
 		ObjectFlags &= ~NewFlags;
 		checkSlow(Name!=NAME_None || !(ObjectFlags&RF_Public));
 	}
-#if !DNF
-	virtual
-#endif
-	const TCHAR* GetName() const
+	IFNDNF(virtual) const TCHAR* GetName() const
 	{
 		return *Name;
 	}
@@ -704,7 +742,7 @@ public:
 	}
 
 	// UnrealScript intrinsics.
-	#define DECLARE_FUNCTION(func) void __fastcall func( FFrame& TheStack, RESULT_DECL );
+	#define DECLARE_FUNCTION(func) void IF_DNF(__fastcall) func( FFrame& TheStack, RESULT_DECL );
 	DECLARE_FUNCTION(execUndefined)
 	DECLARE_FUNCTION(execLocalVariable)
 	DECLARE_FUNCTION(execInstanceVariable)
@@ -862,12 +900,16 @@ public:
 	DECLARE_FUNCTION(execSubtractSubtract_PreInt)
 	DECLARE_FUNCTION(execAddAdd_Int)
 	DECLARE_FUNCTION(execSubtractSubtract_Int)
+#if DNF
 	DECLARE_FUNCTION(execSeed)
+#endif
 	DECLARE_FUNCTION(execRand)
 	DECLARE_FUNCTION(execMin)
 	DECLARE_FUNCTION(execMax)
 	DECLARE_FUNCTION(execClamp)
+#if DNF
 	DECLARE_FUNCTION(execRound)
+#endif
 	DECLARE_FUNCTION(execSubtract_PreFloat)
 	DECLARE_FUNCTION(execMultiplyMultiply_FloatFloat)
 	DECLARE_FUNCTION(execMultiply_FloatFloat)
@@ -889,7 +931,9 @@ public:
 	DECLARE_FUNCTION(execAbs)
 	DECLARE_FUNCTION(execSin)
 	DECLARE_FUNCTION(execCos)
+#if DNF
 	DECLARE_FUNCTION(execAcos)
+#endif
 	DECLARE_FUNCTION(execTan)
 	DECLARE_FUNCTION(execAtan)
 	DECLARE_FUNCTION(execExp)
@@ -919,7 +963,9 @@ public:
 	DECLARE_FUNCTION(execCaps)
 	DECLARE_FUNCTION(execChr)
 	DECLARE_FUNCTION(execAsc)
+#if DNF
 	DECLARE_FUNCTION(execIsValidString)
+#endif
 	DECLARE_FUNCTION(execEqualEqual_ObjectObject)
 	DECLARE_FUNCTION(execNotEqual_ObjectObject)
 	DECLARE_FUNCTION(execEqualEqual_NameName)
@@ -942,11 +988,14 @@ public:
 	DECLARE_FUNCTION(execSaveConfig)
 	DECLARE_FUNCTION(execStaticSaveConfig)
 	DECLARE_FUNCTION(execResetConfig)
+#if DNF
 	DECLARE_FUNCTION(execLogStackTrace);
+#endif
 	DECLARE_FUNCTION(execGetEnum)
 	DECLARE_FUNCTION(execDynamicLoadObject)
 	DECLARE_FUNCTION(execIsInState)
 	DECLARE_FUNCTION(execGetStateName)
+#if DNF
 	DECLARE_FUNCTION(execChangeState)
 	DECLARE_FUNCTION(execChildState)
 	DECLARE_FUNCTION(execEndChildState)
@@ -956,6 +1005,7 @@ public:
 	DECLARE_FUNCTION(execClassForName)
 	DECLARE_FUNCTION(execAtan2)
 	DECLARE_FUNCTION(execSlerp)
+#endif
 	DECLARE_FUNCTION(execHighNative0)
 	DECLARE_FUNCTION(execHighNative1)
 	DECLARE_FUNCTION(execHighNative2)
@@ -1048,8 +1098,11 @@ template< class T > UClass* LoadClass( UObject* Outer, const TCHAR* Name, const 
 // Get default object of a class.
 template< class T > T* GetDefault()
 {
-	//return (T*)&T::StaticClass()->Defaults(0);
+#if DNF
 	return (T*)T::StaticClass()->GetDefaultObject();
+#else
+	return (T*)&T::StaticClass()->Defaults(0);
+#endif
 }
 
 /*----------------------------------------------------------------------------

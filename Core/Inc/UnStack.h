@@ -29,6 +29,59 @@ enum {MAX_FUNC_PARMS			= 16                };
 #define unguardexec      unguardf    (( TEXT("(%s @ %s : %04X)"), Stack.Object->GetFullName(), Stack.Node->GetFullName(), Stack.Code - &Stack.Node->Script(0) ))
 
 //
+// State flags.
+//
+enum EStateFlags
+{
+	// State flags.
+	STATE_Editable		= 0x00000001,	// State should be user-selectable in UnrealEd.
+	STATE_Auto			= 0x00000002,	// State is automatic (the default state).
+	STATE_Simulated     = 0x00000004,   // State executes on client side.
+};
+
+//
+// Function flags.
+//
+enum EFunctionFlags
+{
+	// Function flags.
+	FUNC_Final			= 0x00000001,	// Function is final (prebindable, non-overridable function).
+	FUNC_Defined		= 0x00000002,	// Function has been defined (not just declared).
+	FUNC_Iterator		= 0x00000004,	// Function is an iterator.
+	FUNC_Latent		    = 0x00000008,	// Function is a latent state function.
+	FUNC_PreOperator	= 0x00000010,	// Unary operator is a prefix operator.
+	FUNC_Singular       = 0x00000020,   // Function cannot be reentered.
+	FUNC_Net            = 0x00000040,   // Function is network-replicated.
+	FUNC_NetReliable    = 0x00000080,   // Function should be sent reliably on the network.
+	FUNC_Simulated		= 0x00000100,	// Function executed on the client side.
+	FUNC_Exec		    = 0x00000200,	// Executable from command line.
+	FUNC_Native			= 0x00000400,	// Native function.
+	FUNC_Event          = 0x00000800,   // Event function.
+	FUNC_Operator       = 0x00001000,   // Operator function.
+	FUNC_Static         = 0x00002000,   // Static function.
+	FUNC_NoExport       = 0x00004000,   // Don't export intrinsic function to C++.
+	FUNC_Const          = 0x00008000,   // Function doesn't modify this object.
+	FUNC_Invariant      = 0x00010000,   // Return value is purely dependent on parameters; no state dependencies or internal state changes.
+	FUNC_Public			= 0x00020000,	// Function is accessible in all classes (if overridden, parameters much remain unchanged).
+	FUNC_Private		= 0x00040000,	// Function is accessible only in the class it is defined in (cannot be overriden, but function name may be reused in subclasses.  IOW: if overridden, parameters don't need to match, and Super.Func() cannot be accessed since it's private.)
+	FUNC_Protected		= 0x00080000,	// Function is accessible only in the class it is defined in and subclasses (if overridden, parameters much remain unchanged).
+	FUNC_Multicast      = 0x00100000,   // Function is replicated to all clients for which the context actor is relevant
+#if DNF
+	FUNC_Indexed		= 0x00200000,
+	FUNC_Delegate		= 0x00400000,	// Function is actually a delegate.
+	FUNC_Cached			= 0x01000000,
+	FUNC_Encrypted		= 0x02000000,
+	FUNC_AnimEvent		= 0x04000000,	// Animation event function.
+	FUNC_DevExec		= 0x20000000,	// Function is only executable from command line in development builds.
+#endif
+
+	// Combinations of flags.
+	FUNC_FuncInherit        = FUNC_Exec | FUNC_Event,
+	FUNC_FuncOverrideMatch	= FUNC_Exec | FUNC_Final | FUNC_Latent | FUNC_PreOperator | FUNC_Iterator | FUNC_Static | FUNC_Public | FUNC_Protected,
+	FUNC_NetFuncFlags       = FUNC_Net | FUNC_NetReliable,
+};
+
+//
 // Evaluatable expression item types.
 //
 enum EExprToken
@@ -87,7 +140,7 @@ enum EExprToken
 	EX_StructCmpEq          = 0x32,	// Struct binary compare-for-equal.
 	EX_StructCmpNe          = 0x33,	// Struct binary compare-for-unequal.
 	EX_UnicodeStringConst   = 0x34, // Unicode string constant.
-	EX_RangeConst			= 0x35,	// A range constant.
+	//
 	EX_StructMember         = 0x36, // Struct member.
 	//
 	EX_GlobalFunction		= 0x38, // Call non-state version of a function.
@@ -178,14 +231,6 @@ enum EPollSlowFuncs
 	EPOLL_FinishInterpolation = 302,
 };
 
-//
-// Native function table.
-//
-struct FFrame;
-typedef void (__fastcall UObject::*Native)( FFrame& TheStack, RESULT_DECL );
-extern CORE_API Native GNatives[];
-BYTE CORE_API GRegisterNative( INT iNative, const Native& Func );
-
 /*-----------------------------------------------------------------------------
 	Execution stack helpers.
 -----------------------------------------------------------------------------*/
@@ -204,55 +249,16 @@ struct CORE_API FFrame : public FOutputDevice
 	// Constructors.
 	FFrame( UObject* InObject );
 	FFrame( UObject* InObject, UStruct* InNode, INT CodeOffset, void* InLocals );
-	inline ~FFrame() {}
 
-	//__forceinline void Step( UObject* Context, RESULT_DECL );
-	__forceinline void Step( UObject* Context, RESULT_DECL )
-	{
-		INT B = *Code++;
-		(Context->*GNatives[B])( *this, Result );	// NJS: Primary script function dispatch point:
-	}
-
+	// Functions.
+	void Step( UObject* Context, RESULT_DECL );
 	void Serialize( const TCHAR* V, enum EName Event );
 
-	__forceinline INT ReadInt()
-	{
-		INT Result = *(INT*)Code;
-		Code += sizeof(INT);
-		return Result;
-	}
-	__forceinline UObject* ReadObject()
-	{
-		UObject* Result = *(UObject**)Code;
-		Code += sizeof(INT);
-		return Result;
-	}
-	__forceinline FLOAT ReadFloat()
-	{
-		FLOAT Result = *(FLOAT*)Code;
-		Code += sizeof(FLOAT);
-		return Result;
-	}
-	__forceinline INT ReadWord()
-	{
-		INT Result = *(_WORD*)Code;
-		Code += sizeof(_WORD);
-		return Result;
-	}
-	__forceinline FName ReadName()
-	{
-		FName Result = *(FName*)Code;
-		Code += sizeof(FName);
-		return Result;
-	}
-
-/*
 	INT ReadInt();
 	UObject* ReadObject();
 	FLOAT ReadFloat();
 	INT ReadWord();
 	FName ReadName();
-*/
 };
 
 //
@@ -262,14 +268,20 @@ struct CORE_API FFrame : public FOutputDevice
 struct CORE_API FStateFrame : public FFrame
 {
 	// Variables.
+#if DNF
 	FStateFrame*	StateStack;
+#else
+	FFrame*			CurrentFrame;
+#endif
 	UState*			StateNode;
 	QWORD			ProbeMask;
 	INT				LatentAction;
 
 	// Functions.
 	FStateFrame( UObject* InObject );
+#if DNF
 	~FStateFrame();
+#endif
 	const TCHAR* Describe();
 };
 

@@ -42,18 +42,22 @@ public:
 	}
 	FFieldNetCache* GetFromField( UObject* Field )
 	{
+		guardSlow(FClassNetCache::GetFromField);
 		FFieldNetCache* Result=NULL;
 		for( FClassNetCache* C=this; C; C=C->Super )
 			if( (Result=C->FieldMap.FindRef(Field))!=NULL )
 				break;
 		return Result;
+		unguardSlow;
 	}
 	FFieldNetCache* GetFromIndex( INT Index )
 	{
+		guardSlow(FFieldNetCache::GetFromIndex);
 		for( FClassNetCache* C=this; C; C=C->Super )
 			if( Index>=C->FieldsBase && Index<C->FieldsBase+C->Fields.Num() )
 				return &C->Fields(Index-C->FieldsBase);
 		return NULL;
+		unguardSlow;
 	}
 	CORE_API friend FArchive& operator<<( FArchive& Ar, FClassNetCache& Cache );
 	TArray<FFieldNetCache*> RepProperties;

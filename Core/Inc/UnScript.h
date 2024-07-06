@@ -11,6 +11,13 @@
 -----------------------------------------------------------------------------*/
 
 //
+// Native function table.
+//
+typedef void (IF_DNF(__fastcall) UObject::*Native)( FFrame& TheStack, RESULT_DECL );
+extern CORE_API Native GNatives[];
+BYTE CORE_API GRegisterNative( INT iNative, const Native& Func );
+
+//
 // Registering a native function.
 //
 #if _MSC_VER
@@ -54,7 +61,7 @@
 #define P_GET_OBJECT_OPTX(cls,var,def)cls*  var=def;                       Stack.Step( Stack.Object, &var    );
 #define P_GET_OBJECT_REF(cls,var)     cls*  var##T=NULL; GPropAddr=0;      Stack.Step( Stack.Object, &var##T ); cls**    var = GPropAddr ? (cls   **)GPropAddr:&var##T;
 #define P_GET_ARRAY_REF(typ,var)      typ   var##T[256]; GPropAddr=0;      Stack.Step( Stack.Object,  var##T ); typ*     var = GPropAddr ? (typ    *)GPropAddr: var##T;
-#define P_GET_SKIP_OFFSET(var)        _WORD var; { Stack.Code++; var=*(_WORD*)Stack.Code; Stack.Code+=2; }
+#define P_GET_SKIP_OFFSET(var)        _WORD var; {checkSlow(*Stack.Code==EX_Skip); Stack.Code++; var=*(_WORD*)Stack.Code; Stack.Code+=2; }
 #if DNF
 #define P_FINISH                      Stack.Code++; if( *Stack.Code == EX_DebugInfo ) Stack.Step( Stack.Object, NULL );
 #else
@@ -105,14 +112,13 @@ inline FFrame::FFrame( UObject* InObject, UStruct* InNode, INT CodeOffset, void*
 ,	Code		(&InNode->Script(CodeOffset))
 ,	Locals		((BYTE*)InLocals)
 {}
-/*
-__forceinline void FFrame::Step( UObject* Context, RESULT_DECL )
+inline void FFrame::Step( UObject* Context, RESULT_DECL )
 {
+	guardSlow(FFrame::Step);
 	INT B = *Code++;
-	(Context->*GNatives[B])( *this, Result );	// NJS: Primary script function dispatch point:
+	(Context->*GNatives[B])( *this, Result );
+	unguardfSlow(( TEXT("(%s @ %s : %04X)"), Object->GetFullName(), Node->GetFullName(), Code - &Node->Script(0) ));
 }
-*/
-/*
 inline INT FFrame::ReadInt()
 {
 	INT Result = *(INT*)Code;
@@ -143,7 +149,6 @@ inline FName FFrame::ReadName()
 	Code += sizeof(FName);
 	return Result;
 }
-*/
 CORE_API void GInitRunaway();
 
 /*-----------------------------------------------------------------------------
@@ -152,15 +157,21 @@ CORE_API void GInitRunaway();
 
 inline FStateFrame::FStateFrame( UObject* InObject )
 :	FFrame		( InObject )
+#if DNF
 ,	StateStack	( NULL )
+#else
+,	CurrentFrame( NULL )
+#endif
 ,	StateNode	( InObject->GetClass() )
 ,	ProbeMask	( ~(QWORD)0 )
 {}
+#if DNF
 inline FStateFrame::~FStateFrame()
 {
 	if (StateStack)
 		delete StateStack;
 }
+#endif
 inline const TCHAR* FStateFrame::Describe()
 {
 #if DNF

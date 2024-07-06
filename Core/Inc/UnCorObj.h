@@ -43,7 +43,7 @@ class CORE_API USubsystem : public UObject, public FExec
 	NO_DEFAULT_CONSTRUCTOR(USubsystem)
 
 	// USubsystem interface.
-	virtual void __fastcall Tick( FLOAT DeltaTime )
+	virtual void IF_DNF(__fastcall) Tick( FLOAT DeltaTime )
 	{}
 };
 

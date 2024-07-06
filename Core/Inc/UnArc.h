@@ -178,7 +178,9 @@ public:
 	// Constructor.
 	FArchive()
 	:	ArVer			(PACKAGE_FILE_VERSION)
-	,	ArLVer			(PACKAGE_LICENSEE_VERSION) // CDH
+#if DNF
+	,	ArLVer			(PACKAGE_FILE_VERSION_LICENSEE)
+#endif
 	,	ArNetVer		(ENGINE_NEGOTIATION_VERSION)
 #if DNF
 	,	ArMergeVer		(0)
@@ -195,9 +197,9 @@ public:
 
 	// Status accessors.
 	INT Ver()				{return ArVer;}
-	INT LVer()				{return ArLVer;} // CDH
 	INT NetVer()			{return ArNetVer&0x7fffffff;}
 #if DNF
+	INT LVer()				{return ArLVer;}
 	void SetVer(INT Ver)	{ArVer = Ver;}
 	UBOOL IsTaggingUsed()	{return ArIsTaggingUsed;}
 	UBOOL IsCompressor()	{return ArIsCompressor;}
@@ -274,7 +276,9 @@ public:
 protected:
 	// Status variables.
 	INT ArVer;
-	INT ArLVer; // CDH licensee version
+#if DNF
+	INT ArLVer;
+#endif
 	INT ArNetVer;
 #if DNF
 	INT ArMergeVer;

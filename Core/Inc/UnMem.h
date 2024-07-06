@@ -27,52 +27,35 @@ class CORE_API FMemStack
 {
 public:
 	// Get bytes.
-	__forceinline BYTE* PushBytes( INT AllocSize, INT Align )
+	BYTE* PushBytes( INT AllocSize, INT Align )
 	{
 		// Debug checks.
-		//checkSlow(AllocSize>=0);
-		//checkSlow((Align&(Align-1))==0);
-		//checkSlow(Top<=End);
+		guardSlow(FMemStack::PushBytes);
+		checkSlow(AllocSize>=0);
+		checkSlow((Align&(Align-1))==0);
+		checkSlow(Top<=End);
 
 		// Try to get memory from the current chunk.
 		BYTE* Result = (BYTE *)(((INT)Top+(Align-1))&~(Align-1));
 		Top = Result + AllocSize;
 
-		if( Top <= End ) return Result;
-
 		// Make sure we didn't overflow.
-		// We'd pass the end of the current chunk, so allocate a new one.
-		AllocateNewChunk( AllocSize + Align );
-		Result = (BYTE *)(((INT)Top+(Align-1))&~(Align-1));
-		Top    = Result + AllocSize;
+		if( Top > End )
+		{
+			// We'd pass the end of the current chunk, so allocate a new one.
+			AllocateNewChunk( AllocSize + Align );
+			Result = (BYTE *)(((INT)Top+(Align-1))&~(Align-1));
+			Top    = Result + AllocSize;
+		}
 		return Result;
+		unguardSlow;
 	}
 
 	// Main functions.
-	//void __fastcall Init( INT DefaultChunkSize );
-	void __forceinline Init( INT InDefaultChunkSize )
-	{
-		DefaultChunkSize = InDefaultChunkSize;
-		TopChunk         = NULL;
-		End              = NULL;
-		Top		         = NULL;
-	}
-
-	//void __fastcall Exit();
-	void __forceinline Exit()
-	{
-		Tick();
-		while( UnusedChunks )
-		{
-			void* Old = UnusedChunks;
-			UnusedChunks = UnusedChunks->Next;
-			appFree( Old );
-		}
-	}
-
-	void Tick() { check(TopChunk==NULL); }
-
-	INT __fastcall GetByteCount();
+	void Init( INT DefaultChunkSize );
+	void Exit();
+	void Tick();
+	INT IF_DNF(__fastcall) GetByteCount();
 
 	// Friends.
 	friend class FMemMark;
@@ -102,8 +85,8 @@ private:
 	static FTaggedMemory* UnusedChunks;
 
 	// Functions.
-	BYTE* __fastcall AllocateNewChunk( INT MinSize );
-	void __fastcall FreeChunks( FTaggedMemory* NewTopChunk );
+	BYTE* IF_DNF(__fastcall) AllocateNewChunk( INT MinSize );
+	void IF_DNF(__fastcall) FreeChunks( FTaggedMemory* NewTopChunk );
 };
 
 /*-----------------------------------------------------------------------------
@@ -113,19 +96,25 @@ private:
 // Operator new for typesafe memory stack allocation.
 template <class T> inline T* New( FMemStack& Mem, INT Count=1, INT Align=DEFAULT_ALIGNMENT )
 {
+	guardSlow(FMemStack::New);
 	return (T*)Mem.PushBytes( Count*sizeof(T), Align );
+	unguardSlow;
 }
 template <class T> inline T* NewZeroed( FMemStack& Mem, INT Count=1, INT Align=DEFAULT_ALIGNMENT )
 {
+	guardSlow(FMemStack::New);
 	BYTE* Result = Mem.PushBytes( Count*sizeof(T), Align );
 	appMemzero( Result, Count*sizeof(T) );
 	return (T*)Result;
+	unguardSlow;
 }
 template <class T> inline T* NewOned( FMemStack& Mem, INT Count=1, INT Align=DEFAULT_ALIGNMENT )
 {
+	guardSlow(FMemStack::New);
 	return (T*)Mem.PushBytes( Count*sizeof(T), Align );
 	appMemset( Result, 0xff, Count*sizeof(T) );
 	return (T*)Result;
+	unguardSlow;
 }
 
 /*-----------------------------------------------------------------------------
@@ -136,21 +125,27 @@ template <class T> inline T* NewOned( FMemStack& Mem, INT Count=1, INT Align=DEF
 inline void* operator new( size_t Size, FMemStack& Mem, INT Count, INT Align )
 {
 	// Get uninitialized memory.
+	guardSlow(FMemStack::New1);
 	return Mem.PushBytes( Size*Count, Align );
+	unguardSlow;
 }
 inline void* operator new( size_t Size, FMemStack& Mem, EMemZeroed Tag, INT Count, INT Align )
 {
 	// Get zero-filled memory.
+	guardSlow(FMemStack::New2);
 	BYTE* Result = Mem.PushBytes( Size*Count, Align );
 	appMemzero( Result, Size*Count );
 	return Result;
+	unguardSlow;
 }
 inline void* operator new( size_t Size, FMemStack& Mem, EMemOned Tag, INT Count, INT Align )
 {
 	// Get one-filled memory.
+	guardSlow(FMemStack::New3);
 	BYTE* Result = Mem.PushBytes( Size*Count, Align );
 	appMemset( Result, 0xff, Size*Count );
 	return Result;
+	unguardSlow;
 }
 
 /*-----------------------------------------------------------------------------
@@ -171,20 +166,26 @@ public:
 	{}
 	FMemMark( FMemStack& InMem )
 	{
+		guardSlow(FMemMark::FMemMark);
 		Mem          = &InMem;
 		Top          = Mem->Top;
 		SavedChunk   = Mem->TopChunk;
+		unguardSlow;
 	}
 
 	// FMemMark interface.
 	void Pop()
 	{
+		// Check state.
+		guardSlow(FMemMark::Pop);
+
 		// Unlock any new chunks that were allocated.
 		if( SavedChunk != Mem->TopChunk )
 			Mem->FreeChunks( SavedChunk );
 
 		// Restore the memory stack's state.
 		Mem->Top = Top;
+		unguardSlow;
 	}
 
 private:

@@ -17,21 +17,25 @@ class  FCoords;
 class  FRotator;
 class  FScale;
 class  FGlobalMath;
+#if DNF
 class  FMatrix;
+#endif
 
 // Fixed point conversion.
-__forceinline INT Fix  (INT A)		{ return A<<16; };
-__forceinline INT Fix  (FLOAT A)	{ return (INT)(A*65536.f); };
-//__forceinline INT Unfix(INT A)		{ return A>>16; };
-#define Unfix(A)	((A)>>16)
+inline	INT Fix		(INT A)			{return A<<16;};
+inline	INT Fix		(FLOAT A)		{return (INT)(A*65536.f);};
+inline	INT Unfix	(INT A)			{return A>>16;};
 
 // Constants.
 #undef  PI
 #define PI 					(3.1415926535897932)
+#if DNF
 #define FLOAT_PI			(3.1415926535897932f)
+#endif
 #define SMALL_NUMBER		(1.e-8)
 #define KINDA_SMALL_NUMBER	(1.e-4)
 
+#if DNF
 // Aux constants.
 #define INV_PI			(0.31830988618)
 #define HALF_PI			(1.57079632679)
@@ -39,6 +43,7 @@ __forceinline INT Fix  (FLOAT A)	{ return (INT)(A*65536.f); };
 // Magic numbers for numerical precision.
 #define DELTA			(0.00001f)
 #define SLERP_DELTA		(0.0001f)
+#endif
 
 /*-----------------------------------------------------------------------------
 	Global functions.
@@ -47,7 +52,7 @@ __forceinline INT Fix  (FLOAT A)	{ return (INT)(A*65536.f); };
 //
 // Snap a value to the nearest grid multiple.
 //
-__forceinline FLOAT FSnap( FLOAT Location, FLOAT Grid )
+inline FLOAT FSnap( FLOAT Location, FLOAT Grid )
 {
 	if( Grid==0.f )	return Location;
 	else			return appFloor((Location + 0.5f*Grid)/Grid)*Grid;
@@ -98,7 +103,7 @@ inline DWORD FNextPowerOfTwo( DWORD N )
 // and a max (not to cross).  Accounts for funkyness of word angles.
 // Assumes that angle is initially in the desired range.
 //
-inline _WORD __fastcall FAddAngleConfined( INT Angle, INT Delta, INT MinThresh, INT MaxThresh )
+inline _WORD IF_DNF(__fastcall) FAddAngleConfined( INT Angle, INT Delta, INT MinThresh, INT MaxThresh )
 {
 	if( Delta < 0 )
 	{
@@ -123,12 +128,12 @@ INT ReduceAngle( INT Angle );
 // Warning: likely not portable, and useful on Pentium class processors only.
 //
 
-__forceinline UBOOL IsSmallerPositiveFloat(float F1,float F2)
+inline UBOOL IsSmallerPositiveFloat(float F1,float F2)
 {
 	return ( (*(DWORD*)&F1) < (*(DWORD*)&F2));
 }
 
-__forceinline FLOAT MinPositiveFloat(float F1, float F2)
+inline FLOAT MinPositiveFloat(float F1, float F2)
 {
 	if ( (*(DWORD*)&F1) < (*(DWORD*)&F2)) return F1; else return F2;
 }
@@ -137,23 +142,23 @@ __forceinline FLOAT MinPositiveFloat(float F1, float F2)
 // Warning: 0 and -0 have different binary representations.
 //
 
-__forceinline UBOOL EqualPositiveFloat(float F1, float F2)
+inline UBOOL EqualPositiveFloat(float F1, float F2)
 {
 	return ( *(DWORD*)&F1 == *(DWORD*)&F2 );
 }
 
-__forceinline UBOOL IsNegativeFloat(float F1)
+inline UBOOL IsNegativeFloat(float F1)
 {
 	return ( (*(DWORD*)&F1) >= (DWORD)0x80000000 ); // Detects sign bit.
 }
 
-__forceinline FLOAT MaxPositiveFloat(float F1, float F2)
+inline FLOAT MaxPositiveFloat(float F1, float F2)
 {
 	if ( (*(DWORD*)&F1) < (*(DWORD*)&F2)) return F2; else return F1;
 }
 
 // Clamp F0 between F1 and F2, all positive assumed.
-__forceinline FLOAT ClampPositiveFloat(float F0, float F1, float F2)
+inline FLOAT ClampPositiveFloat(float F0, float F1, float F2)
 {
 	if      ( (*(DWORD*)&F0) < (*(DWORD*)&F1)) return F1;
 	else if ( (*(DWORD*)&F0) > (*(DWORD*)&F2)) return F2;
@@ -188,14 +193,6 @@ enum EVectorFlags
 //
 // Floating point vector.
 //
-
-// I added these because remembering which symbol does what is confusing.
-// So instead of writing "v1^v2" you can write "v1 cross v2" if you want to.
-// - Warren
-//
-#define dot |
-#define cross ^
-
 class CORE_API FVector 
 {
 public:
@@ -210,7 +207,7 @@ public:
 	{}
 
 	// Binary math operators.
-	__forceinline FVector operator^( const FVector& V ) const
+	FVector operator^( const FVector& V ) const
 	{
 		return FVector
 		(
@@ -219,7 +216,7 @@ public:
 			X * V.Y - Y * V.X
 		);
 	}
-	__forceinline FLOAT operator|( const FVector& V ) const
+	FLOAT operator|( const FVector& V ) const
 	{
 		return X*V.X + Y*V.Y + Z*V.Z;
 	}
@@ -227,76 +224,77 @@ public:
 	{
 		return FVector( V.X * Scale, V.Y * Scale, V.Z * Scale );
 	}
-	__forceinline FVector operator+( const FVector& V ) const
+	FVector operator+( const FVector& V ) const
 	{
 		return FVector( X + V.X, Y + V.Y, Z + V.Z );
 	}
-	__forceinline FVector operator-( const FVector& V ) const
+	FVector operator-( const FVector& V ) const
 	{
 		return FVector( X - V.X, Y - V.Y, Z - V.Z );
 	}
-	__forceinline FVector operator*( FLOAT Scale ) const
+	FVector operator*( FLOAT Scale ) const
 	{
 		return FVector( X * Scale, Y * Scale, Z * Scale );
 	}
-	__forceinline FVector operator/( FLOAT Scale ) const
+	FVector operator/( FLOAT Scale ) const
 	{
 		FLOAT RScale = 1.f/Scale;
 		return FVector( X * RScale, Y * RScale, Z * RScale );
 	}
-	__forceinline FVector operator*( const FVector& V ) const
+	FVector operator*( const FVector& V ) const
 	{
 		return FVector( X * V.X, Y * V.Y, Z * V.Z );
 	}
 
 	// Binary comparison operators.
-	__forceinline UBOOL operator==( const FVector& V ) const
+	UBOOL operator==( const FVector& V ) const
 	{
 		return X==V.X && Y==V.Y && Z==V.Z;
 	}
-	__forceinline UBOOL operator!=( const FVector& V ) const
+	UBOOL operator!=( const FVector& V ) const
 	{
 		return X!=V.X || Y!=V.Y || Z!=V.Z;
 	}
 
 	// Unary operators.
-	__forceinline FVector operator-() const
+	FVector operator-() const
 	{
 		return FVector( -X, -Y, -Z );
 	}
 
 	// Assignment operators.
-	__forceinline FVector operator+=( const FVector& V )
+	FVector operator+=( const FVector& V )
 	{
 		X += V.X; Y += V.Y; Z += V.Z;
 		return *this;
 	}
-	__forceinline FVector operator-=( const FVector& V )
+	FVector operator-=( const FVector& V )
 	{
 		X -= V.X; Y -= V.Y; Z -= V.Z;
 		return *this;
 	}
-	__forceinline FVector operator*=( FLOAT Scale )
+	FVector operator*=( FLOAT Scale )
 	{
 		X *= Scale; Y *= Scale; Z *= Scale;
 		return *this;
 	}
-	__forceinline FVector operator/=( FLOAT V )
+	FVector operator/=( FLOAT V )
 	{
 		FLOAT RV = 1.f/V;
 		X *= RV; Y *= RV; Z *= RV;
 		return *this;
 	}
-	__forceinline FVector operator*=( const FVector& V )
+	FVector operator*=( const FVector& V )
 	{
 		X *= V.X; Y *= V.Y; Z *= V.Z;
 		return *this;
 	}
-	__forceinline FVector operator/=( const FVector& V )
+	FVector operator/=( const FVector& V )
 	{
 		X /= V.X; Y /= V.Y; Z /= V.Z;
 		return *this;
 	}
+#if DNF
     FLOAT& operator[]( INT i )
 	{
 		check(i>-1);
@@ -305,36 +303,37 @@ public:
 		else if( i == 1)	return Y;
 		else				return Z;
 	}
+#endif
 
 	// Simple functions.
 	FLOAT Size() const
 	{
 		return appSqrt( X*X + Y*Y + Z*Z );
 	}
-	__forceinline FLOAT SizeSquared() const
+	FLOAT SizeSquared() const
 	{
 		return X*X + Y*Y + Z*Z;
 	}
-	__forceinline FLOAT Size2D() const 
+	FLOAT Size2D() const 
 	{
 		return appSqrt( X*X + Y*Y );
 	}
-	__forceinline FLOAT SizeSquared2D() const 
+	FLOAT SizeSquared2D() const 
 	{
 		return X*X + Y*Y;
 	}
-	__forceinline int IsNearlyZero() const
+	int IsNearlyZero() const
 	{
 		return
 				Abs(X)<KINDA_SMALL_NUMBER
 			&&	Abs(Y)<KINDA_SMALL_NUMBER
 			&&	Abs(Z)<KINDA_SMALL_NUMBER;
 	}
-	__forceinline UBOOL IsZero() const
+	UBOOL IsZero() const
 	{
 		return X==0.f && Y==0.f && Z==0.f;
 	}
-	__forceinline UBOOL Normalize()
+	UBOOL Normalize()
 	{
 		FLOAT SquareSum = X*X+Y*Y+Z*Z;
 		if( SquareSum >= SMALL_NUMBER )
@@ -345,21 +344,21 @@ public:
 		}
 		else return 0;
 	}
-	__forceinline FVector Projection() const
+	FVector Projection() const
 	{
 		FLOAT RZ = 1.f/Z;
 		return FVector( X*RZ, Y*RZ, 1 );
 	}
-	__forceinline FVector UnsafeNormal() const
+	FVector UnsafeNormal() const
 	{
 		FLOAT Scale = 1.f/appSqrt(X*X+Y*Y+Z*Z);
 		return FVector( X*Scale, Y*Scale, Z*Scale );
 	}
-	__forceinline FVector GridSnap( const FVector& Grid )
+	FVector GridSnap( const FVector& Grid )
 	{
 		return FVector( FSnap(X, Grid.X),FSnap(Y, Grid.Y),FSnap(Z, Grid.Z) );
 	}
-	__forceinline FVector BoundToCube( FLOAT Radius )
+	FVector BoundToCube( FLOAT Radius )
 	{
 		return FVector
 		(
@@ -368,11 +367,11 @@ public:
 			Clamp(Z,-Radius,Radius)
 		);
 	}
-	__forceinline void AddBounded( const FVector& V, FLOAT Radius=MAXSWORD )
+	void AddBounded( const FVector& V, FLOAT Radius=MAXSWORD )
 	{
 		*this = (*this + V).BoundToCube(Radius);
 	}
-	__forceinline FLOAT& Component( INT Index )
+	FLOAT& Component( INT Index )
 	{
 		return (&X)[Index];
 	}
@@ -380,7 +379,7 @@ public:
 	// Return a boolean that is based on the vector's direction.
 	// When      V==(0.0.0) Booleanize(0)=1.
 	// Otherwise Booleanize(V) <-> !Booleanize(!B).
-	__forceinline UBOOL Booleanize()
+	UBOOL Booleanize()
 	{
 		return
 			X >  0.f ? 1 :
@@ -418,10 +417,9 @@ public:
 		return Ar << V.X << V.Y << V.Z;
 	}
 
-    void AngleVectors( FVector &forward, FVector &left, FVector &up );
-
 #if DNF
 	// CDH: Additional functions and operators for notational convenience
+	void AngleVectors( FVector &forward, FVector &left, FVector &up );
 
 	// transform by coordinate frame
 	FVector& operator >>= (const FCoords& inC); // in to
@@ -438,6 +436,7 @@ public:
 #endif // #if DNF
 };
 
+#if DNF
 // NJS: Rotate a point or vector about an axis.
 inline FVector RotateAboutAxis(FVector &p,FLOAT theta,FVector &r)
 {
@@ -475,7 +474,7 @@ public:
 	{}
 
 	// Binary math operators.
-	__forceinline FVectorDouble operator^( const FVectorDouble& V ) const
+	FVectorDouble operator^( const FVectorDouble& V ) const
 	{
 		return FVectorDouble
 		(
@@ -484,7 +483,7 @@ public:
 			X * V.Y - Y * V.X
 		);
 	}
-	__forceinline FLOAT operator|( const FVectorDouble& V ) const
+	FLOAT operator|( const FVectorDouble& V ) const
 	{
 		return X*V.X + Y*V.Y + Z*V.Z;
 	}
@@ -492,77 +491,78 @@ public:
 	{
 		return FVectorDouble( V.X * Scale, V.Y * Scale, V.Z * Scale );
 	}
-	__forceinline FVectorDouble operator+( const FVectorDouble& V ) const
+	FVectorDouble operator+( const FVectorDouble& V ) const
 	{
 		return FVectorDouble( X + V.X, Y + V.Y, Z + V.Z );
 	}
-	__forceinline FVectorDouble operator-( const FVectorDouble& V ) const
+	FVectorDouble operator-( const FVectorDouble& V ) const
 	{
 		return FVectorDouble( X - V.X, Y - V.Y, Z - V.Z );
 	}
-	__forceinline FVectorDouble operator*( DOUBLE Scale ) const
+	FVectorDouble operator*( DOUBLE Scale ) const
 	{
 		return FVectorDouble( X * Scale, Y * Scale, Z * Scale );
 	}
-	__forceinline FVectorDouble operator/( DOUBLE Scale ) const
+	FVectorDouble operator/( DOUBLE Scale ) const
 	{
 		
 		DOUBLE RScale = 1.0/Scale;
 		return FVectorDouble( X * RScale, Y * RScale, Z * RScale );
 	}
-	__forceinline FVectorDouble operator*( const FVectorDouble& V ) const
+	FVectorDouble operator*( const FVectorDouble& V ) const
 	{
 		return FVectorDouble( X * V.X, Y * V.Y, Z * V.Z );
 	}
 
 	// Binary comparison operators.
-	__forceinline UBOOL operator==( const FVectorDouble& V ) const
+	UBOOL operator==( const FVectorDouble& V ) const
 	{
 		return X==V.X && Y==V.Y && Z==V.Z;
 	}
-	__forceinline UBOOL operator!=( const FVectorDouble& V ) const
+	UBOOL operator!=( const FVectorDouble& V ) const
 	{
 		return X!=V.X || Y!=V.Y || Z!=V.Z;
 	}
 
 	// Unary operators.
-	__forceinline FVectorDouble operator-() const
+	FVectorDouble operator-() const
 	{
 		return FVectorDouble( -X, -Y, -Z );
 	}
 
 	// Assignment operators.
-	__forceinline FVectorDouble operator+=( const FVectorDouble& V )
+	FVectorDouble operator+=( const FVectorDouble& V )
 	{
 		X += V.X; Y += V.Y; Z += V.Z;
 		return *this;
 	}
-	__forceinline FVectorDouble operator-=( const FVectorDouble& V )
+	FVectorDouble operator-=( const FVectorDouble& V )
 	{
 		X -= V.X; Y -= V.Y; Z -= V.Z;
 		return *this;
 	}
-	__forceinline FVectorDouble operator*=( DOUBLE Scale )
+	FVectorDouble operator*=( DOUBLE Scale )
 	{
 		X *= Scale; Y *= Scale; Z *= Scale;
 		return *this;
 	}
-	__forceinline FVectorDouble operator/=( DOUBLE V )
+	FVectorDouble operator/=( DOUBLE V )
 	{
 		DOUBLE RV = 1.0/V;
 		X *= RV; Y *= RV; Z *= RV;
 		return *this;
 	}
-	__forceinline FVectorDouble operator*=( const FVectorDouble& V )
+	FVectorDouble operator*=( const FVectorDouble& V )
 	{
 		X *= V.X; Y *= V.Y; Z *= V.Z;
 		return *this;
 	}
-	__forceinline FVectorDouble operator/=( const FVectorDouble& V )
+	FVectorDouble operator/=( const FVectorDouble& V )
 	{
 		X /= V.X; Y /= V.Y; Z /= V.Z;
 		return *this;
 	}
+#if DNF
     DOUBLE& operator[]( INT i )
 	{
 		check(i>-1);
@@ -571,36 +571,37 @@ public:
 		else if( i == 1)	return Y;
 		else				return Z;
 	}
+#endif
 
 	// Simple functions.
 	DOUBLE Size() const
 	{
 		return appSqrt( X*X + Y*Y + Z*Z );
 	}
-	__forceinline DOUBLE SizeSquared() const
+	DOUBLE SizeSquared() const
 	{
 		return X*X + Y*Y + Z*Z;
 	}
-	__forceinline DOUBLE Size2D() const 
+	DOUBLE Size2D() const 
 	{
 		return appSqrt( X*X + Y*Y );
 	}
-	__forceinline DOUBLE SizeSquared2D() const 
+	DOUBLE SizeSquared2D() const 
 	{
 		return X*X + Y*Y;
 	}
-	__forceinline int IsNearlyZero() const
+	int IsNearlyZero() const
 	{
 		return
 				Abs(X)<KINDA_SMALL_NUMBER
 			&&	Abs(Y)<KINDA_SMALL_NUMBER
 			&&	Abs(Z)<KINDA_SMALL_NUMBER;
 	}
-	__forceinline UBOOL IsZero() const
+	UBOOL IsZero() const
 	{
 		return X==0.f && Y==0.f && Z==0.f;
 	}
-	__forceinline UBOOL Normalize()
+	UBOOL Normalize()
 	{
 		DOUBLE SquareSum = X*X+Y*Y+Z*Z;
 		if( SquareSum >= SMALL_NUMBER )
@@ -611,21 +612,21 @@ public:
 		}
 		else return 0;
 	}
-	__forceinline FVectorDouble Projection() const
+	FVectorDouble Projection() const
 	{
 		DOUBLE RZ = 1.0/Z;
 		return FVectorDouble( X*RZ, Y*RZ, 1 );
 	}
-	__forceinline FVectorDouble UnsafeNormal() const
+	FVectorDouble UnsafeNormal() const
 	{
 		DOUBLE Scale = 1.0/appSqrt(X*X+Y*Y+Z*Z);
 		return FVectorDouble( X*Scale, Y*Scale, Z*Scale );
 	}
-	__forceinline FVectorDouble GridSnap( const FVectorDouble& Grid )
+	FVectorDouble GridSnap( const FVectorDouble& Grid )
 	{
 		return FVectorDouble( FSnap(X, Grid.X),FSnap(Y, Grid.Y),FSnap(Z, Grid.Z) );
 	}
-	__forceinline FVectorDouble BoundToCube( DOUBLE Radius )
+	FVectorDouble BoundToCube( DOUBLE Radius )
 	{
 		return FVectorDouble
 		(
@@ -634,11 +635,11 @@ public:
 			Clamp(Z,-Radius,Radius)
 		);
 	}
-	__forceinline void AddBounded( const FVectorDouble& V, DOUBLE Radius=MAXSWORD )
+	void AddBounded( const FVectorDouble& V, DOUBLE Radius=MAXSWORD )
 	{
 		*this = (*this + V).BoundToCube(Radius);
 	}
-	__forceinline DOUBLE& Component( INT Index )
+	DOUBLE& Component( INT Index )
 	{
 		return (&X)[Index];
 	}
@@ -646,7 +647,7 @@ public:
 	// Return a boolean that is based on the vector's direction.
 	// When      V==(0.0.0) Booleanize(0)=1.
 	// Otherwise Booleanize(V) <-> !Booleanize(!B).
-	__forceinline UBOOL Booleanize()
+	UBOOL Booleanize()
 	{
 		return
 			X >  0.f ? 1 :
@@ -669,7 +670,6 @@ public:
 	FVectorDouble ToUnr() const { return(FVectorDouble(Z, -X, Y)); } // Standard->Unreal
 };
 
-#if DNF
 /*
 	FQuat (CDH)
 */
@@ -716,7 +716,6 @@ public:
 	inline UBOOL operator == (const FQuat& inQ) const { return(V==inQ.V && S==inQ.S); }
 	inline UBOOL operator != (const FQuat& inQ) const { return(!(*this == inQ)); }
 };
-#endif
 
 // Used by the multiple vertex editing function to keep track of selected vertices.
 class ABrush;
@@ -776,6 +775,7 @@ public:
 			|| (E.Vertex[0] == Vertex[1] && E.Vertex[1] == Vertex[0]) );
 	}
 };
+#endif
 
 /*-----------------------------------------------------------------------------
 	FPlane.
@@ -859,11 +859,13 @@ public:
 	FSphere( const FVector* Pts, INT Count );
 	friend FArchive& operator<<( FArchive& Ar, FSphere& S )
 	{
+		guardSlow(FSphere<<);
 		if( Ar.Ver()<=61 )//oldver
 			Ar << (FVector&)S;
 		else
 			Ar << (FPlane&)S;
 		return Ar;
+		unguardSlow
 	}
 };
 
@@ -949,11 +951,13 @@ public:
 	FCoords Inverse() const;
 	FRotator OrthoRotation() const;
 
+#if DNF
 	// CDH: Unreal<->Standard coordinate frame conversions
 	//      Unreal form: X back, Y left, Z up
 	//      Standard form: X right, Y up, Z back	
 	FCoords ToStd() const { return(FCoords(Origin.ToStd(), -YAxis.ToStd(), ZAxis.ToStd(), XAxis.ToStd())); } // Unreal->Standard
 	FCoords ToUnr() const { return(FCoords(Origin.ToUnr(), ZAxis.ToUnr(), -XAxis.ToUnr(), YAxis.ToUnr())); } // Standard->Unreal
+#endif
 
 	// Operators.
 	FCoords& operator*=	(const FCoords   &TransformCoords);
@@ -1137,9 +1141,12 @@ public:
 		);
 	}
 	FVector Vector();
-    inline void AngleVectors( FVector &forward, FVector &left, FVector &up );
+#if DNF
+    void AngleVectors( FVector &forward, FVector &left, FVector &up );
+#endif
 };
 
+#if DNF
 /*-----------------------------------------------------------------------------
 	FRange.
 -----------------------------------------------------------------------------*/
@@ -1304,6 +1311,7 @@ public:
 		return Ar << R.A << R.B;
 	}
 };
+#endif
 
 /*-----------------------------------------------------------------------------
 	Bounds.
@@ -1322,7 +1330,11 @@ public:
 
 	// Constructors.
 	FBox() {}
+#if DNF
 	FBox(INT) { Init(); }
+#else
+	FBox(INT) : Min(0,0,0), Max(0,0,0), IsValid(0) {}
+#endif
 	FBox( const FVector& InMin, const FVector& InMax ) : Min(InMin), Max(InMax), IsValid(1) {}
 	FBox( const FVector* Points, INT Count );
 
@@ -1337,11 +1349,13 @@ public:
 	}
 
 	// Functions.
+#if DNF
 	void Init()
 	{
 		Min = Max = FVector(0,0,0);
 		IsValid = 0;
 	}
+#endif
 	FBox& operator+=( const FVector &Other )
 	{
 		if( IsValid )
@@ -1384,6 +1398,7 @@ public:
 	{
 		return FBox(*this) += Other;
 	}
+#if DNF
     FVector& operator[]( INT i )
 	{
 		check(i>-1);
@@ -1391,6 +1406,7 @@ public:
 		if( i == 0 )		return Min;
 		else				return Max;
 	}
+#endif
 	FBox TransformBy( const FCoords& Coords ) const
 	{
 		FBox NewBox(0);
@@ -1651,7 +1667,7 @@ inline void ASMTransformPoint(const FCoords &Coords, const FVector &InVector, FV
 #endif
 
 #if ASM
-__forceinline void ASMTransformVector(const FCoords &Coords, const FVector &InVector, FVector &OutVector)
+inline void ASMTransformVector(const FCoords &Coords, const FVector &InVector, FVector &OutVector)
 {
 	__asm
 	{
@@ -1709,7 +1725,7 @@ __forceinline void ASMTransformVector(const FCoords &Coords, const FVector &InVe
 #endif
 
 #if ASMLINUX
-__forceinline void ASMTransformVector(const FCoords &Coords, const FVector &InVector, FVector &OutVector)
+inline void ASMTransformVector(const FCoords &Coords, const FVector &InVector, FVector &OutVector)
 {
 	asm volatile("
 		# Get source.
@@ -1791,7 +1807,7 @@ inline FVector FVector::TransformPointBy( const FCoords &Coords ) const
 // Transform a directional vector by a coordinate system.
 // Ignore's the coordinate system's origin.
 //
-__forceinline FVector FVector::TransformVectorBy( const FCoords &Coords ) const
+inline FVector FVector::TransformVectorBy( const FCoords &Coords ) const
 {
 #if ASM
 	FVector Temp;
@@ -2228,6 +2244,7 @@ inline FVector VRand()
 	return Result.UnsafeNormal();
 }
 
+#if DNF
 // NJS: Return a random VRand scale:
 inline FVector VRandScale()
 {
@@ -2287,6 +2304,7 @@ inline void FTexCoordsToVectors( FVector V0, FVector ST0, FVector V1, FVector ST
 	*InUResult = TUResult;
 	*InVResult = TVResult;
 }
+#endif
 
 /*-----------------------------------------------------------------------------
 	Advanced geometry.
@@ -2333,6 +2351,8 @@ inline FVector FLinePlaneIntersection
 //
 inline UBOOL FIntersectPlanes3( FVector& I, const FPlane& P1, const FPlane& P2, const FPlane& P3 )
 {
+	guard(FIntersectPlanes3);
+
 	// Compute determinant, the triple product P1|(P2^P3)==(P1^P2)|P3.
 	FLOAT Det = (P1 ^ P2) | P3;
 	if( Square(Det) < Square(0.001) )
@@ -2347,6 +2367,7 @@ inline UBOOL FIntersectPlanes3( FVector& I, const FPlane& P1, const FPlane& P2, 
 		I = (P1.W*(P2^P3) + P2.W*(P3^P1) + P3.W*(P1^P2)) / Det;
 	}
 	return 1;
+	unguard;
 }
 
 //
@@ -2355,6 +2376,8 @@ inline UBOOL FIntersectPlanes3( FVector& I, const FPlane& P1, const FPlane& P2, 
 //
 inline UBOOL FIntersectPlanes2( FVector& I, FVector& D, const FPlane& P1, const FPlane& P2 )
 {
+	guard(FIntersectPlanes2);
+
 	// Compute line direction, perpendicular to both plane normals.
 	D = P1 ^ P2;
 	FLOAT DD = D.SizeSquared();
@@ -2371,6 +2394,7 @@ inline UBOOL FIntersectPlanes2( FVector& I, FVector& D, const FPlane& P1, const 
 		D.Normalize();
 		return 1;
 	}
+	unguard;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2385,6 +2409,7 @@ inline FVector FRotator::Vector()
 	return (GMath.UnitCoords / *this).XAxis;
 }
 
+#if DNF
 inline void FRotator::AngleVectors( FVector &forward, FVector &left, FVector &up )
 {
     static FLOAT sr, sp, sy, cr, cp, cy;
@@ -2410,7 +2435,6 @@ inline void FRotator::AngleVectors( FVector &forward, FVector &left, FVector &up
     up.Y = (cr*sp*sy+-sr*cy);
     up.Z = (cr*cp);
 }
-
 
 /*-----------------------------------------------------------------------------
 	FMatrix.          
@@ -2507,7 +2531,6 @@ inline FCoords FCoordsFromFMatrix(const FMatrix& FM)
 /*-----------------------------------------------------------------------------
 	CDH: Additional coords-related functions and operators
 -----------------------------------------------------------------------------*/
-#if DNF
 
 inline FVector& FVector::operator >>= (const FCoords& inC) { *this = TransformPointBy(inC); return(*this); }
 inline FVector FVector::operator >> (const FCoords& inC) const { return(TransformPointBy(inC)); }
@@ -2626,8 +2649,6 @@ inline void FQuat::Slerp(const FQuat& inQ1, const FQuat& inQ2, FLOAT inAlpha1, F
 	Normalize();
 }
 
-#endif // #if DNF
-
 // NJS:
 inline void KRSpline_Sample( float t, 
 					         FVector &NewLocation,  FRotator &NewRotation,
@@ -2704,7 +2725,7 @@ class CORE_API Cylinder
 	                        FLOAT		&objout	    /* Exiting  distance		*/
                             );
 };
-
+#endif
 
 /*-----------------------------------------------------------------------------
 	The End.

@@ -22,12 +22,12 @@
 // The current Unrealfile version.
 #define PACKAGE_FILE_VERSION 156
 
+// Licensee version number.
+#define PACKAGE_FILE_VERSION_LICENSEE 36
+
 // The earliest file version which we can load with complete
 // backwards compatibility. Must be at least PACKAGE_FILE_VERSION.
 #define PACKAGE_MIN_VERSION 60
-
-// Licensee version number.
-#define PACKAGE_LICENSEE_VERSION 36
 
 /*-----------------------------------------------------------------------------
 	The End.

@@ -106,6 +106,7 @@ public:
 	}
 	BYTE* Get( QWORD Id, FCacheItem*& Item, INT Alignment=DEFAULT_ALIGNMENT )
 	{	
+		guardSlow(FMemCache::Get);
 		clockSlow(GetCycles);
 #if DO_SLOW_CLOCK
 		NumGets++;
@@ -132,6 +133,7 @@ public:
 		}
 		unclockSlow(GetCycles);
 		return NULL;
+		unguardSlow;
 	}
 
 private:

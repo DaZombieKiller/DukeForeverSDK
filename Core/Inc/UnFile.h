@@ -8,10 +8,7 @@
 -----------------------------------------------------------------------------*/
 
 // Global variables.
-#if DNF
-extern "C"
-#endif
-CORE_API extern DWORD GCRCTable[];
+IF_DNF(extern "C") CORE_API extern DWORD GCRCTable[];
 
 /*----------------------------------------------------------------------------
 	Byte order conversion.
@@ -62,8 +59,10 @@ CORE_API void VARARGS appFailAssert( const ANSICHAR* Expr, const ANSICHAR* File,
 CORE_API void VARARGS appUnwindf( const TCHAR* Fmt, ... );
 CORE_API const TCHAR* appGetSystemErrorMessage( INT Error=0 );
 CORE_API const void appDebugMessagef( const TCHAR* Fmt, ... );
+#if 1 //U2Ed
 CORE_API const void appMsgf( const TCHAR* Fmt, ... );
 CORE_API const void appGetLastError( void );
+#endif
 
 #define debugf				GLog->Logf
 #define appErrorf			GError->Logf
@@ -107,9 +106,6 @@ CORE_API FString appClipboardPaste();
 // For showing calling stack when errors occur in major functions.
 // Meant to be enabled in release builds.
 //
-//#undef DO_GUARD
-//#define DO_GUARD 0	// NJS: Turn it off.
-
 #if defined(_DEBUG) || !DO_GUARD
 	#define guard(func)			{static const TCHAR __FUNC_NAME__[]=TEXT(#func);
 	#define unguard				}
@@ -164,7 +160,7 @@ CORE_API void VARARGS appThrowf( const TCHAR* Fmt, ... );
 	#define check(expr)  {if(!(expr)) appFailAssert( #expr, __FILE__, __LINE__ );}
 	#define verify(expr) {if(!(expr)) appFailAssert( #expr, __FILE__, __LINE__ );}
 #else
-	#define check(expr)
+	#define check(expr) 0
 	#define verify(expr) expr
 #endif
 
@@ -245,7 +241,6 @@ CORE_API const TCHAR* LocalizeGeneral( const TCHAR* Key, const TCHAR* Package=GP
 // File utilities.
 CORE_API const TCHAR* appFExt( const TCHAR* Filename );
 CORE_API UBOOL appUpdateFileModTime( TCHAR* Filename );
-
 #if !DNF
 CORE_API FString appGetGMTRef();
 #endif
@@ -287,7 +282,7 @@ CORE_API DOUBLE appSeconds();
 CORE_API void appSystemTime( INT& Year, INT& Month, INT& DayOfWeek, INT& Day, INT& Hour, INT& Min, INT& Sec, INT& MSec );
 CORE_API const TCHAR* appTimestamp();
 CORE_API DOUBLE appSecondsSlow();
-CORE_API void __fastcall appSleep( FLOAT Seconds );
+CORE_API void IF_DNF(__fastcall) appSleep( FLOAT Seconds );
 
 /*-----------------------------------------------------------------------------
 	Character type functions.
@@ -295,11 +290,11 @@ CORE_API void __fastcall appSleep( FLOAT Seconds );
 
 inline TCHAR appToUpper( TCHAR c )
 {
-	return (c<'a' || c>'z') ? (c) : (c+'A'-'a');
+	return (c<'a' || c>'z') ? (c) : (TCHAR)(c+'A'-'a');
 }
 inline TCHAR appToLower( TCHAR c )
 {
-	return (c<'A' || c>'Z') ? (c) : (c+'a'-'A');
+	return (c<'A' || c>'Z') ? (c) : (TCHAR)(c+'a'-'A');
 }
 inline UBOOL appIsAlpha( TCHAR c )
 {
@@ -319,9 +314,9 @@ inline UBOOL appIsAlnum( TCHAR c )
 -----------------------------------------------------------------------------*/
 
 #if DNF
-#define appFromAnsi( Str ) ( *( FString( Str ) ) )
-#define appFromUnicode( Str ) ( *( FString( Str ) ) )
-#define appToUnicode( Str ) ( *( FString( Str ) ) )
+#define appFromAnsi( Str ) (*FString( Str ))
+#define appFromUnicode( Str ) (*FString( Str ))
+#define appToUnicode( Str ) (*FString( Str ))
 #else
 CORE_API const ANSICHAR* appToAnsi( const TCHAR* Str );
 CORE_API const UNICHAR* appToUnicode( const TCHAR* Str );
@@ -347,8 +342,6 @@ CORE_API UBOOL appIsPureAnsi( const TCHAR* Str );
 #define appStrtoi wcstol
 #define appStrnicmp wcsnicmp
 #define appSprintf( Buffer, Fmt, ... ) _sntprintf( Buffer, 1024, Fmt, __VA_ARGS__ )
-const TCHAR* appSpc( int Num );
-const TCHAR* appStrfind( const TCHAR* Str, const TCHAR* Find );
 #else
 CORE_API TCHAR* appStrcpy( TCHAR* Dest, const TCHAR* Src );
 CORE_API INT appStrcpy( const TCHAR* String );
@@ -361,26 +354,23 @@ CORE_API INT appStricmp( const TCHAR* String1, const TCHAR* String2 );
 CORE_API INT appStrncmp( const TCHAR* String1, const TCHAR* String2, INT Count );
 CORE_API TCHAR* appStaticString1024();
 CORE_API ANSICHAR* appAnsiStaticString1024();
+#endif
 
 CORE_API const TCHAR* appSpc( int Num );
+#if !DNF
 CORE_API TCHAR* appStrncpy( TCHAR* Dest, const TCHAR* Src, int Max);
 CORE_API TCHAR* appStrncat( TCHAR* Dest, const TCHAR* Src, int Max);
 CORE_API TCHAR* appStrupr( TCHAR* String );
-CORE_API const TCHAR* appStrfind(const TCHAR* Str, const TCHAR* Find);
+#endif
+CORE_API const TCHAR* appStrfind( const TCHAR* Str, const TCHAR* Find );
+CORE_API DWORD appStrCrc( const TCHAR* Data );
+CORE_API DWORD appStrCrcCaps( const TCHAR* Data );
+#if !DNF
 CORE_API INT appAtoi( const TCHAR* Str );
 CORE_API FLOAT appAtof( const TCHAR* Str );
 CORE_API INT appStrtoi( const TCHAR* Start, TCHAR** End, INT Base );
 CORE_API INT appStrnicmp( const TCHAR* A, const TCHAR* B, INT Count );
 CORE_API INT appSprintf( TCHAR* Dest, const TCHAR* Fmt, ... );
-#endif
-
-CORE_API DWORD appStrCrc(const TCHAR* Data);
-CORE_API DWORD appStrCrcCaps(const TCHAR* Data);
- 
-#if UNICODE
-	#define appSSCANF	swscanf
-#else
-	#define appSSCANF	scanf
 #endif
 
 #if _MSC_VER
@@ -394,10 +384,8 @@ typedef int QSORT_RETURN;
 typedef QSORT_RETURN(CDECL* QSORT_COMPARE)( const void* A, const void* B );
 
 #if DNF
-#define appStrlwr wcslwr
 #define appQsort qsort
 #else
-CORE_API TCHAR *appStrlwr(TCHAR *s);
 CORE_API void appQsort( void* Base, INT Num, INT Width, QSORT_COMPARE Compare );
 #endif
 
@@ -410,10 +398,10 @@ inline DWORD appStrihash( const TCHAR* Data )
 	while( *Data )
 	{
 		TCHAR Ch = appToUpper(*Data++);
-		BYTE  B  = Ch;
+		BYTE  B  = (BYTE)Ch;
 		Hash     = ((Hash >> 8) & 0x00FFFFFF) ^ GCRCTable[(Hash ^ B) & 0x000000FF];
 #if UNICODE
-		B        = Ch>>8;
+		B        = (BYTE)(Ch>>8);
 		Hash     = ((Hash >> 8) & 0x00FFFFFF) ^ GCRCTable[(Hash ^ B) & 0x000000FF];
 #endif
 	}
@@ -424,128 +412,79 @@ inline DWORD appStrihash( const TCHAR* Data )
 	Parsing functions.
 -----------------------------------------------------------------------------*/
 
-#if DNF
-#define PARSE_API
-#else
-#define PARSE_API CORE_API
-#endif
-
-PARSE_API UBOOL ParseCommand( const TCHAR** Stream, const TCHAR* Match );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FName& Name );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, DWORD& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FGuid& Guid );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, TCHAR* Value, INT MaxLen );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, BYTE& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SBYTE& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, _WORD& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SWORD& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, FLOAT& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, INT& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, FString& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, QWORD& Value );
-PARSE_API UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SQWORD& Value );
-PARSE_API UBOOL ParseUBOOL( const TCHAR* Stream, const TCHAR* Match, UBOOL& OnOff );
-PARSE_API UBOOL ParseObject( const TCHAR* Stream, const TCHAR* Match, class UClass* Type, class UObject*& DestRes, class UObject* InParent );
-PARSE_API UBOOL ParseLine( const TCHAR** Stream, TCHAR* Result, INT MaxLen, UBOOL Exact=0 );
-PARSE_API UBOOL ParseLine( const TCHAR** Stream, FString& Resultd, UBOOL Exact=0 );
-PARSE_API UBOOL ParseToken( const TCHAR*& Str, TCHAR* Result, INT MaxLen, UBOOL UseEscape );
-PARSE_API UBOOL ParseToken( const TCHAR*& Str, FString& Arg, UBOOL UseEscape );
-PARSE_API FString ParseToken( const TCHAR*& Str, UBOOL UseEscape );
-PARSE_API void ParseNext( const TCHAR** Stream );
-PARSE_API UBOOL ParseParam( const TCHAR* Stream, const TCHAR* Param );
+IFNDNF(CORE_API) UBOOL ParseCommand( const TCHAR** Stream, const TCHAR* Match );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FName& Name );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, DWORD& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, class FGuid& Guid );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, TCHAR* Value, INT MaxLen );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, BYTE& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SBYTE& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, _WORD& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SWORD& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, FLOAT& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, INT& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, FString& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, QWORD& Value );
+IFNDNF(CORE_API) UBOOL Parse( const TCHAR* Stream, const TCHAR* Match, SQWORD& Value );
+IFNDNF(CORE_API) UBOOL ParseUBOOL( const TCHAR* Stream, const TCHAR* Match, UBOOL& OnOff );
+IFNDNF(CORE_API) UBOOL ParseObject( const TCHAR* Stream, const TCHAR* Match, class UClass* Type, class UObject*& DestRes, class UObject* InParent );
+IFNDNF(CORE_API) UBOOL ParseLine( const TCHAR** Stream, TCHAR* Result, INT MaxLen, UBOOL Exact=0 );
+IFNDNF(CORE_API) UBOOL ParseLine( const TCHAR** Stream, FString& Resultd, UBOOL Exact=0 );
+IFNDNF(CORE_API) UBOOL ParseToken( const TCHAR*& Str, TCHAR* Result, INT MaxLen, UBOOL UseEscape );
+IFNDNF(CORE_API) UBOOL ParseToken( const TCHAR*& Str, FString& Arg, UBOOL UseEscape );
+IFNDNF(CORE_API) FString ParseToken( const TCHAR*& Str, UBOOL UseEscape );
+IFNDNF(CORE_API) void ParseNext( const TCHAR** Stream );
+IFNDNF(CORE_API) UBOOL ParseParam( const TCHAR* Stream, const TCHAR* Param );
 
 /*-----------------------------------------------------------------------------
 	Math functions.
 -----------------------------------------------------------------------------*/
+#if DNF
 #include <math.h>
-#include <float.h>
-#include <stdlib.h>
-
-inline DOUBLE appExp( DOUBLE Value )
-{
-	return exp(Value);
-}
-inline DOUBLE appLoge( DOUBLE Value )
-{
-	return log(Value);
-}
-inline DOUBLE appFmod( DOUBLE Y, DOUBLE X )
-{
-	return fmod(Y,X);
-}
-inline DOUBLE appSin( DOUBLE Value )
-{
-	return sin(Value);
-}
-inline DOUBLE appCos( DOUBLE Value )
-{
-	return cos(Value);
-}
-inline DOUBLE appTan( DOUBLE Value )
-{
-	return tan(Value);
-}
-inline DOUBLE appAsin( DOUBLE Value )
-{
-	return asin(Value);
-}
-inline DOUBLE appAcos( DOUBLE Value )
-{
-	return acos(Value);
-}
-inline DOUBLE appAtan( DOUBLE Value )
-{
-	return atan(Value);
-}
-inline DOUBLE appAtan2( DOUBLE Y, DOUBLE X )
-{
-	return atan2(Y,X);
-}
-inline DOUBLE appPow( DOUBLE A, DOUBLE B )
-{
-	return pow(A,B);
-}
-
-inline UBOOL appIsNan( DOUBLE A )
-{
-#if _MSC_VER
-	return _isnan(A)==1;
+#define appExp exp
+#define appLoge log
+#define appFmod fmod
+#define appSin sin
+#define appCos cos
+#define appAcos acos
+#define appTan tan
+#define appAtan atan
+#define appAtan2 atan2
+#define appSqrt sqrt
+#define appPow pow
+#define appIsNan isnan
+#define appRand rand
+#define appFrand() (appRand() / (FLOAT)RAND_MAX)
+#define appRound(X) ((INT)roundf(X))
+#define appFloor(X) ((INT)floorf(X))
+#define appCeil(X) ((INT)ceilf(X))
+#define DEFINED_appRound 1
+#define DEFINED_appFloor 1
+#define DEFINED_appCeil 1
 #else
-	return isnan(A)==1;
+CORE_API DOUBLE appExp( DOUBLE Value );
+CORE_API DOUBLE appLoge( DOUBLE Value );
+CORE_API DOUBLE appFmod( DOUBLE A, DOUBLE B );
+CORE_API DOUBLE appSin( DOUBLE Value );
+CORE_API DOUBLE appCos( DOUBLE Value );
+CORE_API DOUBLE appAcos( DOUBLE Value );
+CORE_API DOUBLE appTan( DOUBLE Value );
+CORE_API DOUBLE appAtan( DOUBLE Value );
+CORE_API DOUBLE appAtan2( DOUBLE Y, DOUBLE X );
+CORE_API DOUBLE appSqrt( DOUBLE Value );
+CORE_API DOUBLE appPow( DOUBLE A, DOUBLE B );
+CORE_API UBOOL appIsNan( DOUBLE Value );
+CORE_API INT appRand();
+CORE_API FLOAT appFrand();
+#if 1 //Fix added by Legend on 4/12/2000
+CORE_API FLOAT appRandRange( FLOAT Min, FLOAT Max );
+CORE_API INT appRandRange( INT Min, INT Max );
 #endif
-}
-inline void appSrand( DWORD seed )
-{
-	srand( seed );
-}
-inline INT appRand()
-{
-	return rand();
-}
-inline FLOAT appFrand()
-{
-	return rand() / (FLOAT)RAND_MAX;
-}
-__forceinline DOUBLE appSqrt( DOUBLE Value )
-{
-	return sqrt(Value);
-}
+#endif
 
 #if !DEFINED_appRound
 CORE_API INT appRound( FLOAT Value );
 #endif
-
-#define DEFINED_appFloor 1
-
-inline INT appFloor( FLOAT F )
-{
-	static FLOAT Half=0.5f;
-	INT I;
-	__asm fld [F]
-	__asm fsub [Half]
-	__asm fistp [I]
-	return I;
-}
 
 #if !DEFINED_appFloor
 CORE_API INT appFloor( FLOAT Value );
@@ -566,52 +505,34 @@ CORE_API UBOOL appSaveArrayToFile( const TArray<BYTE>& Array, const TCHAR* Filen
 CORE_API UBOOL appSaveStringToFile( const FString& String, const TCHAR* Filename, FFileManager* FileManager=GFileManager );
 
 /*-----------------------------------------------------------------------------
-	CDH: File mapping
------------------------------------------------------------------------------*/
-
-#if !DNF
-struct FFileMapping
-{
-	void* FileHandle;
-	void* MapHandle;
-	void* Data;
-};
-
-CORE_API UBOOL appMapFileRead(FFileMapping& OutMapping, const TCHAR* Filename);
-CORE_API UBOOL appUnmapFile(FFileMapping& InMapping);
-#endif
-
-/*-----------------------------------------------------------------------------
 	Memory functions.
 -----------------------------------------------------------------------------*/
-#include <memory.h>	// NJS: Include memory related functions
-#include <string.h>
 
+#if DNF
+#define appMemmove	memmove
+#define appMemset	memset
+#define appMemcpy	memcpy
+#define appMemzero	ZeroMemory
+#define DEFINED_appMemcpy
+#define DEFINED_appMemzero
+#else
+CORE_API void* appMemmove( void* Dest, const void* Src, INT Count );
+#endif
 CORE_API INT appMemcmp( const void* Buf1, const void* Buf2, INT Count );
 CORE_API UBOOL appMemIsZero( const void* V, int Count );
 CORE_API DWORD appMemCrc( const void* Data, INT Length, DWORD CRC=0 );
 CORE_API void appMemswap( void* Ptr1, void* Ptr2, DWORD Size );
+#if !DNF
+CORE_API void appMemset( void* Dest, INT C, INT Count );
+#endif
 
-//inline void *appMemcpy(void *dest,const void *src,size_t count)  { return memcpy(dest,src,count); } 
-inline void appMemcpy( void* Dest, const void* Src, INT Count )
-{	
-	__asm
-	{
-		mov		ecx, Count
-		mov		esi, Src
-		mov		edi, Dest
-		mov     ebx, ecx
-		shr     ecx, 2
-		and     ebx, 3
-		rep     movsd
-		mov     ecx, ebx
-		rep     movsb
-	}
-}
+#ifndef DEFINED_appMemcpy
+CORE_API void appMemcpy( void* Dest, const void* Src, INT Count );
+#endif
 
-#define appMemmove								memmove
-#define appMemset								memset
-inline void appMemzero(void *dest,size_t count) { memset(dest,0,count); } 
+#ifndef DEFINED_appMemzero
+CORE_API void appMemzero( void* Dest, INT Count );
+#endif
 
 //
 // C style memory allocation stubs.
@@ -625,29 +546,36 @@ inline void appMemzero(void *dest,size_t count) { memset(dest,0,count); }
 //
 inline void* operator new( unsigned int Size, const TCHAR* Tag )
 {
+	guardSlow(new);
 #if DNF
 	return appMalloc( Size, 8 );
 #else
 	return appMalloc( Size, Tag );
 #endif
+	unguardSlow;
 }
 inline void* operator new( unsigned int Size )
 {
+	guardSlow(new);
 #if DNF
 	return appMalloc( Size, 8 );
 #else
 	return appMalloc( Size, TEXT("new") );
 #endif
+	unguardSlow;
 }
 inline void operator delete( void* Ptr )
 {
+	guardSlow(delete);
 	appFree( Ptr );
+	unguardSlow;
 }
 
+#if DNF
 // CDH... placement new
 inline void* operator new(unsigned int Size, void* Ptr)
 {
-	return(Ptr);
+	return Ptr;
 }
 #if _MSC_VER >= 1200
 inline void operator delete(void*, void*)
@@ -655,27 +583,34 @@ inline void operator delete(void*, void*)
 }
 #endif
 // ...CDH
+#endif
 
 #if PLATFORM_NEEDS_ARRAY_NEW
 inline void* operator new[]( unsigned int Size, const TCHAR* Tag )
 {
+	guardSlow(new);
 #if DNF
 	return appMalloc( Size, 8 );
 #else
 	return appMalloc( Size, Tag );
 #endif
+	unguardSlow;
 }
 inline void* operator new[]( unsigned int Size )
 {
+	guardSlow(new);
 #if DNF
 	return appMalloc( Size, 8 );
 #else
 	return appMalloc( Size, TEXT("new") );
 #endif
+	unguardSlow;
 }
 inline void operator delete[]( void* Ptr )
 {
+	guardSlow(delete);
 	appFree( Ptr );
+	unguardSlow;
 }
 #endif
 
