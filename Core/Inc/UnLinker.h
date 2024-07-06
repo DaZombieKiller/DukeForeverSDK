@@ -10,11 +10,6 @@
 	FObjectExport.
 -----------------------------------------------------------------------------*/
 
-
-// JEP
-#define EF_CachedObject			(1<<0)
-
-
 //
 // Information about an exported object.
 //
@@ -31,39 +26,30 @@ struct CORE_API FObjectExport
 	UObject*	_Object;		// Internal.
 	INT			_iHashNext;		// Internal.
 
+#if DNF
 	// JEP
 	DWORD		ExportObjFlags;
+#endif
 
 	// Functions.
-	FObjectExport()
-	:	_Object			( NULL														)
-	,	_iHashNext		( INDEX_NONE												)
-	,	ExportObjFlags  ( 0															)		// JEP
-	{}
-	FObjectExport( UObject* InObject )
-	:	ClassIndex		( 0															)
-	,	SuperIndex		( 0															)
-	,	PackageIndex	( 0															)
-	,	ObjectName		( InObject ? (InObject->GetFName()			) : NAME_None	)
-	,	ObjectFlags		( InObject ? (InObject->GetFlags() & RF_Load) : 0			)
-	,	SerialSize		( 0															)
-	,	SerialOffset	( 0															)
-	,	_Object			( InObject													)
-	,	ExportObjFlags  ( 0															)		// JEP
-	{}
+	FObjectExport();
+	FObjectExport( UObject* InObject );
+
 	friend FArchive& operator<<( FArchive& Ar, FObjectExport& E )
 	{
+		guard(FObjectExport<<);
+
 		Ar << AR_INDEX(E.ClassIndex);
 		Ar << AR_INDEX(E.SuperIndex);
 		Ar << E.PackageIndex;
 		Ar << E.ObjectName;
 		Ar << E.ObjectFlags;
 		Ar << AR_INDEX(E.SerialSize);
-
 		if( E.SerialSize )
 			Ar << AR_INDEX(E.SerialOffset);
 
 		return Ar;
+		unguard;
 	}
 };
 
@@ -86,22 +72,13 @@ struct CORE_API FObjectImport
 	INT             SourceIndex;	// Internal.
 
 	// Functions.
-	FObjectImport()
-	{}
-	FObjectImport( UObject* InObject )
-	:	ClassPackage	( InObject->GetClass()->GetOuter()->GetFName())
-	,	ClassName		( InObject->GetClass()->GetFName()		 )
-	,	PackageIndex	( 0                                      )
-	,	ObjectName		( InObject->GetFName()					 )
-	,	XObject			( InObject								 )
-	,	SourceLinker	( NULL									 )
-	,	SourceIndex		( INDEX_NONE							 )
-	{
-			if( XObject )
-				UObject::GImportCount++;
-	}
+	FObjectImport();
+	FObjectImport( UObject* InObject );
+
 	friend FArchive& operator<<( FArchive& Ar, FObjectImport& I )
 	{
+		guard(FObjectImport<<);
+
 		Ar << I.ClassPackage << I.ClassName;
 		Ar << I.PackageIndex;
 		Ar << I.ObjectName;
@@ -110,8 +87,9 @@ struct CORE_API FObjectImport
 			I.SourceIndex = INDEX_NONE;
 			I.XObject     = NULL;
 		}
-	
 		return Ar;
+
+		unguard;
 	}
 };
 
@@ -125,12 +103,12 @@ struct CORE_API FObjectImport
 struct FGenerationInfo
 {
 	INT ExportCount, NameCount;
-	FGenerationInfo( INT InExportCount, INT InNameCount )
-	: ExportCount(InExportCount), NameCount(InNameCount)
-	{}
+	FGenerationInfo( INT InExportCount, INT InNameCount );
 	friend FArchive& operator<<( FArchive& Ar, FGenerationInfo& Info )
 	{
+		guard(FGenerationInfo<<);
 		return Ar << Info.ExportCount << Info.NameCount;
+		unguard;
 	}
 };
 
@@ -138,8 +116,12 @@ struct FPackageFileSummary
 {
 	// Variables.
 	INT		Tag;	
+#if DNF
 	_WORD	FileVersion; // CDH changed from INT to _WORD
 	_WORD	LicenseeVersion; // CDH
+#else
+	INT		FileVersion;
+#endif
 	DWORD	PackageFlags;
 	INT		NameCount,		NameOffset;
 	INT		ExportCount,	ExportOffset;
@@ -148,17 +130,18 @@ struct FPackageFileSummary
 	TArray<FGenerationInfo> Generations;
 
 	// Constructor.
-	FPackageFileSummary()
-	{
-		appMemzero( this, sizeof(*this) );
-	}
+	FPackageFileSummary();
 
 	// Serializer.
 	friend FArchive& operator<<( FArchive& Ar, FPackageFileSummary& Sum )
 	{
+		guard(FUnrealfileSummary<<);
+
 		Ar << Sum.Tag;
 		Ar << Sum.FileVersion;
+#if DNF
 		Ar << Sum.LicenseeVersion; // CDH... storing licensee version in upper word, initial version is zero
+#endif
 		Ar << Sum.PackageFlags;
 		Ar << Sum.NameCount     << Sum.NameOffset;
 		Ar << Sum.ExportCount   << Sum.ExportOffset;
@@ -193,6 +176,7 @@ struct FPackageFileSummary
 		}
 
 		return Ar;
+		unguard;
 	}
 };
 
@@ -252,10 +236,12 @@ class ULinkerLoad : public ULinker, public FArchive
 	TArray<FLazyLoader*>	LazyLoaders;
 	FArchive*				Loader;
 
+#if DNF
 	// JEP...
 	ULinkerLoad				*ParentLinker;
 	ULinkerLoad				*ChildLinker;
 	// ... JEP
+#endif
 
 	// Constructor; all errors here throw exceptions which are fully recoverable.
 	ULinkerLoad( UObject* InParent, const TCHAR* InFilename, DWORD InLoadFlags );
@@ -263,7 +249,6 @@ class ULinkerLoad : public ULinker, public FArchive
 	void Verify();
 	FName GetExportClassPackage( INT i );
 	FName GetExportClassName( INT i );
-	//void VerifyExport( INT i );				// JEP
 	void VerifyImport( INT i );
 	void LoadAllObjects();
 	INT FindExportIndex( FName ClassName, FName ClassPackage, FName ObjectName, INT PackageIndex );
@@ -273,11 +258,15 @@ class ULinkerLoad : public ULinker, public FArchive
 private:
 	UObject* CreateExport( INT Index );
 	UObject* CreateImport( INT Index );
+
 	UObject* IndexToObject( INT Index );
 	void DetachExport( INT i );
+
+	// UObject interface.
 	void Serialize( FArchive& Ar );
 	void Destroy();
 
+	// FArchive interface.
 	void AttachLazyLoader( FLazyLoader* LazyLoader );
 	void DetachLazyLoader( FLazyLoader* LazyLoader );
 	void DetachAllLazyLoaders( UBOOL Load );
@@ -309,6 +298,8 @@ class ULinkerSave : public ULinker, public FArchive
 	// Constructor.
 	ULinkerSave( UObject* InParent, const TCHAR* InFilename );
 	void Destroy();
+
+	// FArchive interface.
 	INT MapName( FName* Name );
 	INT MapObject( UObject* Object );
 	FArchive& operator<<( FName& Name );
