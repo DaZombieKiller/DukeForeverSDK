@@ -154,12 +154,18 @@ enum EObjectFlags
 	RF_SourceModified   = 0x00000020,   // Modified relative to source files.
 	RF_TagGarbage		= 0x00000040,	// Check during garbage collection.
 	RF_Final			= 0x00000080,	// Object is not visible outside of class.
-	//
+#if DNF
+	RF_EnteredSafeMode	= 0x00000100,
+#endif
 	RF_NeedLoad			= 0x00000200,   // During load, indicates object needs loading.
 	RF_HighlightedName  = 0x00000400,	// A hardcoded name which should be syntax-highlighted.
 	RF_EliminateObject  = 0x00000400,   // NULL out references to this during garbage collecion.
+#if DNF
+	RF_InstanceObject	= 0x00000800,
+#else // TODO: Are these in DNF? They aren't mirrored in UnrealScript.
 	RF_InSingularFunc   = 0x00000800,	// In a singular function.
 	RF_RemappedName     = 0x00000800,   // Name is remapped.
+#endif
 	RF_Suppress         = 0x00001000,	//warning: Mirrored in UnName.h. Suppressed log name.
 	RF_StateChanged     = 0x00001000,   // Object did a state change.
 	RF_InEndState       = 0x00002000,   // Within an EndState call.
